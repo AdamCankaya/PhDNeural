@@ -1,0 +1,15 @@
+﻿# Secrets and local config
+.env
+github_sync.config.json
+.phd-github-sync.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db

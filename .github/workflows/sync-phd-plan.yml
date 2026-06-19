@@ -1,0 +1,54 @@
+name: Sync PhD Plan to GitHub Projects
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (no changes)"
+        type: boolean
+        default: true
+      update_existing:
+        description: "Update existing issue titles/bodies"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+  projects: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync master plan to GitHub Projects
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNER: ${{ vars.GITHUB_OWNER }}
+          GITHUB_REPO: ${{ vars.GITHUB_REPO }}
+          GITHUB_PROJECT_NUMBER: ${{ vars.GITHUB_PROJECT_NUMBER }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ "${{ inputs.update_existing }}" = "true" ]; then
+            ARGS="$ARGS --update-existing"
+          fi
+          python scripts/sync_phd_to_github.py $ARGS
+
+      - name: Upload sync state artifact
+        if: inputs.dry_run == false
+        uses: actions/upload-artifact@v4
+        with:
+          name: phd-github-sync-state
+          path: .phd-github-sync.json
+          if-no-files-found: ignore

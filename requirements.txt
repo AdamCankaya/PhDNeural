@@ -1,0 +1,2 @@
+# No external dependencies — uses Python 3.10+ standard library only.
+# Optional: install gh CLI for token fallback (https://cli.github.com/)

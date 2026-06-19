@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhD Roadmap Dashboard — NAS for Epigenomic Phenotype Prediction</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            slate: { 850: '#1a2332', 950: '#0d1117' },
+            accent: { DEFAULT: '#6366f1', light: '#818cf8', dark: '#4f46e5' },
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+
+    .timeline-node {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .timeline-node:hover { transform: translateY(-3px); }
+    .timeline-node.active {
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .semester-card { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+    .semester-card.highlight {
+      box-shadow: 0 0 0 2px #6366f1, 0 8px 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .progress-bar-fill {
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .task-checkbox:checked + .task-label {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    .step-header { border-left: 3px solid #6366f1; }
+
+    .collapse-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .collapse-content.open {
+      max-height: 5000px;
+      opacity: 1;
+    }
+
+    .chevron { transition: transform 0.25s ease; }
+    .chevron.rotated { transform: rotate(180deg); }
+
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">PhD Roadmap Dashboard</h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Automated NAS for Epigenomic Phenotype Prediction</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <p class="text-xs text-slate-500 uppercase tracking-wider">Overall Progress</p>
+          <p id="header-progress" class="text-2xl font-bold text-accent-light">0%</p>
+        </div>
+        <button id="reset-btn" class="text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition" title="Reset all progress">
+          Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-8">
+
+    <!-- Core Objective -->
+    <section class="bg-gradient-to-br from-indigo-950/60 to-slate-900 border border-indigo-800/40 rounded-2xl p-6 sm:p-8">
+      <div class="flex items-start gap-4">
+        <div class="hidden sm:flex w-12 h-12 rounded-xl bg-indigo-600/20 items-center justify-center flex-shrink-0 text-2xl">🎯</div>
+        <div>
+          <h2 class="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-2">Core Objective</h2>
+          <p id="core-objective" class="text-base sm:text-lg text-slate-200 leading-relaxed"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Row -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+        <p class="text-3xl font-bold text-white" id="stat-total">0</p>
+        <p class="text-xs text-slate-500 mt-1">Total Tasks</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+        <p class="text-3xl font-bold text-emerald-400" id="stat-done">0</p>
+        <p class="text-xs text-slate-500 mt-1">Completed</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+        <p class="text-3xl font-bold text-amber-400" id="stat-remaining">0</p>
+        <p class="text-xs text-slate-500 mt-1">Remaining</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+        <p class="text-3xl font-bold text-accent-light" id="stat-overall-pct">0%</p>
+        <p class="text-xs text-slate-500 mt-1">Completion</p>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+        <h3 class="text-sm font-semibold text-slate-300 mb-4">Overall Completion</h3>
+        <div class="relative h-52 flex items-center justify-center">
+          <canvas id="doughnut-chart"></canvas>
+        </div>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+        <h3 class="text-sm font-semibold text-slate-300 mb-4">Progress by Year</h3>
+        <div class="relative h-52">
+          <canvas id="bar-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Timeline -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6">
+      <h3 class="text-sm font-semibold text-slate-300 mb-6 flex items-center gap-2">
+        <span>📅</span> 3-Year Timeline
+        <span class="text-xs font-normal text-slate-500 ml-auto">Click a semester to jump</span>
+      </h3>
+      <div id="timeline" class="overflow-x-auto pb-2"></div>
+    </section>
+
+    <!-- Year Progress Bars -->
+    <section id="year-bars" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></section>
+
+    <!-- Semester Detail Cards -->
+    <section id="semesters" class="space-y-6"></section>
+
+  </main>
+
+  <footer class="border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-600">
+    PhD Master Roadmap Dashboard &middot; Progress saved locally in your browser
+  </footer>
+
+  <script>
+    // ─── Embedded Plan Data (from phd_master_plan.md) ───────────────────────
+    const PLAN = {
+      title: 'PhD Master Roadmap: Automated Neural Architecture Search for Epigenomic Phenotype Prediction',
+      coreObjective: 'Develop a high-performance Neural Architecture Search (NAS) framework utilizing Optuna to autonomously discover the optimal multi-modal fusion network. This network will predict a specific disease phenotype by integrating DNA methylation arrays, genetic variants, and tabular clinical data. The final deliverable is an end-to-end software application for patient-specific inference.',
+      years: [
+        {
+          id: 'y1', label: 'Year 1', subtitle: 'Foundation, Data Engineering & Central Infrastructure',
+          color: '#6366f1',
+          semesters: [
+            {
+              id: 'y1-fall', season: 'Fall', title: 'Phenotype Selection & Data Sourcing',
+              goal: 'Define the biological scope and secure the raw datasets.',
+              steps: [
+                {
+                  num: 1, title: 'Disease Phenotype Selection',
+                  tasks: [
+                    { id: 'y1f-1-1', text: 'Criteria: Focus on a disease with a highly documented epigenetic footprint and massive amounts of open-access data. Avoid rare diseases to ensure statistical significance.' },
+                    { id: 'y1f-1-2', text: 'Action: Target Breast Invasive Carcinoma (BRCA) or Lung Adenocarcinoma (LUAD).' },
+                    { id: 'y1f-1-3', text: 'Phenotype Target: Define the prediction goal as a binary classification (Disease vs. Healthy Tissue) or a multi-class prediction (Tumor Stage I, II, III, IV).' },
+                  ],
+                },
+                {
+                  num: 2, title: 'Data Sourcing (The Cancer Genome Atlas - TCGA)',
+                  tasks: [
+                    { id: 'y1f-2-1', text: 'Repository: Navigate to the NCI Genomic Data Commons (GDC) Portal.' },
+                    { id: 'y1f-2-2', text: 'Access Level: Filter strictly for "Level 3 Open Access" data, which requires no institutional IRB approval and contains pre-processed, de-identified patient data.' },
+                    { id: 'y1f-2-3', text: 'Methylation: Illumina HumanMethylation450 or EPIC array data (beta-values).' },
+                    { id: 'y1f-2-4', text: 'Clinical: XML or TSV files containing age, biological sex, tumor stage, and survival metrics.' },
+                    { id: 'y1f-2-5', text: 'Genomic: Masked Somatic Mutation files (VCFs) representing single nucleotide polymorphisms (SNPs).' },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'y1-spring', season: 'Spring', title: 'Data Preparation & Normalization',
+              goal: 'Construct the ETL (Extract, Transform, Load) pipeline to format the disparate data modalities for neural network ingestion.',
+              steps: [
+                {
+                  num: 1, title: 'Clinical Data Normalization',
+                  tasks: [
+                    { id: 'y1s-1-1', text: 'Apply one-hot encoding for categorical variables (e.g., gender, race).' },
+                    { id: 'y1s-1-2', text: 'Apply standard Z-score normalization for continuous variables (e.g., age, BMI).' },
+                  ],
+                },
+                {
+                  num: 2, title: 'Methylation Data Dimensionality Reduction',
+                  tasks: [
+                    { id: 'y1s-2-1', text: 'Implement variance-based feature selection to isolate the top 10,000 most highly variable CpG sites across the dataset to prevent memory exhaustion.' },
+                  ],
+                },
+                {
+                  num: 3, title: 'Unified Storage Architecture',
+                  tasks: [
+                    { id: 'y1s-3-1', text: 'Align all modalities using the universal Patient_ID.' },
+                    { id: 'y1s-3-2', text: 'Serialize the aligned tensors into high-performance HDF5 or Zarr files to ensure memory-mapped, zero-copy reading from disk to GPU during fast-paced Optuna trials.' },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'y1-summer', season: 'Summer', title: 'Model Building Blocks & "The Hub" Setup',
+              goal: 'Code the modular PyTorch network architectures and spin up the centralized database for parallelization.',
+              steps: [
+                {
+                  num: 1, title: 'Defining the Sub-Networks & Fusion Layers',
+                  tasks: [
+                    { id: 'y1u-1-1', text: 'Tabular/Clinical Branch: Multi-Layer Perceptrons (MLPs).' },
+                    { id: 'y1u-1-2', text: 'Methylation Branch: 1D-Convolutional Neural Networks (1D-CNNs) or lightweight Transformer Encoders.' },
+                    { id: 'y1u-1-3', text: 'Fusion Layers: Code Early Fusion (concatenation), Intermediate Fusion (cross-attention), and Late Fusion (ensemble) modules.' },
+                  ],
+                },
+                {
+                  num: 2, title: 'The Hub (Centralized Database Configuration)',
+                  tasks: [
+                    { id: 'y1u-2-1', text: 'Deploy a lightweight Docker container running PostgreSQL on your dedicated Hetzner Linux server.' },
+                    { id: 'y1u-2-2', text: 'This database acts as the centralized "brain" that will track the distributed trial history and prevent remote workers from evaluating duplicate architectures.' },
+                    { id: 'y1u-2-3', text: 'Configure network firewalls to securely accept connections from external university IP addresses.' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'y2', label: 'Year 2', subtitle: 'Distributed NAS Execution & Optimization',
+          color: '#8b5cf6',
+          semesters: [
+            {
+              id: 'y2-fall', season: 'Fall', title: 'Distributed Optuna Integration (The Workers)',
+              goal: 'Write the "Define-by-Run" NAS engine and deploy the execution script across university compute clusters.',
+              steps: [
+                {
+                  num: 1, title: 'Building the Search Space',
+                  tasks: [
+                    { id: 'y2f-1-1', text: 'Use Optuna\'s conditional logic to dynamically build models inside the objective function.' },
+                    { id: 'y2f-1-2', text: 'Structural Choices: Number of hidden layers (trial.suggest_int), layer widths (trial.suggest_categorical), and activation functions.' },
+                  ],
+                },
+                {
+                  num: 2, title: 'Worker Configuration & Parallelization',
+                  tasks: [
+                    { id: 'y2f-2-1', text: 'Code the Optuna initialization to strictly use storage="postgresql://..." and load_if_exists=True.' },
+                    { id: 'y2f-2-2', text: 'Execution Strategy: Parallelize the trials, not the individual training loops. Worker 1 handles Trial A while Worker 2 handles Trial B independently.' },
+                  ],
+                },
+                {
+                  num: 3, title: 'Deployment to University Clusters',
+                  tasks: [
+                    { id: 'y2f-3-1', text: 'Utilize GitHub Actions as your CI/CD runner to package your PyTorch/Optuna code.' },
+                    { id: 'y2f-3-2', text: 'Deploy the scripts to your university\'s remote compute servers (via Slurm job scheduler or direct SSH). Scale horizontally by spinning up as many worker nodes as your access permits.' },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'y2-spring', season: 'Spring', title: 'Model Training & Validation Strategy',
+              goal: 'Execute the search and rigorously validate the discovered architectures.',
+              steps: [
+                {
+                  num: 1, title: 'The Holdout Set',
+                  tasks: [
+                    { id: 'y2s-1-1', text: 'Strictly partition 20% of the unified dataset into a "blind" Test Set before the search begins.' },
+                  ],
+                },
+                {
+                  num: 2, title: 'K-Fold Cross-Validation (The Search Phase)',
+                  tasks: [
+                    { id: 'y2s-2-1', text: 'For the remaining 80% of the data, implement 5-Fold Cross-Validation within the Optuna objective function running on the university nodes.' },
+                  ],
+                },
+                {
+                  num: 3, title: 'Pruning Mechanisms',
+                  tasks: [
+                    { id: 'y2s-3-1', text: 'Implement Optuna\'s HyperbandPruner to monitor the training loss of unpromising neural architectures and terminate them early, saving massive amounts of university GPU compute time.' },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'y2-summer', season: 'Summer', title: 'Architecture Refinement & Analysis',
+              goal: 'Lock in the final model and evaluate its performance against biological reality.',
+              steps: [
+                {
+                  num: 1, title: 'Final Evaluation',
+                  tasks: [
+                    { id: 'y2u-1-1', text: 'Extract the single highest-performing multi-modal architecture discovered in the PostgreSQL database.' },
+                    { id: 'y2u-1-2', text: 'Train this final model from scratch on the entire 80% training set and evaluate it against the 20% blind Test Set to generate final accuracy, precision, and AUC-ROC metrics.' },
+                  ],
+                },
+                {
+                  num: 2, title: 'Interpretability',
+                  tasks: [
+                    { id: 'y2u-2-1', text: 'Implement SHAP (SHapley Additive exPlanations) or Integrated Gradients to trace the model\'s predictions back to specific biological features.' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'y3', label: 'Year 3', subtitle: 'Final Deliverable & Thesis',
+          color: '#06b6d4',
+          semesters: [
+            {
+              id: 'y3-fall', season: 'Fall', title: 'Software Application Development',
+              goal: 'Build the patient-facing inference application.',
+              steps: [
+                {
+                  num: 1, title: 'The Inference Engine',
+                  tasks: [
+                    { id: 'y3f-1-1', text: 'Export the PyTorch model weights via TorchScript or ONNX for optimized, low-latency execution.' },
+                  ],
+                },
+                {
+                  num: 2, title: 'The User Interface',
+                  tasks: [
+                    { id: 'y3f-2-1', text: 'Build a lightweight frontend (e.g., Streamlit, React, or Vue) where a user can securely upload their raw .CSV or .TXT methylation and clinical data.' },
+                    { id: 'y3f-2-2', text: 'Implement a parser that instantly formats the user\'s data to match the pipeline developed in Year 1.' },
+                  ],
+                },
+                {
+                  num: 3, title: 'Deployment',
+                  tasks: [
+                    { id: 'y3f-3-1', text: 'Containerize the entire application using Docker. Push the image via CI/CD to a production-ready web environment. The software will output the phenotypic prediction alongside a statistical confidence score.' },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'y3-spring', season: 'Spring', title: 'Thesis Writing & Defense',
+              goal: 'Synthesize the computational novelty of the project.',
+              steps: [
+                {
+                  num: 1, title: 'The CS Focus',
+                  tasks: [
+                    { id: 'y3s-1-1', text: 'Emphasize the efficiency of the search space design, the horizontal scalability of the distributed workers, and the computational overhead reduced through pruning.' },
+                  ],
+                },
+                {
+                  num: 2, title: 'Visualization',
+                  tasks: [
+                    { id: 'y3s-2-1', text: 'Generate Pareto front charts demonstrating how the automated NAS discovered highly accurate models faster than manual hyperparameter tuning.' },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'y3-summer', season: 'Summer', title: 'Open Source Release & Publication',
+              goal: 'Finalize the academic output.',
+              steps: [
+                {
+                  num: 1, title: 'Code Release',
+                  tasks: [
+                    { id: 'y3u-1-1', text: 'Clean and document the GitHub repository, providing instructions for how other researchers can connect to their own databases to utilize your distributed NAS framework.' },
+                  ],
+                },
+                {
+                  num: 2, title: 'Publication',
+                  tasks: [
+                    { id: 'y3u-2-1', text: 'Submit the methodology to a computational biology or applied machine learning conference (e.g., ISMB, NeurIPS ML4H).' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const STORAGE_KEY = 'phd_plan_progress';
+    const SEASON_COLORS = { Fall: '#f59e0b', Spring: '#10b981', Summer: '#3b82f6' };
+
+    // ─── State ────────────────────────────────────────────────────────────────
+    let progress = loadProgress();
+    let doughnutChart = null;
+    let barChart = null;
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch { return {}; }
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    function allTaskIds() {
+      const ids = [];
+      PLAN.years.forEach(y => y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => ids.push(t.id)))));
+      return ids;
+    }
+
+    function getCompletionStats() {
+      const ids = allTaskIds();
+      const done = ids.filter(id => progress[id]).length;
+      const total = ids.length;
+      const pct = total ? Math.round((done / total) * 100) : 0;
+
+      const yearStats = PLAN.years.map(y => {
+        const yIds = [];
+        y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => yIds.push(t.id))));
+        const yDone = yIds.filter(id => progress[id]).length;
+        return { id: y.id, label: y.label, done: yDone, total: yIds.length, pct: yIds.length ? Math.round((yDone / yIds.length) * 100) : 0, color: y.color };
+      });
+
+      const semesterStats = {};
+      PLAN.years.forEach(y => y.semesters.forEach(s => {
+        const sIds = [];
+        s.steps.forEach(st => st.tasks.forEach(t => sIds.push(t.id)));
+        const sDone = sIds.filter(id => progress[id]).length;
+        semesterStats[s.id] = { done: sDone, total: sIds.length, pct: sIds.length ? Math.round((sDone / sIds.length) * 100) : 0 };
+      }));
+
+      return { ids, done, total, pct, yearStats, semesterStats };
+    }
+
+    // ─── Render ───────────────────────────────────────────────────────────────
+    function render() {
+      document.getElementById('core-objective').textContent = PLAN.coreObjective;
+      renderTimeline();
+      renderYearBars();
+      renderSemesters();
+      updateStats();
+      updateCharts();
+    }
+
+    function renderTimeline() {
+      const el = document.getElementById('timeline');
+      let html = '<div class="flex gap-0 min-w-[700px]">';
+
+      PLAN.years.forEach((year, yi) => {
+        html += `<div class="flex-1 ${yi > 0 ? 'border-l border-slate-700/50 pl-2' : ''}">`;
+        html += `<p class="text-xs font-bold uppercase tracking-wider mb-3 text-center" style="color:${year.color}">${year.label}</p>`;
+        html += '<div class="flex gap-2 justify-center">';
+        year.semesters.forEach(sem => {
+          const stats = getCompletionStats().semesterStats[sem.id];
+          const sc = SEASON_COLORS[sem.season];
+          html += `
+            <button data-semester="${sem.id}"
+              class="timeline-node flex-1 max-w-[120px] rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-center cursor-pointer hover:bg-slate-800 hover:border-slate-600"
+              style="border-top: 3px solid ${sc}">
+              <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${sc}">${sem.season}</p>
+              <p class="text-[11px] text-slate-300 mt-1 leading-tight line-clamp-2">${sem.title.split(' ').slice(0, 3).join(' ')}…</p>
+              <div class="mt-2 h-1 bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full rounded-full progress-bar-fill" style="width:${stats.pct}%;background:${sc}"></div>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">${stats.pct}%</p>
+            </button>`;
+        });
+        html += '</div></div>';
+      });
+
+      html += '</div>';
+      el.innerHTML = html;
+
+      el.querySelectorAll('.timeline-node').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.semester;
+          const card = document.getElementById(`card-${id}`);
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            highlightCard(id);
+            if (!card.querySelector('.collapse-content.open')) {
+              card.querySelector('.collapse-toggle').click();
+            }
+          }
+        });
+      });
+    }
+
+    function highlightCard(id) {
+      document.querySelectorAll('.semester-card').forEach(c => c.classList.remove('highlight'));
+      document.querySelectorAll('.timeline-node').forEach(n => n.classList.remove('active'));
+      const card = document.getElementById(`card-${id}`);
+      const node = document.querySelector(`[data-semester="${id}"]`);
+      if (card) { card.classList.add('highlight'); setTimeout(() => card.classList.remove('highlight'), 2500); }
+      if (node) node.classList.add('active');
+    }
+
+    function renderYearBars() {
+      const stats = getCompletionStats();
+      const el = document.getElementById('year-bars');
+      el.innerHTML = stats.yearStats.map(y => `
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-semibold" style="color:${y.color}">${y.label}</span>
+            <span class="text-sm font-bold text-white">${y.pct}%</span>
+          </div>
+          <div class="h-2.5 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full rounded-full progress-bar-fill" style="width:${y.pct}%;background:${y.color}"></div>
+          </div>
+          <p class="text-xs text-slate-500 mt-2">${y.done} / ${y.total} tasks complete</p>
+        </div>
+      `).join('');
+    }
+
+    function renderSemesters() {
+      const el = document.getElementById('semesters');
+      let html = '';
+
+      PLAN.years.forEach(year => {
+        html += `
+          <div class="mt-2">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-1 h-8 rounded-full" style="background:${year.color}"></div>
+              <div>
+                <h2 class="text-lg font-bold text-white">${year.label}: ${year.subtitle}</h2>
+              </div>
+            </div>
+            <div class="space-y-4">`;
+
+        year.semesters.forEach(sem => {
+          const sc = SEASON_COLORS[sem.season];
+          const semStats = getCompletionStats().semesterStats[sem.id];
+          const stepCount = sem.steps.length;
+          const taskCount = sem.steps.reduce((a, st) => a + st.tasks.length, 0);
+
+          html += `
+            <article id="card-${sem.id}" class="semester-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+              <button class="collapse-toggle w-full text-left px-5 sm:px-6 py-4 flex items-center gap-4 hover:bg-slate-800/50 transition">
+                <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border" style="border-color:${sc}33;background:${sc}15">
+                  <span class="text-[10px] font-bold uppercase" style="color:${sc}">${sem.season}</span>
+                  <span class="text-lg font-bold text-white">${semStats.pct}%</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-base sm:text-lg font-semibold text-white truncate">${sem.title}</h3>
+                  <p class="text-sm text-slate-400 mt-0.5 line-clamp-1"><span class="text-indigo-400 font-medium">Goal:</span> ${sem.goal}</p>
+                  <p class="text-xs text-slate-600 mt-1">${stepCount} steps · ${taskCount} tasks</p>
+                </div>
+                <svg class="chevron w-5 h-5 text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div class="collapse-content border-t border-slate-800">
+                <div class="px-5 sm:px-6 py-5 space-y-5">
+                  <div class="bg-indigo-950/30 border border-indigo-800/30 rounded-lg px-4 py-3">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-1">Semester Goal</p>
+                    <p class="text-sm text-slate-300">${sem.goal}</p>
+                  </div>`;
+
+          sem.steps.forEach(step => {
+            const stepTasks = step.tasks;
+            const stepDone = stepTasks.filter(t => progress[t.id]).length;
+            const stepPct = stepTasks.length ? Math.round((stepDone / stepTasks.length) * 100) : 0;
+
+            html += `
+                  <div class="step-header pl-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <h4 class="text-sm font-bold text-white">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600/30 text-indigo-300 text-xs font-bold mr-2">${step.num}</span>
+                        ${step.title}
+                      </h4>
+                      <span class="text-xs text-slate-500">${stepDone}/${stepTasks.length}</span>
+                    </div>
+                    <div class="h-1 bg-slate-800 rounded-full mb-3 overflow-hidden max-w-xs">
+                      <div class="h-full bg-indigo-500 rounded-full progress-bar-fill" style="width:${stepPct}%"></div>
+                    </div>
+                    <ul class="space-y-2 ml-1">`;
+
+            step.tasks.forEach(task => {
+              const checked = progress[task.id] ? 'checked' : '';
+              html += `
+                      <li class="flex items-start gap-3 group">
+                        <input type="checkbox" id="${task.id}" data-task="${task.id}"
+                          class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 cursor-pointer flex-shrink-0"
+                          ${checked} />
+                        <label for="${task.id}" class="task-label text-sm text-slate-300 leading-relaxed cursor-pointer group-hover:text-slate-100 transition">${task.text}</label>
+                      </li>`;
+            });
+
+            html += `</ul></div>`;
+          });
+
+          html += `</div></div></article>`;
+        });
+
+        html += '</div></div>';
+      });
+
+      el.innerHTML = html;
+
+      el.querySelectorAll('.collapse-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const content = btn.nextElementSibling;
+          const chevron = btn.querySelector('.chevron');
+          const isOpen = content.classList.contains('open');
+          content.classList.toggle('open', !isOpen);
+          chevron.classList.toggle('rotated', !isOpen);
+        });
+      });
+
+      el.querySelectorAll('.task-checkbox').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          progress[e.target.dataset.task] = e.target.checked;
+          saveProgress();
+          updateStats();
+          updateCharts();
+          renderYearBars();
+          renderTimeline();
+          updateSemesterBadges();
+        });
+      });
+
+      // Open first semester by default
+      const firstToggle = el.querySelector('.collapse-toggle');
+      if (firstToggle) firstToggle.click();
+    }
+
+    function updateSemesterBadges() {
+      PLAN.years.forEach(y => y.semesters.forEach(s => {
+        const stats = getCompletionStats().semesterStats[s.id];
+        const card = document.getElementById(`card-${s.id}`);
+        if (!card) return;
+        const badge = card.querySelector('.collapse-toggle .text-lg');
+        if (badge) badge.textContent = stats.pct + '%';
+        const node = document.querySelector(`[data-semester="${s.id}"] .progress-bar-fill`);
+        if (node) node.style.width = stats.pct + '%';
+        const nodePct = document.querySelector(`[data-semester="${s.id}"] p:last-child`);
+        if (nodePct) nodePct.textContent = stats.pct + '%';
+      }));
+    }
+
+    function updateStats() {
+      const s = getCompletionStats();
+      document.getElementById('stat-total').textContent = s.total;
+      document.getElementById('stat-done').textContent = s.done;
+      document.getElementById('stat-remaining').textContent = s.total - s.done;
+      document.getElementById('stat-overall-pct').textContent = s.pct + '%';
+      document.getElementById('header-progress').textContent = s.pct + '%';
+    }
+
+    function updateCharts() {
+      const s = getCompletionStats();
+
+      if (doughnutChart) doughnutChart.destroy();
+      doughnutChart = new Chart(document.getElementById('doughnut-chart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Completed', 'Remaining'],
+          datasets: [{
+            data: [s.done, s.total - s.done],
+            backgroundColor: ['#6366f1', '#1e293b'],
+            borderColor: ['#818cf8', '#334155'],
+            borderWidth: 2,
+            hoverOffset: 6,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '68%',
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 16, font: { size: 12 } } },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} tasks` } },
+          },
+        },
+        plugins: [{
+          id: 'centerText',
+          beforeDraw(chart) {
+            const { width, height, ctx } = chart;
+            ctx.restore();
+            ctx.font = 'bold 28px Inter, sans-serif';
+            ctx.fillStyle = '#e2e8f0';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(s.pct + '%', width / 2, height / 2 - 8);
+            ctx.font = '12px Inter, sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('complete', width / 2, height / 2 + 16);
+            ctx.save();
+          },
+        }],
+      });
+
+      if (barChart) barChart.destroy();
+      barChart = new Chart(document.getElementById('bar-chart'), {
+        type: 'bar',
+        data: {
+          labels: s.yearStats.map(y => y.label),
+          datasets: [{
+            label: 'Completion %',
+            data: s.yearStats.map(y => y.pct),
+            backgroundColor: s.yearStats.map(y => y.color + '99'),
+            borderColor: s.yearStats.map(y => y.color),
+            borderWidth: 2,
+            borderRadius: 8,
+            borderSkipped: false,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true, max: 100,
+              ticks: { color: '#64748b', callback: v => v + '%' },
+              grid: { color: '#1e293b' },
+            },
+            x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.raw}% (${s.yearStats[ctx.dataIndex].done}/${s.yearStats[ctx.dataIndex].total})` } },
+          },
+        },
+      });
+    }
+
+    // Reset
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      if (confirm('Reset all progress? This cannot be undone.')) {
+        progress = {};
+        saveProgress();
+        document.getElementById('semesters').innerHTML = '';
+        render();
+      }
+    });
+
+    // Init
+    render();
+  </script>
+</body>
+</html>
