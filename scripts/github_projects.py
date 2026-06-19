@@ -91,10 +91,7 @@ class GitHubProjectsClient:
         return RepositoryInfo(node_id=node_id, owner=owner, name=repo)
 
     def get_project(self, owner: str, project_number: int) -> ProjectInfo:
-        query = """
-        query($owner: String!, $number: Int!) {
-          user(login: $owner) {
-            projectV2(number: $number) {
+        project_fragment = """
               id
               title
               url
@@ -116,37 +113,28 @@ class GitHubProjectsClient:
                   }
                 }
               }
-            }
-          }
-          organization(login: $owner) {
-            projectV2(number: $number) {
-              id
-              title
-              url
-              fields(first: 50) {
-                nodes {
-                  ... on ProjectV2FieldCommon {
-                    id
-                    name
-                    dataType
-                  }
-                  ... on ProjectV2SingleSelectField {
-                    id
-                    name
-                    dataType
-                    options {
-                      id
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
         """
-        data = self._request(query, {"owner": owner, "number": project_number})["data"]
-        project = data["user"]["projectV2"] or data["organization"]["projectV2"]
+
+        project = None
+        for owner_kind in ("user", "organization"):
+            query = f"""
+            query($owner: String!, $number: Int!) {{
+              {owner_kind}(login: $owner) {{
+                projectV2(number: $number) {{{project_fragment}
+                }}
+              }}
+            }}
+            """
+            body = self._request(query, {"owner": owner, "number": project_number})
+            if body.get("errors"):
+                continue
+            data = body["data"]
+            owner_node = data.get(owner_kind)
+            if owner_node:
+                project = owner_node.get("projectV2")
+            if project:
+                break
+
         if not project:
             raise GitHubApiError(
                 f"Project #{project_number} not found for owner '{owner}'. "
@@ -294,6 +282,28 @@ class GitHubProjectsClient:
         """
         self._request(mutation, {"id": issue_id, "title": title, "body": body})
 
+    def close_issue(self, issue_id: str, reason: str = "") -> None:
+        if self.dry_run:
+            return
+        mutation = """
+        mutation($id: ID!, $state: IssueState!) {
+          updateIssue(input: {id: $id, state: $state}) {
+            issue { id state }
+          }
+        }
+        """
+        self._request(mutation, {"id": issue_id, "state": "CLOSED"})
+        if reason:
+            comment_mutation = """
+            mutation($subjectId: ID!, $body: String!) {
+              addComment(input: {subjectId: $subjectId, body: $body}) {
+                commentEdge { node { id } }
+              }
+            }
+            """
+            body = f"Closed automatically: {reason}"
+            self._request(comment_mutation, {"subjectId": issue_id, "body": body})
+
     def add_issue_to_project(self, project_id: str, issue_node_id: str) -> str:
         if self.dry_run:
             return f"dry-run-item-{issue_node_id[-8:]}"
@@ -427,8 +437,8 @@ class GitHubProjectsClient:
               }
             }
             """
-            options_input = [{"name": name} for name in field.options.keys()] + [
-                {"name": name} for name in missing
+            options_input = [{"name": name, "description": name, "color": "GRAY"} for name in field.options.keys()] + [
+                {"name": name, "description": name, "color": "GRAY"} for name in missing
             ]
             result = self._request(
                 mutation, {"fieldId": field.field_id, "options": options_input}
@@ -474,7 +484,7 @@ class GitHubProjectsClient:
           }
         }
         """
-        options_input = [{"name": name, "color": "GRAY"} for name in option_names]
+        options_input = [{"name": name, "description": name, "color": "GRAY"} for name in option_names]
         result = self._request(
             mutation,
             {"projectId": project_id, "name": field_name, "options": options_input},

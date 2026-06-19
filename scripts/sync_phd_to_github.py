@@ -24,7 +24,7 @@ from github_projects import (
     resolve_token,
     validate_config,
 )
-from phd_parser import PhdTask, load_tasks
+from phd_parser import SEMESTER_DISPLAY, PhdTask, load_tasks
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_STATE_PATH = ROOT / ".phd-github-sync.json"
@@ -73,6 +73,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Update title/body of issues that already exist (by sync id).",
     )
+    parser.add_argument(
+        "--close-stale",
+        action="store_true",
+        help="Close open phd-sync issues whose sync-id is no longer in the plan.",
+    )
     return parser.parse_args()
 
 
@@ -88,7 +93,7 @@ def save_state(path: Path, state: dict) -> None:
 
 
 def semester_display(semester: str) -> str:
-    return semester.title()
+    return SEMESTER_DISPLAY.get(semester, semester.title())
 
 
 def year_display(year: int) -> str:
@@ -142,7 +147,7 @@ def setup_project_fields(
 
 
 def _semester_sort_key(name: str) -> int:
-    order = {"Fall": 0, "Spring": 1, "Summer": 2}
+    order = {"Fall": 0, "Spring": 1, "Spring & Summer": 2, "Summer": 3}
     return order.get(name, 99)
 
 
@@ -207,12 +212,36 @@ def print_parse_summary(tasks: list[PhdTask]) -> None:
         print(f"  - [{task.task_id}] {task.title}")
 
 
+def close_stale_issues(
+    client: GitHubProjectsClient,
+    existing_issues: dict[str, dict],
+    current_task_ids: set[str],
+) -> int:
+    """Close open synced issues that are no longer in the master plan."""
+    closed = 0
+    for sync_id, issue in existing_issues.items():
+        if sync_id in current_task_ids:
+            continue
+        if issue.get("state") != "OPEN":
+            continue
+        issue_number = issue.get("number", "?")
+        print(f"Closing stale issue #{issue_number} ({sync_id})")
+        client.close_issue(
+            issue["id"],
+            "Task removed from phd_master_plan.md during roadmap update.",
+        )
+        closed += 1
+        time.sleep(0.2)
+    return closed
+
+
 def sync_tasks(
     client: GitHubProjectsClient,
     config: dict,
     tasks: list[PhdTask],
     state_path: Path,
     update_existing: bool,
+    close_stale: bool,
 ) -> dict:
     owner = config["GITHUB_OWNER"]
     repo = config["GITHUB_REPO"]
@@ -239,6 +268,11 @@ def sync_tasks(
     updated = 0
     skipped = 0
     linked = 0
+    closed = 0
+    current_task_ids = {task.task_id for task in tasks}
+
+    if close_stale:
+        closed = close_stale_issues(client, existing_issues, current_task_ids)
 
     for index, task in enumerate(tasks, start=1):
         print(f"[{index}/{len(tasks)}] {task.issue_title()}")
@@ -310,11 +344,16 @@ def sync_tasks(
     if not client.dry_run:
         save_state(state_path, state)
 
+    stale_ids = set(existing_issues) - current_task_ids
+    for stale_id in stale_ids:
+        state.get("tasks", {}).pop(stale_id, None)
+
     return {
         "created": created,
         "updated": updated,
         "skipped": skipped,
         "linked": linked,
+        "closed": closed,
         "total": len(tasks),
     }
 
@@ -387,6 +426,7 @@ def main() -> int:
             tasks,
             state_path,
             update_existing=args.update_existing,
+            close_stale=args.close_stale,
         )
     except GitHubApiError as exc:
         print(f"GitHub API error: {exc}", file=sys.stderr)
@@ -401,7 +441,8 @@ def main() -> int:
         f"  Created:     {summary['created']}\n"
         f"  Updated:     {summary['updated']}\n"
         f"  Skipped:     {summary['skipped']}\n"
-        f"  Linked:      {summary['linked']}"
+        f"  Linked:      {summary['linked']}\n"
+        f"  Closed:      {summary.get('closed', 0)}"
     )
     if args.dry_run:
         print("\nRe-run without --dry-run to apply changes.")

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PhD Roadmap Dashboard — NAS for Epigenomic Phenotype Prediction</title>
+  <title>PhD Roadmap Dashboard — Comparative NAS for Multi-Task, Multi-Omic Disease Prediction</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
@@ -73,7 +73,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
       <div>
         <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">PhD Roadmap Dashboard</h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Automated NAS for Epigenomic Phenotype Prediction</p>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Comparative NAS for Multi-Task, Multi-Omic Disease Prediction</p>
       </div>
       <div class="flex items-center gap-3">
         <div class="text-right hidden sm:block">
@@ -160,235 +160,356 @@
   <script>
     // ─── Embedded Plan Data (from phd_master_plan.md) ───────────────────────
     const PLAN = {
-      title: 'PhD Master Roadmap: Automated Neural Architecture Search for Epigenomic Phenotype Prediction',
-      coreObjective: 'Develop a high-performance Neural Architecture Search (NAS) framework utilizing Optuna to autonomously discover the optimal multi-modal fusion network. This network will predict a specific disease phenotype by integrating DNA methylation arrays, genetic variants, and tabular clinical data. The final deliverable is an end-to-end software application for patient-specific inference.',
-      years: [
+  "title": "PhD Master Roadmap: Comparative Neural Architecture Search for Multi-Task, Multi-Omic Disease Prediction",
+  "coreObjective": "Develop a high-performance, distributed Neural Architecture Search (NAS) framework utilizing Optuna to discover the optimal computational networks across 5 fundamental disease categories. The system will ingest multi-omic data (Methylation, Transcriptomics, Genomics, CNVs) and patient demographics via 5 independent ETL pipelines. Final architectures will use Multi-Task Learning (MTL) to simultaneously predict disease presence, staging, and prognostic survival timelines.",
+  "years": [
+    {
+      "id": "y1",
+      "label": "Year 1",
+      "subtitle": "The 5-Category Sourcing & Multi-Omic ETL",
+      "color": "#6366f1",
+      "semesters": [
         {
-          id: 'y1', label: 'Year 1', subtitle: 'Foundation, Data Engineering & Central Infrastructure',
-          color: '#6366f1',
-          semesters: [
+          "id": "y1-fall",
+          "season": "Fall",
+          "title": "5-Category Disease Selection & Sourcing",
+          "goal": "Secure high-quality datasets representing the 5 major disease topologies to prove how biological etiology dictates neural network structure.",
+          "steps": [
             {
-              id: 'y1-fall', season: 'Fall', title: 'Phenotype Selection & Data Sourcing',
-              goal: 'Define the biological scope and secure the raw datasets.',
-              steps: [
+              "num": 1,
+              "title": "The 5 Disease Targets",
+              "tasks": [
                 {
-                  num: 1, title: 'Disease Phenotype Selection',
-                  tasks: [
-                    { id: 'y1f-1-1', text: 'Criteria: Focus on a disease with a highly documented epigenetic footprint and massive amounts of open-access data. Avoid rare diseases to ensure statistical significance.' },
-                    { id: 'y1f-1-2', text: 'Action: Target Breast Invasive Carcinoma (BRCA) or Lung Adenocarcinoma (LUAD).' },
-                    { id: 'y1f-1-3', text: 'Phenotype Target: Define the prediction goal as a binary classification (Disease vs. Healthy Tissue) or a multi-class prediction (Tumor Stage I, II, III, IV).' },
-                  ],
+                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-1-oncological-breast-invasive-ca",
+                  "text": "**Oncological:** Breast Invasive Carcinoma (BRCA) via TCGA. (Localized, high mutational burden)."
                 },
                 {
-                  num: 2, title: 'Data Sourcing (The Cancer Genome Atlas - TCGA)',
-                  tasks: [
-                    { id: 'y1f-2-1', text: 'Repository: Navigate to the NCI Genomic Data Commons (GDC) Portal.' },
-                    { id: 'y1f-2-2', text: 'Access Level: Filter strictly for "Level 3 Open Access" data, which requires no institutional IRB approval and contains pre-processed, de-identified patient data.' },
-                    { id: 'y1f-2-3', text: 'Methylation: Illumina HumanMethylation450 or EPIC array data (beta-values).' },
-                    { id: 'y1f-2-4', text: 'Clinical: XML or TSV files containing age, biological sex, tumor stage, and survival metrics.' },
-                    { id: 'y1f-2-5', text: 'Genomic: Masked Somatic Mutation files (VCFs) representing single nucleotide polymorphisms (SNPs).' },
-                  ],
+                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-2-neurological-alzheimer-s-disea",
+                  "text": "**Neurological:** Alzheimer's Disease via NCBI GEO. (Systemic, progressive structural degradation)."
                 },
-              ],
+                {
+                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-3-autoimmune-rheumatoid-arthriti",
+                  "text": "**Autoimmune:** Rheumatoid Arthritis via NCBI GEO. (Systemic, immune-driven inflammation)."
+                },
+                {
+                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-4-metabolic-type-2-diabetes-via",
+                  "text": "**Metabolic:** Type 2 Diabetes via GEO or `recountmethylation`. (Lifestyle, lipid/insulin driven)."
+                },
+                {
+                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-5-genetic-developmental-down-syn",
+                  "text": "**Genetic/Developmental:** Down Syndrome via GEO. (Innate chromosomal variation)."
+                }
+              ]
             },
             {
-              id: 'y1-spring', season: 'Spring', title: 'Data Preparation & Normalization',
-              goal: 'Construct the ETL (Extract, Transform, Load) pipeline to format the disparate data modalities for neural network ingestion.',
-              steps: [
+              "num": 2,
+              "title": "The Multi-Omic Data Modalities",
+              "tasks": [
                 {
-                  num: 1, title: 'Clinical Data Normalization',
-                  tasks: [
-                    { id: 'y1s-1-1', text: 'Apply one-hot encoding for categorical variables (e.g., gender, race).' },
-                    { id: 'y1s-1-2', text: 'Apply standard Z-score normalization for continuous variables (e.g., age, BMI).' },
-                  ],
+                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-1-epigenomic-the-anchor-dna-meth",
+                  "text": "**Epigenomic (The Anchor):** DNA Methylation arrays (Beta-values ranging from 0.0 to 1.0 at CpG sites)."
                 },
                 {
-                  num: 2, title: 'Methylation Data Dimensionality Reduction',
-                  tasks: [
-                    { id: 'y1s-2-1', text: 'Implement variance-based feature selection to isolate the top 10,000 most highly variable CpG sites across the dataset to prevent memory exhaustion.' },
-                  ],
+                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-2-transcriptomic-rna-seq-gene-ex",
+                  "text": "**Transcriptomic:** RNA-Seq Gene Expression (Continuous FPKM or TPM values)."
                 },
                 {
-                  num: 3, title: 'Unified Storage Architecture',
-                  tasks: [
-                    { id: 'y1s-3-1', text: 'Align all modalities using the universal Patient_ID.' },
-                    { id: 'y1s-3-2', text: 'Serialize the aligned tensors into high-performance HDF5 or Zarr files to ensure memory-mapped, zero-copy reading from disk to GPU during fast-paced Optuna trials.' },
-                  ],
-                },
-              ],
-            },
-            {
-              id: 'y1-summer', season: 'Summer', title: 'Model Building Blocks & "The Hub" Setup',
-              goal: 'Code the modular PyTorch network architectures and spin up the centralized database for parallelization.',
-              steps: [
-                {
-                  num: 1, title: 'Defining the Sub-Networks & Fusion Layers',
-                  tasks: [
-                    { id: 'y1u-1-1', text: 'Tabular/Clinical Branch: Multi-Layer Perceptrons (MLPs).' },
-                    { id: 'y1u-1-2', text: 'Methylation Branch: 1D-Convolutional Neural Networks (1D-CNNs) or lightweight Transformer Encoders.' },
-                    { id: 'y1u-1-3', text: 'Fusion Layers: Code Early Fusion (concatenation), Intermediate Fusion (cross-attention), and Late Fusion (ensemble) modules.' },
-                  ],
+                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-3-genomic-somatic-mutations-and",
+                  "text": "**Genomic:** Somatic Mutations and SNPs (Sparse binary matrices from VCF files)."
                 },
                 {
-                  num: 2, title: 'The Hub (Centralized Database Configuration)',
-                  tasks: [
-                    { id: 'y1u-2-1', text: 'Deploy a lightweight Docker container running PostgreSQL on your dedicated Hetzner Linux server.' },
-                    { id: 'y1u-2-2', text: 'This database acts as the centralized "brain" that will track the distributed trial history and prevent remote workers from evaluating duplicate architectures.' },
-                    { id: 'y1u-2-3', text: 'Configure network firewalls to securely accept connections from external university IP addresses.' },
-                  ],
+                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-4-structural-copy-number-variati",
+                  "text": "**Structural:** Copy Number Variations (Continuous Log2 copy ratios)."
                 },
-              ],
-            },
-          ],
+                {
+                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-5-demographic-clinical-age-sex-e",
+                  "text": "**Demographic/Clinical:** Age, Sex, Ethnicity, plus disease-specific targets (e.g., Tumor Stage for BRCA, Cognitive Score for Alzheimer's, Days to Live)."
+                }
+              ]
+            }
+          ]
         },
         {
-          id: 'y2', label: 'Year 2', subtitle: 'Distributed NAS Execution & Optimization',
-          color: '#8b5cf6',
-          semesters: [
+          "id": "y1-spring",
+          "season": "Spring",
+          "title": "5 Independent Pipelines & Normalization",
+          "goal": "Construct the ETL pipelines without flattening the data. Because each disease has unique clinical variables and available omics, you must build 5 distinct pipelines.",
+          "steps": [
             {
-              id: 'y2-fall', season: 'Fall', title: 'Distributed Optuna Integration (The Workers)',
-              goal: 'Write the "Define-by-Run" NAS engine and deploy the execution script across university compute clusters.',
-              steps: [
+              "num": 1,
+              "title": "The Universal Split (Train vs. Test)",
+              "tasks": [
                 {
-                  num: 1, title: 'Building the Search Space',
-                  tasks: [
-                    { id: 'y2f-1-1', text: 'Use Optuna\'s conditional logic to dynamically build models inside the objective function.' },
-                    { id: 'y2f-1-2', text: 'Structural Choices: Number of hidden layers (trial.suggest_int), layer widths (trial.suggest_categorical), and activation functions.' },
-                  ],
-                },
-                {
-                  num: 2, title: 'Worker Configuration & Parallelization',
-                  tasks: [
-                    { id: 'y2f-2-1', text: 'Code the Optuna initialization to strictly use storage="postgresql://..." and load_if_exists=True.' },
-                    { id: 'y2f-2-2', text: 'Execution Strategy: Parallelize the trials, not the individual training loops. Worker 1 handles Trial A while Worker 2 handles Trial B independently.' },
-                  ],
-                },
-                {
-                  num: 3, title: 'Deployment to University Clusters',
-                  tasks: [
-                    { id: 'y2f-3-1', text: 'Utilize GitHub Actions as your CI/CD runner to package your PyTorch/Optuna code.' },
-                    { id: 'y2f-3-2', text: 'Deploy the scripts to your university\'s remote compute servers (via Slurm job scheduler or direct SSH). Scale horizontally by spinning up as many worker nodes as your access permits.' },
-                  ],
-                },
-              ],
+                  "id": "year-1-spring-sec-1-the-universal-split-train-vs-t-item-1-extract-a-strict-20-holdout-te",
+                  "text": "Extract a strict **20% Holdout Test Set** for each of the 5 diseases before any preprocessing occurs."
+                }
+              ]
             },
             {
-              id: 'y2-spring', season: 'Spring', title: 'Model Training & Validation Strategy',
-              goal: 'Execute the search and rigorously validate the discovered architectures.',
-              steps: [
+              "num": 2,
+              "title": "The 5 Independent PyTorch `Dataset` Classes",
+              "tasks": [
                 {
-                  num: 1, title: 'The Holdout Set',
-                  tasks: [
-                    { id: 'y2s-1-1', text: 'Strictly partition 20% of the unified dataset into a "blind" Test Set before the search begins.' },
-                  ],
+                  "id": "year-1-spring-sec-2-the-5-independent-pytorch-data-item-1-write-5-separate-data-ingestio",
+                  "text": "Write 5 separate data ingestion scripts (e.g., `BRCADataset`, `AlzheimersDataset`)."
                 },
                 {
-                  num: 2, title: 'K-Fold Cross-Validation (The Search Phase)',
-                  tasks: [
-                    { id: 'y2s-2-1', text: 'For the remaining 80% of the data, implement 5-Fold Cross-Validation within the Optuna objective function running on the university nodes.' },
-                  ],
-                },
-                {
-                  num: 3, title: 'Pruning Mechanisms',
-                  tasks: [
-                    { id: 'y2s-3-1', text: 'Implement Optuna\'s HyperbandPruner to monitor the training loss of unpromising neural architectures and terminate them early, saving massive amounts of university GPU compute time.' },
-                  ],
-                },
-              ],
+                  "id": "year-1-spring-sec-2-the-5-independent-pytorch-data-item-2-this-ensures-disease-specific",
+                  "text": "This ensures disease-specific clinical variables are perfectly preserved. If a dataset lacks a specific omic layer (e.g., no RNA-Seq for Rheumatoid Arthritis), that specific pipeline simply omits the RNA-Seq tensor without breaking the universal code."
+                }
+              ]
             },
             {
-              id: 'y2-summer', season: 'Summer', title: 'Architecture Refinement & Analysis',
-              goal: 'Lock in the final model and evaluate its performance against biological reality.',
-              steps: [
+              "num": 3,
+              "title": "Dynamic Normalization (Applied to the 80% Training Set)",
+              "tasks": [
                 {
-                  num: 1, title: 'Final Evaluation',
-                  tasks: [
-                    { id: 'y2u-1-1', text: 'Extract the single highest-performing multi-modal architecture discovered in the PostgreSQL database.' },
-                    { id: 'y2u-1-2', text: 'Train this final model from scratch on the entire 80% training set and evaluate it against the 20% blind Test Set to generate final accuracy, precision, and AUC-ROC metrics.' },
-                  ],
+                  "id": "year-1-spring-sec-3-dynamic-normalization-applied-item-1-demographics-z-score-standardi",
+                  "text": "*Demographics:* Z-score standardization for continuous arrays; One-Hot Encoding for categorical."
                 },
                 {
-                  num: 2, title: 'Interpretability',
-                  tasks: [
-                    { id: 'y2u-2-1', text: 'Implement SHAP (SHapley Additive exPlanations) or Integrated Gradients to trace the model\'s predictions back to specific biological features.' },
-                  ],
-                },
-              ],
+                  "id": "year-1-spring-sec-3-dynamic-normalization-applied-item-2-methylation-transcriptomics-va",
+                  "text": "*Methylation/Transcriptomics:* Variance-based dimensionality reduction to isolate the top 10,000 highly variable features, preventing GPU memory exhaustion."
+                }
+              ]
             },
-          ],
+            {
+              "num": 4,
+              "title": "Unified Storage",
+              "tasks": [
+                {
+                  "id": "year-1-spring-sec-4-unified-storage-item-1-serialize-the-processed-multi",
+                  "text": "Serialize the processed, multi-modal tensors into 5 distinct, partitioned `HDF5` databases."
+                }
+              ]
+            }
+          ]
         },
         {
-          id: 'y3', label: 'Year 3', subtitle: 'Final Deliverable & Thesis',
-          color: '#06b6d4',
-          semesters: [
+          "id": "y1-summer",
+          "season": "Summer",
+          "title": "Software Stack & Hub Setup",
+          "goal": "Provision the remote execution servers and establish the Python ecosystem.",
+          "steps": [
             {
-              id: 'y3-fall', season: 'Fall', title: 'Software Application Development',
-              goal: 'Build the patient-facing inference application.',
-              steps: [
+              "num": 1,
+              "title": "The Core Stack",
+              "tasks": [
                 {
-                  num: 1, title: 'The Inference Engine',
-                  tasks: [
-                    { id: 'y3f-1-1', text: 'Export the PyTorch model weights via TorchScript or ONNX for optimized, low-latency execution.' },
-                  ],
-                },
-                {
-                  num: 2, title: 'The User Interface',
-                  tasks: [
-                    { id: 'y3f-2-1', text: 'Build a lightweight frontend (e.g., Streamlit, React, or Vue) where a user can securely upload their raw .CSV or .TXT methylation and clinical data.' },
-                    { id: 'y3f-2-2', text: 'Implement a parser that instantly formats the user\'s data to match the pipeline developed in Year 1.' },
-                  ],
-                },
-                {
-                  num: 3, title: 'Deployment',
-                  tasks: [
-                    { id: 'y3f-3-1', text: 'Containerize the entire application using Docker. Push the image via CI/CD to a production-ready web environment. The software will output the phenotypic prediction alongside a statistical confidence score.' },
-                  ],
-                },
-              ],
+                  "id": "year-1-summer-sec-1-the-core-stack-item-1-torch-optuna-scikit-learn-xgbo",
+                  "text": "`torch`, `optuna`, `scikit-learn`, `xgboost`, `h5py`, `pandas`, `numpy`."
+                }
+              ]
             },
             {
-              id: 'y3-spring', season: 'Spring', title: 'Thesis Writing & Defense',
-              goal: 'Synthesize the computational novelty of the project.',
-              steps: [
+              "num": 2,
+              "title": "The Central Database Hub",
+              "tasks": [
                 {
-                  num: 1, title: 'The CS Focus',
-                  tasks: [
-                    { id: 'y3s-1-1', text: 'Emphasize the efficiency of the search space design, the horizontal scalability of the distributed workers, and the computational overhead reduced through pruning.' },
-                  ],
+                  "id": "year-1-summer-sec-2-the-central-database-hub-item-1-deploy-a-dockerized-postgresql",
+                  "text": "Deploy a Dockerized PostgreSQL database (`psycopg2-binary`) on a dedicated Linux server to track the distributed Optuna trials for all 5 independent disease pipelines concurrently."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "y2",
+      "label": "Year 2",
+      "subtitle": "Distributed NAS & Multi-Task Execution",
+      "color": "#8b5cf6",
+      "semesters": [
+        {
+          "id": "y2-fall",
+          "season": "Fall",
+          "title": "Defining the Multi-Omic Architecture Toolkit",
+          "goal": "Code the PyTorch algorithmic blueprints that Optuna will dynamically assemble.",
+          "steps": [
+            {
+              "num": 1,
+              "title": "The Multi-Branched Network Body",
+              "tasks": [
+                {
+                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-1-tabular-branch-demographics-ml",
+                  "text": "*Tabular Branch (Demographics):* MLPs or TabNet."
                 },
                 {
-                  num: 2, title: 'Visualization',
-                  tasks: [
-                    { id: 'y3s-2-1', text: 'Generate Pareto front charts demonstrating how the automated NAS discovered highly accurate models faster than manual hyperparameter tuning.' },
-                  ],
+                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-2-epigenomic-transcriptomic-bran",
+                  "text": "*Epigenomic/Transcriptomic Branch:* 1D-CNNs or Transformer Encoders for dense continuous sequences."
                 },
-              ],
+                {
+                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-3-genomic-cnv-branch-sparse-line",
+                  "text": "*Genomic/CNV Branch:* Sparse linear layers."
+                },
+                {
+                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-4-fusion-layers-code-early-conca",
+                  "text": "*Fusion Layers:* Code Early (Concatenation) and Intermediate (Cross-Attention) fusion modules. Optuna will dynamically skip omic branches if a specific pipeline (like Alzheimer's) does not provide that data."
+                }
+              ]
             },
             {
-              id: 'y3-summer', season: 'Summer', title: 'Open Source Release & Publication',
-              goal: 'Finalize the academic output.',
-              steps: [
+              "num": 2,
+              "title": "The Multi-Task Learning (MTL) Heads",
+              "tasks": [
                 {
-                  num: 1, title: 'Code Release',
-                  tasks: [
-                    { id: 'y3u-1-1', text: 'Clean and document the GitHub repository, providing instructions for how other researchers can connect to their own databases to utilize your distributed NAS framework.' },
-                  ],
+                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-1-design-the-network-to-split-in",
+                  "text": "Design the network to split into three output heads:"
                 },
                 {
-                  num: 2, title: 'Publication',
-                  tasks: [
-                    { id: 'y3u-2-1', text: 'Submit the methodology to a computational biology or applied machine learning conference (e.g., ISMB, NeurIPS ML4H).' },
-                  ],
+                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-2-diagnostic-head-binary-multi-c",
+                  "text": "**Diagnostic Head:** Binary/Multi-class Softmax layer predicting disease presence."
                 },
-              ],
-            },
-          ],
+                {
+                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-3-staging-head-ordinal-classific",
+                  "text": "**Staging Head:** Ordinal classification layer predicting severity/progression."
+                },
+                {
+                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-4-prognostic-head-linear-regress",
+                  "text": "**Prognostic Head:** Linear regression layer predicting timelines (Days to Live)."
+                }
+              ]
+            }
+          ]
         },
-      ],
-    };
+        {
+          "id": "y2-spring",
+          "season": "Spring",
+          "title": "Execution & K-Fold Cross-Validation",
+          "goal": "Execute the NAS engines across university compute clusters.",
+          "steps": [
+            {
+              "num": 1,
+              "title": "Optuna Objective Function",
+              "tasks": [
+                {
+                  "id": "year-2-spring-sec-1-optuna-objective-function-item-1-train-architectures-using-5-fo",
+                  "text": "Train architectures using **5-Fold Cross-Validation** exclusively on the 80% Training Set."
+                },
+                {
+                  "id": "year-2-spring-sec-1-optuna-objective-function-item-2-program-optuna-to-automaticall",
+                  "text": "Program Optuna to automatically tune the weights of the combined MTL loss function."
+                }
+              ]
+            },
+            {
+              "num": 2,
+              "title": "Parallel Execution",
+              "tasks": [
+                {
+                  "id": "year-2-spring-sec-2-parallel-execution-item-1-deploy-execution-scripts-to-sl",
+                  "text": "Deploy execution scripts to Slurm clusters, pointed at the PostgreSQL database (`load_if_exists=True`). Use `HyperbandPruner` to terminate unpromising architectures."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y2-summer",
+          "season": "Summer",
+          "title": "Holdout Evaluation & Benchmarking",
+          "goal": "Evaluate the discovered architectures against classical models.",
+          "steps": [
+            {
+              "num": 1,
+              "title": "The 20% Holdout Evaluation",
+              "tasks": [
+                {
+                  "id": "year-2-summer-sec-1-the-20-holdout-evaluation-item-1-extract-the-single-optimal-mul",
+                  "text": "Extract the single optimal multi-task architecture for each of the 5 diseases."
+                },
+                {
+                  "id": "year-2-summer-sec-1-the-20-holdout-evaluation-item-2-train-from-scratch-on-the-full",
+                  "text": "Train from scratch on the full 80% dataset, then evaluate against the untouched 20% Test Set to generate final ROC-AUC and Mean Squared Error metrics."
+                }
+              ]
+            },
+            {
+              "num": 2,
+              "title": "Classical Benchmarking",
+              "tasks": [
+                {
+                  "id": "year-2-summer-sec-2-classical-benchmarking-item-1-train-baseline-xgboost-and-ela",
+                  "text": "Train baseline XGBoost and ElasticNet models on the tabular/methylation data to prove whether the deep multi-omic neural networks statistically outperformed standard tree-based methods."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "y3",
+      "label": "Year 3",
+      "subtitle": "Synthesis & Final Deliverables",
+      "color": "#06b6d4",
+      "semesters": [
+        {
+          "id": "y3-fall",
+          "season": "Fall",
+          "title": "Interpretability & The Patient Portal",
+          "goal": "Build the end-to-end inference software.",
+          "steps": [
+            {
+              "num": 1,
+              "title": "Interpretability (SHAP)",
+              "tasks": [
+                {
+                  "id": "year-3-fall-sec-1-interpretability-shap-item-1-map-feature-importance-determi",
+                  "text": "Map feature importance. Determine which specific omic layer or demographic variable drove the predictions for each distinct disease category."
+                }
+              ]
+            },
+            {
+              "num": 2,
+              "title": "The Universal Inference Application",
+              "tasks": [
+                {
+                  "id": "year-3-fall-sec-2-the-universal-inference-applic-item-1-build-a-streamlit-web-interfac",
+                  "text": "Build a `streamlit` web interface."
+                },
+                {
+                  "id": "year-3-fall-sec-2-the-universal-inference-applic-item-2-a-user-selects-the-disease-cat",
+                  "text": "A user selects the disease category, uploads the available patient demographics and raw omic `.CSV` files."
+                },
+                {
+                  "id": "year-3-fall-sec-2-the-universal-inference-applic-item-3-the-software-passes-the-data-t",
+                  "text": "The software passes the data through the specific optimized PyTorch model and outputs the Disease Probability, Predicted Stage, and Prognostic Timeline."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y3-springsummer",
+          "season": "Spring & Summer",
+          "title": "Thesis Defense & Publication",
+          "goal": "Synthesize the meta-methodology.",
+          "steps": [
+            {
+              "num": 2,
+              "title": "The Universal Inference Application",
+              "tasks": [
+                {
+                  "id": "year-3-spring-summer-sec-2-the-universal-inference-applic-item-4-1-the-cs-focus-document-the-st",
+                  "text": "**1. The CS Focus:** Document the structural taxonomy. Did systemic diseases inherently favor self-attention (Transformers) while localized cancers favored spatial architectures (CNNs)?"
+                },
+                {
+                  "id": "year-3-spring-summer-sec-2-the-universal-inference-applic-item-5-2-publication-open-source-the",
+                  "text": "**2. Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit findings to computational biology conferences (e.g., ISMB, NeurIPS)."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
 
-    const STORAGE_KEY = 'phd_plan_progress';
-    const SEASON_COLORS = { Fall: '#f59e0b', Spring: '#10b981', Summer: '#3b82f6' };
+    const STORAGE_KEY = 'phd_plan_progress_v2';
+    const SEASON_COLORS = { Fall: '#f59e0b', Spring: '#10b981', 'Spring & Summer': '#14b8a6', Summer: '#3b82f6' };
 
     // ─── State ────────────────────────────────────────────────────────────────
     let progress = loadProgress();

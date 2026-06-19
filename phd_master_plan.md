@@ -1,159 +1,102 @@
-# PhD Master Roadmap: Automated Neural Architecture Search for Epigenomic Phenotype Prediction
+# PhD Master Roadmap: Comparative Neural Architecture Search for Multi-Task, Multi-Omic Disease Prediction
 
 ## Core Objective
-
-Develop a high-performance Neural Architecture Search (NAS) framework utilizing Optuna to autonomously discover the optimal multi-modal fusion network. This network will predict a specific disease phenotype by integrating DNA methylation arrays, genetic variants, and tabular clinical data. The final deliverable is an end-to-end software application for patient-specific inference.
-
----
-
-## Year 1: Foundation, Data Engineering & Central Infrastructure
-
-### Fall Semester: Phenotype Selection & Data Sourcing
-
-**Goal:** Define the biological scope and secure the raw datasets.
-
-#### 1. Disease Phenotype Selection
-
-- **Criteria:** Focus on a disease with a highly documented epigenetic footprint and massive amounts of open-access data. Avoid rare diseases to ensure statistical significance.
-- **Action:** Target Breast Invasive Carcinoma (BRCA) or Lung Adenocarcinoma (LUAD).
-- **Phenotype Target:** Define the prediction goal as a binary classification (Disease vs. Healthy Tissue) or a multi-class prediction (Tumor Stage I, II, III, IV).
-
-#### 2. Data Sourcing (The Cancer Genome Atlas - TCGA)
-
-- **Repository:** Navigate to the NCI Genomic Data Commons (GDC) Portal.
-- **Access Level:** Filter strictly for "Level 3 Open Access" data, which requires no institutional IRB approval and contains pre-processed, de-identified patient data.
-- **Data Types to Download:**
-  - **Methylation:** Illumina HumanMethylation450 or EPIC array data (beta-values).
-  - **Clinical:** XML or TSV files containing age, biological sex, tumor stage, and survival metrics.
-  - **Genomic:** Masked Somatic Mutation files (VCFs) representing single nucleotide polymorphisms (SNPs).
-
-### Spring Semester: Data Preparation & Normalization
-
-**Goal:** Construct the ETL (Extract, Transform, Load) pipeline to format the disparate data modalities for neural network ingestion.
-
-#### 1. Clinical Data Normalization
-
-- Apply one-hot encoding for categorical variables (e.g., gender, race).
-- Apply standard Z-score normalization for continuous variables (e.g., age, BMI).
-
-#### 2. Methylation Data Dimensionality Reduction
-
-- Implement variance-based feature selection to isolate the top 10,000 most highly variable CpG sites across the dataset to prevent memory exhaustion.
-
-#### 3. Unified Storage Architecture
-
-- Align all modalities using the universal `Patient_ID`.
-- Serialize the aligned tensors into high-performance `HDF5` or `Zarr` files to ensure memory-mapped, zero-copy reading from disk to GPU during fast-paced Optuna trials.
-
-### Summer Semester: Model Building Blocks & "The Hub" Setup
-
-**Goal:** Code the modular PyTorch network architectures and spin up the centralized database for parallelization.
-
-#### 1. Defining the Sub-Networks & Fusion Layers
-
-- **Tabular/Clinical Branch:** Multi-Layer Perceptrons (MLPs).
-- **Methylation Branch:** 1D-Convolutional Neural Networks (1D-CNNs) or lightweight Transformer Encoders.
-- **Fusion Layers:** Code Early Fusion (concatenation), Intermediate Fusion (cross-attention), and Late Fusion (ensemble) modules.
-
-#### 2. The Hub (Centralized Database Configuration)
-
-- Deploy a lightweight Docker container running PostgreSQL on your dedicated Hetzner Linux server.
-- This database acts as the centralized "brain" that will track the distributed trial history and prevent remote workers from evaluating duplicate architectures.
-- Configure network firewalls to securely accept connections from external university IP addresses.
+Develop a high-performance, distributed Neural Architecture Search (NAS) framework utilizing Optuna to discover the optimal computational networks across 5 fundamental disease categories. The system will ingest multi-omic data (Methylation, Transcriptomics, Genomics, CNVs) and patient demographics via 5 independent ETL pipelines. Final architectures will use Multi-Task Learning (MTL) to simultaneously predict disease presence, staging, and prognostic survival timelines.
 
 ---
 
-## Year 2: Distributed NAS Execution & Optimization
+## Year 1: The 5-Category Sourcing & Multi-Omic ETL
 
-### Fall Semester: Distributed Optuna Integration (The Workers)
+### Fall Semester: 5-Category Disease Selection & Sourcing
+**Goal:** Secure high-quality datasets representing the 5 major disease topologies to prove how biological etiology dictates neural network structure.
 
-**Goal:** Write the "Define-by-Run" NAS engine and deploy the execution script across university compute clusters.
+* **1. The 5 Disease Targets:**
+    * **Oncological:** Breast Invasive Carcinoma (BRCA) via TCGA. (Localized, high mutational burden).
+    * **Neurological:** Alzheimer's Disease via NCBI GEO. (Systemic, progressive structural degradation).
+    * **Autoimmune:** Rheumatoid Arthritis via NCBI GEO. (Systemic, immune-driven inflammation).
+    * **Metabolic:** Type 2 Diabetes via GEO or `recountmethylation`. (Lifestyle, lipid/insulin driven).
+    * **Genetic/Developmental:** Down Syndrome via GEO. (Innate chromosomal variation).
+* **2. The Multi-Omic Data Modalities:**
+    * **Epigenomic (The Anchor):** DNA Methylation arrays (Beta-values ranging from 0.0 to 1.0 at CpG sites).
+    * **Transcriptomic:** RNA-Seq Gene Expression (Continuous FPKM or TPM values).
+    * **Genomic:** Somatic Mutations and SNPs (Sparse binary matrices from VCF files).
+    * **Structural:** Copy Number Variations (Continuous Log2 copy ratios).
+    * **Demographic/Clinical:** Age, Sex, Ethnicity, plus disease-specific targets (e.g., Tumor Stage for BRCA, Cognitive Score for Alzheimer's, Days to Live).
 
-#### 1. Building the Search Space
+### Spring Semester: 5 Independent Pipelines & Normalization
+**Goal:** Construct the ETL pipelines without flattening the data. Because each disease has unique clinical variables and available omics, you must build 5 distinct pipelines.
 
-- Use Optuna's conditional logic to dynamically build models inside the objective function.
-- **Structural Choices:** Number of hidden layers (`trial.suggest_int`), layer widths (`trial.suggest_categorical`), and activation functions.
+* **1. The Universal Split (Train vs. Test):**
+    * Extract a strict **20% Holdout Test Set** for each of the 5 diseases before any preprocessing occurs.
+* **2. The 5 Independent PyTorch `Dataset` Classes:**
+    * Write 5 separate data ingestion scripts (e.g., `BRCADataset`, `AlzheimersDataset`). 
+    * This ensures disease-specific clinical variables are perfectly preserved. If a dataset lacks a specific omic layer (e.g., no RNA-Seq for Rheumatoid Arthritis), that specific pipeline simply omits the RNA-Seq tensor without breaking the universal code.
+* **3. Dynamic Normalization (Applied to the 80% Training Set):**
+    * *Demographics:* Z-score standardization for continuous arrays; One-Hot Encoding for categorical.
+    * *Methylation/Transcriptomics:* Variance-based dimensionality reduction to isolate the top 10,000 highly variable features, preventing GPU memory exhaustion.
+* **4. Unified Storage:**
+    * Serialize the processed, multi-modal tensors into 5 distinct, partitioned `HDF5` databases.
 
-#### 2. Worker Configuration & Parallelization
+### Summer Semester: Software Stack & Hub Setup
+**Goal:** Provision the remote execution servers and establish the Python ecosystem.
 
-- Code the Optuna initialization to strictly use `storage="postgresql://..."` and `load_if_exists=True`.
-- **Execution Strategy:** Parallelize the *trials*, not the individual training loops. Worker 1 handles Trial A while Worker 2 handles Trial B independently.
-
-#### 3. Deployment to University Clusters
-
-- Utilize GitHub Actions as your CI/CD runner to package your PyTorch/Optuna code.
-- Deploy the scripts to your university's remote compute servers (via Slurm job scheduler or direct SSH). Scale horizontally by spinning up as many worker nodes as your access permits.
-
-### Spring Semester: Model Training & Validation Strategy
-
-**Goal:** Execute the search and rigorously validate the discovered architectures.
-
-#### 1. The Holdout Set
-
-- Strictly partition 20% of the unified dataset into a "blind" Test Set before the search begins.
-
-#### 2. K-Fold Cross-Validation (The Search Phase)
-
-- For the remaining 80% of the data, implement 5-Fold Cross-Validation within the Optuna objective function running on the university nodes.
-
-#### 3. Pruning Mechanisms
-
-- Implement Optuna's `HyperbandPruner` to monitor the training loss of unpromising neural architectures and terminate them early, saving massive amounts of university GPU compute time.
-
-### Summer Semester: Architecture Refinement & Analysis
-
-**Goal:** Lock in the final model and evaluate its performance against biological reality.
-
-#### 1. Final Evaluation
-
-- Extract the single highest-performing multi-modal architecture discovered in the PostgreSQL database.
-- Train this final model from scratch on the entire 80% training set and evaluate it against the 20% blind Test Set to generate final accuracy, precision, and AUC-ROC metrics.
-
-#### 2. Interpretability
-
-- Implement SHAP (SHapley Additive exPlanations) or Integrated Gradients to trace the model's predictions back to specific biological features.
+* **1. The Core Stack:**
+    * `torch`, `optuna`, `scikit-learn`, `xgboost`, `h5py`, `pandas`, `numpy`.
+* **2. The Central Database Hub:**
+    * Deploy a Dockerized PostgreSQL database (`psycopg2-binary`) on a dedicated Linux server to track the distributed Optuna trials for all 5 independent disease pipelines concurrently.
 
 ---
 
-## Year 3: Final Deliverable & Thesis
+## Year 2: Distributed NAS & Multi-Task Execution
 
-### Fall Semester: Software Application Development
+### Fall Semester: Defining the Multi-Omic Architecture Toolkit
+**Goal:** Code the PyTorch algorithmic blueprints that Optuna will dynamically assemble.
 
-**Goal:** Build the patient-facing inference application.
+* **1. The Multi-Branched Network Body:**
+    * *Tabular Branch (Demographics):* MLPs or TabNet.
+    * *Epigenomic/Transcriptomic Branch:* 1D-CNNs or Transformer Encoders for dense continuous sequences.
+    * *Genomic/CNV Branch:* Sparse linear layers.
+    * *Fusion Layers:* Code Early (Concatenation) and Intermediate (Cross-Attention) fusion modules. Optuna will dynamically skip omic branches if a specific pipeline (like Alzheimer's) does not provide that data.
+* **2. The Multi-Task Learning (MTL) Heads:**
+    * Design the network to split into three output heads:
+        * **Diagnostic Head:** Binary/Multi-class Softmax layer predicting disease presence.
+        * **Staging Head:** Ordinal classification layer predicting severity/progression.
+        * **Prognostic Head:** Linear regression layer predicting timelines (Days to Live).
 
-#### 1. The Inference Engine
+### Spring Semester: Execution & K-Fold Cross-Validation
+**Goal:** Execute the NAS engines across university compute clusters.
 
-- Export the PyTorch model weights via TorchScript or ONNX for optimized, low-latency execution.
+* **1. Optuna Objective Function:**
+    * Train architectures using **5-Fold Cross-Validation** exclusively on the 80% Training Set.
+    * Program Optuna to automatically tune the weights of the combined MTL loss function.
+* **2. Parallel Execution:**
+    * Deploy execution scripts to Slurm clusters, pointed at the PostgreSQL database (`load_if_exists=True`). Use `HyperbandPruner` to terminate unpromising architectures.
 
-#### 2. The User Interface
+### Summer Semester: Holdout Evaluation & Benchmarking
+**Goal:** Evaluate the discovered architectures against classical models.
 
-- Build a lightweight frontend (e.g., Streamlit, React, or Vue) where a user can securely upload their raw `.CSV` or `.TXT` methylation and clinical data.
-- Implement a parser that instantly formats the user's data to match the pipeline developed in Year 1.
+* **1. The 20% Holdout Evaluation:**
+    * Extract the single optimal multi-task architecture for each of the 5 diseases.
+    * Train from scratch on the full 80% dataset, then evaluate against the untouched 20% Test Set to generate final ROC-AUC and Mean Squared Error metrics.
+* **2. Classical Benchmarking:**
+    * Train baseline XGBoost and ElasticNet models on the tabular/methylation data to prove whether the deep multi-omic neural networks statistically outperformed standard tree-based methods.
 
-#### 3. Deployment
+---
 
-- Containerize the entire application using Docker. Push the image via CI/CD to a production-ready web environment. The software will output the phenotypic prediction alongside a statistical confidence score.
+## Year 3: Synthesis & Final Deliverables
 
-### Spring Semester: Thesis Writing & Defense
+### Fall Semester: Interpretability & The Patient Portal
+**Goal:** Build the end-to-end inference software.
 
-**Goal:** Synthesize the computational novelty of the project.
+* **1. Interpretability (SHAP):**
+    * Map feature importance. Determine which specific omic layer or demographic variable drove the predictions for each distinct disease category.
+* **2. The Universal Inference Application:**
+    * Build a `streamlit` web interface.
+    * A user selects the disease category, uploads the available patient demographics and raw omic `.CSV` files.
+    * The software passes the data through the specific optimized PyTorch model and outputs the Disease Probability, Predicted Stage, and Prognostic Timeline.
 
-#### 1. The CS Focus
+### Spring & Summer Semesters: Thesis Defense & Publication
+**Goal:** Synthesize the meta-methodology.
 
-- Emphasize the efficiency of the search space design, the horizontal scalability of the distributed workers, and the computational overhead reduced through pruning.
-
-#### 2. Visualization
-
-- Generate Pareto front charts demonstrating how the automated NAS discovered highly accurate models faster than manual hyperparameter tuning.
-
-### Summer Semester: Open Source Release & Publication
-
-**Goal:** Finalize the academic output.
-
-#### 1. Code Release
-
-- Clean and document the GitHub repository, providing instructions for how other researchers can connect to their own databases to utilize your distributed NAS framework.
-
-#### 2. Publication
-
-- Submit the methodology to a computational biology or applied machine learning conference (e.g., ISMB, NeurIPS ML4H).
+* **1. The CS Focus:** Document the structural taxonomy. Did systemic diseases inherently favor self-attention (Transformers) while localized cancers favored spatial architectures (CNNs)?
+* **2. Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit findings to computational biology conferences (e.g., ISMB, NeurIPS).
