@@ -10,8 +10,8 @@ The sync script:
 
 1. Parses every checklist item in your 3-year master plan
 2. Creates one GitHub **issue** per task (with labels and context in the body)
-3. Adds each issue to your **Project v2** board
-4. Sets custom fields: **Year**, **Semester**, **Section**, and **Status** (if present)
+3. Adds each issue to your **repo-linked Project v2** board
+4. Sets custom fields: **Year**, **Semester**, **Section**, **Phase**, and **Status** (if present)
 5. Skips tasks that already exist (idempotent via `<!-- phd-sync-id: ... -->` markers)
 
 ---
@@ -21,7 +21,7 @@ The sync script:
 If you do not already have a repo for PhD tracking:
 
 1. Go to [https://github.com/new](https://github.com/new)
-2. Name it something like `phd-nas-roadmap`
+2. Name it e.g. `PhDNeural`
 3. Choose **Private** (recommended for research notes)
 4. You do **not** need to initialize with a README if this folder is your local workspace
 
@@ -30,24 +30,38 @@ Optional — link this local folder later:
 ```powershell
 cd C:\PhD
 git init
-git remote add origin https://github.com/YOUR_USERNAME/phd-nas-roadmap.git
+git remote add origin https://github.com/YOUR_USERNAME/PhDNeural.git
 ```
 
 > The sync script does **not** require git to be initialized locally. It only needs API access to the remote repo.
 
 ---
 
-## Step 2: Create a GitHub Project (v2)
+## Step 2: Create a Repo-Linked GitHub Project (v2)
 
-1. Open your repository on GitHub
+Use a **repository-linked** project (not a standalone user-level board) so the project appears under **Repository → Projects** and works with the default `GITHUB_TOKEN` in GitHub Actions.
+
+### Create and link the project
+
+1. Open your repository on GitHub (e.g. `AdamCankaya/PhDNeural`)
 2. Click **Projects** → **New project**
 3. Choose **Board** layout (recommended for kanban-style tracking)
 4. Name it e.g. `PhD Master Plan`
 5. Note the project **number** from the URL:
-   - `https://github.com/users/YOUR_USERNAME/projects/3` → number is **3**
-   - Or for org projects: `https://github.com/orgs/ORG/projects/2` → number is **2**
+   - Repo-linked: `https://github.com/AdamCankaya/PhDNeural/projects/2` → number is **2**
+   - Or from the user URL: `https://github.com/users/YOUR_USERNAME/projects/2` → number is **2**
 
-The script will automatically create **Year**, **Semester**, and **Section** custom fields if they do not exist. GitHub's built-in **Status** field is used when available.
+### Link an existing user project to the repo (optional)
+
+If you already created a user-level project, link it to the repository:
+
+```powershell
+gh project link 2 --owner YOUR_USERNAME --repo PhDNeural
+```
+
+After linking, the project appears under the repository's **Projects** tab.
+
+The script will automatically create **Year**, **Semester**, **Section**, and **Phase** custom fields if they do not exist. GitHub's built-in **Status** field is used when available.
 
 ---
 
@@ -103,8 +117,9 @@ Edit `github_sync.config.json`:
 ```json
 {
   "GITHUB_OWNER": "your-github-username",
-  "GITHUB_REPO": "phd-nas-roadmap",
-  "GITHUB_PROJECT_NUMBER": 1
+  "GITHUB_REPO": "PhDNeural",
+  "GITHUB_PROJECT_NUMBER": 2,
+  "GITHUB_PROJECT_SCOPE": "repository"
 }
 ```
 
@@ -113,6 +128,7 @@ Edit `github_sync.config.json`:
 | `GITHUB_OWNER` | Your GitHub username or organization name |
 | `GITHUB_REPO` | Repository where issues will be created |
 | `GITHUB_PROJECT_NUMBER` | Project number from the project URL |
+| `GITHUB_PROJECT_SCOPE` | Set to `repository` when the project is linked to the repo (recommended) |
 
 Environment variables override the config file if set.
 
@@ -127,7 +143,7 @@ cd C:\PhD
 python scripts/sync_phd_to_github.py --parse-only
 ```
 
-You should see ~40 checklist items grouped by year, semester, and section.
+You should see ~38 checklist items grouped by year, semester, and section.
 
 ---
 
@@ -160,12 +176,12 @@ On first run, the script will:
 - Create labels: `phd-sync`, `year-1`, `year-2`, `year-3`, `fall`, `spring`, `summer`, plus category labels
 - Create one issue per checklist item
 - Add each issue to your project board
-- Set **Year**, **Semester**, and **Section** custom fields
+- Set **Year**, **Semester**, **Section**, and **Phase** custom fields
 - Save state to `.phd-github-sync.json`
 
 Re-running is safe: existing tasks (matched by sync ID in the issue body) are **skipped**.
 
-To refresh issue titles/bodies after editing the master plan:
+To refresh issue titles/bodies and project fields after editing the master plan:
 
 ```powershell
 python scripts/sync_phd_to_github.py --update-existing
@@ -173,7 +189,29 @@ python scripts/sync_phd_to_github.py --update-existing
 
 ---
 
-## Step 8: Mark Tasks Done in GitHub Projects
+## Step 8: Group by Year or Phase in the Project UI
+
+The GitHub Projects API cannot set a default board view. Configure grouping manually:
+
+1. Open your project: **Repository → Projects → PhD Master Plan**
+   - URL: `https://github.com/AdamCankaya/PhDNeural/projects/N`
+2. Click the **⋯** menu on the board view (or **View options**)
+3. Choose **Group by** → **Phase** (recommended) or **Year**
+4. Optionally save this as your default view
+
+### Phase field values
+
+| Phase | Maps to | Description |
+|-------|---------|-------------|
+| `Phase 1: Data & ETL` | Year 1 | Data sourcing, ETL, and foundation work |
+| `Phase 2: NAS & MTL` | Year 2 | Neural architecture search and multi-task learning |
+| `Phase 3: Portal & Thesis` | Year 3 | Portal delivery and thesis milestones |
+
+The sync script sets **Phase** automatically from each task's year.
+
+---
+
+## Step 9: Mark Tasks Done in GitHub Projects
 
 ### On the Project board
 
@@ -195,7 +233,7 @@ python scripts/sync_phd_to_github.py --update-existing
 | In Progress | Open | Actively working |
 | Done | Closed | Completed |
 
-You can filter the board by **Year** or **Semester** using the custom fields.
+You can filter the board by **Year**, **Semester**, or **Phase** using the custom fields.
 
 ---
 
@@ -225,10 +263,10 @@ Before using it, set repository **Variables** (Settings → Secrets and variable
 | Variable | Example |
 |----------|---------|
 | `GITHUB_OWNER` | `your-username` |
-| `GITHUB_REPO` | `phd-nas-roadmap` |
-| `GITHUB_PROJECT_NUMBER` | `1` |
+| `GITHUB_REPO` | `PhDNeural` |
+| `GITHUB_PROJECT_NUMBER` | `2` |
 
-The default `GITHUB_TOKEN` in Actions has access to the same repository. For **user-level** projects (not linked to the repo), you may need a Personal Access Token stored as a secret instead.
+The default `GITHUB_TOKEN` in Actions has access to the same repository and repo-linked projects. No extra PAT is needed when the project is linked to the repo.
 
 Use the workflow when you update `phd_master_plan.md` in the repo and want to re-sync without running locally.
 
@@ -243,8 +281,8 @@ Ensure `github_sync.config.json` exists or set `GITHUB_OWNER`, `GITHUB_REPO`, an
 ### `Project #N not found`
 
 - Confirm the project number from the URL
-- For user projects, `GITHUB_OWNER` must be your username
-- For org projects, use the org name
+- Ensure the project is **linked to the repository** (`gh project link N --owner USER --repo REPO`)
+- For repo-linked projects, set `GITHUB_REPO` in config so the script queries via the repository
 
 ### `GraphQL error: Resource not accessible`
 
@@ -277,8 +315,9 @@ The script pauses briefly between API calls. For large plans, if you hit limits,
 ## API Limitations
 
 - **Projects v2 only** — classic projects are not supported
-- **User vs org projects** — the script queries both; owner must match project owner
+- **Repo-linked projects** — recommended; the script resolves projects via `repository(owner, name).projectV2(number)`
 - **Custom field creation** — requires `project` scope; fields are created once per project
+- **Default board view** — Group by Phase/Year must be set manually in the GitHub UI
 - **Status field** — uses GitHub's built-in Status options (Todo, In Progress, Done); names must match your project
 - **Issue search** — idempotency relies on the `phd-sync` label and body marker, not full-text search
 - **Nested checklist changes** — editing the master plan may change task IDs for reordered items (treated as new tasks)

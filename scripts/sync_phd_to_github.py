@@ -24,7 +24,7 @@ from github_projects import (
     resolve_token,
     validate_config,
 )
-from phd_parser import SEMESTER_DISPLAY, PhdTask, load_tasks
+from phd_parser import PHASE_OPTIONS, SEMESTER_DISPLAY, PhdTask, load_tasks
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_STATE_PATH = ROOT / ".phd-github-sync.json"
@@ -138,9 +138,17 @@ def setup_project_fields(
         project_id, "Semester", semesters, project_fields
     )
     section_field = client.ensure_text_field(project_id, "Section", project_fields)
+    phase_field = client.ensure_single_select_field(
+        project_id, "Phase", PHASE_OPTIONS, project_fields
+    )
 
     return (
-        {"year": year_field, "semester": semester_field, "section": section_field},
+        {
+            "year": year_field,
+            "semester": semester_field,
+            "section": section_field,
+            "phase": phase_field,
+        },
         {year_display(t.year): year_display(t.year) for t in tasks},
         {semester_display(t.semester): semester_display(t.semester) for t in tasks},
     )
@@ -161,6 +169,7 @@ def apply_project_fields(
     year_field = custom_fields.get("year")
     semester_field = custom_fields.get("semester")
     section_field = custom_fields.get("section")
+    phase_field = custom_fields.get("phase")
 
     if year_field:
         year_name = year_display(task.year)
@@ -185,6 +194,14 @@ def apply_project_fields(
             section_field.field_id,
             f"{task.section_number}. {task.section_title}",
         )
+
+    if phase_field:
+        phase_name = task.phase()
+        option_id = phase_field.options.get(phase_name)
+        if option_id:
+            client.set_single_select_field(
+                project_id, item_id, phase_field.field_id, option_id
+            )
 
     status_field = custom_fields.get("status")
     if status_field:
@@ -248,7 +265,7 @@ def sync_tasks(
     project_number = int(config["GITHUB_PROJECT_NUMBER"])
 
     repository = client.get_repository(owner, repo)
-    project = client.get_project(owner, project_number)
+    project = client.get_project(owner, project_number, repo=repo)
 
     print(f"Repository: {owner}/{repo}")
     print(f"Project: {project.title} (#{project_number})")

@@ -36,6 +36,14 @@ YEAR_CATEGORY_LABELS = {
     3: "thesis-deliverable",
 }
 
+PHASE_BY_YEAR = {
+    1: "Phase 1: Data & ETL",
+    2: "Phase 2: NAS & MTL",
+    3: "Phase 3: Portal & Thesis",
+}
+
+PHASE_OPTIONS = list(PHASE_BY_YEAR.values())
+
 SEMESTER_DISPLAY = {
     "fall": "Fall",
     "spring": "Spring",
@@ -61,6 +69,9 @@ class PhdTask:
     title: str
     detail: str
     labels: tuple[str, ...] = field(default_factory=tuple)
+
+    def phase(self) -> str:
+        return PHASE_BY_YEAR.get(self.year, f"Phase {self.year}")
 
     def issue_title(self) -> str:
         sem = SEMESTER_DISPLAY.get(self.semester, self.semester.title())

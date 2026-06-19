@@ -90,7 +90,9 @@ class GitHubProjectsClient:
         node_id = data["repository"]["id"]
         return RepositoryInfo(node_id=node_id, owner=owner, name=repo)
 
-    def get_project(self, owner: str, project_number: int) -> ProjectInfo:
+    def get_project(
+        self, owner: str, project_number: int, repo: str | None = None
+    ) -> ProjectInfo:
         project_fragment = """
               id
               title
@@ -116,29 +118,48 @@ class GitHubProjectsClient:
         """
 
         project = None
-        for owner_kind in ("user", "organization"):
+        if repo:
             query = f"""
-            query($owner: String!, $number: Int!) {{
-              {owner_kind}(login: $owner) {{
+            query($owner: String!, $repo: String!, $number: Int!) {{
+              repository(owner: $owner, name: $repo) {{
                 projectV2(number: $number) {{{project_fragment}
                 }}
               }}
             }}
             """
-            body = self._request(query, {"owner": owner, "number": project_number})
-            if body.get("errors"):
-                continue
-            data = body["data"]
-            owner_node = data.get(owner_kind)
-            if owner_node:
-                project = owner_node.get("projectV2")
-            if project:
-                break
+            body = self._request(
+                query, {"owner": owner, "repo": repo, "number": project_number}
+            )
+            if not body.get("errors"):
+                repo_node = body.get("data", {}).get("repository")
+                if repo_node:
+                    project = repo_node.get("projectV2")
 
         if not project:
+            for owner_kind in ("user", "organization"):
+                query = f"""
+                query($owner: String!, $number: Int!) {{
+                  {owner_kind}(login: $owner) {{
+                    projectV2(number: $number) {{{project_fragment}
+                    }}
+                  }}
+                }}
+                """
+                body = self._request(query, {"owner": owner, "number": project_number})
+                if body.get("errors"):
+                    continue
+                data = body["data"]
+                owner_node = data.get(owner_kind)
+                if owner_node:
+                    project = owner_node.get("projectV2")
+                if project:
+                    break
+
+        if not project:
+            scope_hint = f"repository {owner}/{repo}" if repo else f"owner '{owner}'"
             raise GitHubApiError(
-                f"Project #{project_number} not found for owner '{owner}'. "
-                "Check GITHUB_OWNER and GITHUB_PROJECT_NUMBER."
+                f"Project #{project_number} not found for {scope_hint}. "
+                "Check GITHUB_OWNER, GITHUB_REPO, and GITHUB_PROJECT_NUMBER."
             )
 
         fields: dict[str, ProjectFieldInfo] = {}

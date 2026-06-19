@@ -1,5 +1,6 @@
 {
   "GITHUB_OWNER": "your-github-username",
-  "GITHUB_REPO": "phd-nas-roadmap",
-  "GITHUB_PROJECT_NUMBER": 1
+  "GITHUB_REPO": "PhDNeural",
+  "GITHUB_PROJECT_NUMBER": 2,
+  "GITHUB_PROJECT_SCOPE": "repository"
 }
