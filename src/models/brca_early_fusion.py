@@ -1,53 +1,55 @@
-"""Stage 1 Early Fusion model: concatenation + MLP trunk + three MTL heads."""
+"""Stage 1 Early Fusion model: concatenation + Static MTL two-head baseline."""
 
 from __future__ import annotations
 
 import torch
-import torch.nn as nn
+
+from src.models.static_mtl_model import StaticMtlModel
 
 
-class BrcaEarlyFusionModel(nn.Module):
-    """Early fusion baseline for BRCA multi-omic multi-task learning.
+class StaticMtlEarlyFusionModel(StaticMtlModel):
+    """Early fusion wrapper: accepts concatenated X_fused from Stage 1 dataset.
 
     Architecture:
-        1. Accept concatenated input X_fused (Stage 1 flat tensor from dataset)
+        1. Accept concatenated input X_fused (flat tensor from dataset)
         2. MLP trunk maps fused features to a dense latent vector
-        3. Three independent heads:
-           - Diagnostic: BCE (tumor vs. normal)
-           - Staging: ordinal logits (stages I–IV)
-           - Prognostic: Cox-PH risk score
+        3. Two independent heads:
+           - phenotype_head: BCE (Healthy vs. Diseased)
+           - severity_head: ordinal logits (0..K-1)
 
     TODO:
         - Wire trunk depth/width to Optuna search space
-        - Implement forward() with torch.cat on modality inputs if dict passed
-        - Return dict of head outputs for multi-task loss computation
-        - Add survival loss helper for Cox-PH head
+        - Implement forward() with torch.cat on modality dict if dict passed
+        - Connect StaticMtlLoss in training loop
     """
+
+    def forward(self, x_fused: torch.Tensor) -> dict[str, torch.Tensor]:
+        return super().forward(x_fused)
+
+
+class BrcaEarlyFusionModel(StaticMtlEarlyFusionModel):
+    """Backward-compatible alias for BRCA Stage 1 early fusion baseline."""
 
     def __init__(
         self,
         input_dim: int,
         hidden_dims: tuple[int, ...] = (512, 256),
         latent_dim: int = 128,
-        n_stages: int = 4,
+        n_severity_classes: int = 4,
+        n_stages: int | None = None,
+        dropout: float = 0.2,
     ) -> None:
-        super().__init__()
-        layers: list[nn.Module] = []
-        prev = input_dim
-        for hidden in hidden_dims:
-            layers.extend([nn.Linear(prev, hidden), nn.ReLU(), nn.Dropout(0.2)])
-            prev = hidden
-        layers.append(nn.Linear(prev, latent_dim))
-        self.trunk = nn.Sequential(*layers)
+        # n_stages kept for transitional call sites; prefer n_severity_classes.
+        k = n_severity_classes if n_stages is None else n_stages
+        super().__init__(
+            input_dim=input_dim,
+            hidden_dims=hidden_dims,
+            latent_dim=latent_dim,
+            n_severity_classes=k,
+            dropout=dropout,
+        )
 
-        self.diagnostic_head = nn.Linear(latent_dim, 1)
-        self.staging_head = nn.Linear(latent_dim, n_stages)
-        self.prognostic_head = nn.Linear(latent_dim, 1)
 
-    def forward(self, x_fused: torch.Tensor) -> dict[str, torch.Tensor]:
-        latent = self.trunk(x_fused)
-        return {
-            "diagnostic": self.diagnostic_head(latent).squeeze(-1),
-            "staging": self.staging_head(latent),
-            "prognostic": self.prognostic_head(latent).squeeze(-1),
-        }
+def concat_modalities(modalities: dict[str, torch.Tensor], order: tuple[str, ...]) -> torch.Tensor:
+    """Concatenate modality tensors in a fixed order (Stage 1 helper)."""
+    return torch.cat([modalities[m] for m in order if m in modalities], dim=-1)

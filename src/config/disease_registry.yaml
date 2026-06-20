@@ -1,0 +1,91 @@
+# Per-disease label registry for the Static MTL baseline.
+# Maps cohort-specific source columns to canonical {phenotype, severity} labels.
+#
+# phenotype: 0 = Healthy, 1 = Diseased
+# severity:  0..K-1 ordinal (missing → mask loss with severity = -1)
+
+diseases:
+  brca:
+    id: brca
+    name: Breast Invasive Carcinoma (TCGA-BRCA)
+    n_severity_classes: 4
+    phenotype:
+      source_columns:
+        - sample_type
+      mapping:
+        "Solid Tissue Normal": 0
+        "Primary Tumor": 1
+        "Metastatic": 1
+        "Recurrent Tumor": 1
+    severity:
+      source_columns:
+        - ajcc_pathologic_tumor_stage
+      mapping:
+        "Stage I": 0
+        "Stage IA": 0
+        "Stage IB": 0
+        "Stage II": 1
+        "Stage IIA": 1
+        "Stage IIB": 1
+        "Stage III": 2
+        "Stage IIIA": 2
+        "Stage IIIB": 2
+        "Stage IIIC": 2
+        "Stage IV": 3
+      missing_policy: mask  # severity = -1 when stage unavailable (e.g. normal samples)
+
+  alzheimers:
+    id: alzheimers
+    name: Alzheimer's Disease
+    n_severity_classes: 4  # placeholder: CDR/MMSE severity bands TBD
+    phenotype:
+      source_columns:
+        - diagnosis  # placeholder
+      mapping: {}  # 0 = control, 1 = AD — fill when GEO cohort is wired
+    severity:
+      source_columns:
+        - cdr_score  # placeholder
+      mapping: {}  # ordinal 0..K-1 — fill when cohort schema is finalized
+      missing_policy: mask
+
+  rheumatoid_arthritis:
+    id: rheumatoid_arthritis
+    name: Rheumatoid Arthritis
+    n_severity_classes: 4  # placeholder: DAS28 tiers TBD
+    phenotype:
+      source_columns:
+        - diagnosis  # placeholder
+      mapping: {}
+    severity:
+      source_columns:
+        - das28_score  # placeholder
+      mapping: {}
+      missing_policy: mask
+
+  type2_diabetes:
+    id: type2_diabetes
+    name: Type 2 Diabetes
+    n_severity_classes: 4  # placeholder: HbA1c brackets TBD
+    phenotype:
+      source_columns:
+        - diagnosis  # placeholder
+      mapping: {}
+    severity:
+      source_columns:
+        - hba1c_percent  # placeholder
+      mapping: {}
+      missing_policy: mask
+
+  down_syndrome:
+    id: down_syndrome
+    name: Down Syndrome
+    n_severity_classes: 3  # placeholder: severity proxy TBD
+    phenotype:
+      source_columns:
+        - diagnosis  # placeholder
+      mapping: {}
+    severity:
+      source_columns:
+        - severity_proxy  # placeholder
+      mapping: {}
+      missing_policy: mask
