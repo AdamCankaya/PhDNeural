@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PhD Roadmap Dashboard — Vertical Slice Multi-Task NAS</title>
+  <title>PhD Roadmap Dashboard — Two-Stage Multi-Omic Fusion NAS</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
@@ -73,7 +73,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
       <div>
         <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">PhD Roadmap Dashboard</h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Vertical Slice Multi-Task NAS</p>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Two-Stage Multi-Omic Fusion NAS</p>
       </div>
       <div class="flex items-center gap-3">
         <div class="text-right hidden sm:block">
@@ -160,8 +160,8 @@
   <script>
     // ─── Embedded Plan Data (from phd_master_plan.md) ───────────────────────
     const PLAN = {
-  "title": "PhD Master Roadmap: \"Vertical Slice\" Multi-Task Neural Architecture Search",
-  "coreObjective": "Develop a generalized, multi-task Neural Architecture Search (NAS) framework. The project will be built using a \"Vertical Slice\" methodology: engineering the complete, end-to-end multi-omic pipeline exclusively for Breast Invasive Carcinoma (BRCA) first. Once validated, this baseline architecture will be abstracted and deployed across 4 additional disease categories (Neurological, Autoimmune, Metabolic, Genetic) to conduct a comparative computational analysis.",
+  "title": "PhD Master Roadmap: Two-Stage Multi-Omic Fusion for BRCA Baseline",
+  "coreObjective": "Develop a generalized, multi-task Neural Architecture Search (NAS) framework using a **vertical slice** methodology on Breast Invasive Carcinoma (BRCA). Phase 1 follows a strict **two-stage evolution**: Stage 1 stress-tests ingestion, PyTorch, multi-task heads, and Optuna logging via **Early Fusion (concatenation)**; Stage 2 upgrades to a **Stacked Late Fusion Ensemble** with modality-specific expert networks and an ElasticNet meta-classifier trained on clean Out-of-Fold predictions. Once validated, the pipeline abstracts and scales across four additional disease categories for comparative analysis.",
   "phases": [
     {
       "id": "p1",
@@ -170,77 +170,55 @@
       "color": "#6366f1",
       "steps": [
         {
-          "id": "p1-step1",
+          "id": "p1-stage1",
           "num": 1,
-          "title": "BRCA Multi-Omic Sourcing & Split",
-          "goal": "Acquire the most feature-dense dataset to stress-test every branch of the neural network.",
+          "kind": "stage",
+          "title": "Early Fusion Proof-of-Concept",
+          "goal": "Establish an end-to-end software baseline using immediate feature concatenation to stress-test data ingestion, PyTorch tensor formatting, multi-task heads, and distributed Optuna logging without algorithmic complexity.",
           "tasks": [
             {
-              "id": "phase-1-step-1-item-1-source-tcga-level-3-open-access",
-              "text": "**Source:** TCGA (Level 3 Open Access)."
+              "id": "phase-1-step-1-item-1-data-splitting-leakage-guardrails-isolat",
+              "text": "**Data Splitting & Leakage Guardrails:** Isolate a strict **20% Holdout Test Set** from the TCGA-BRCA cohort prior to any scaling, normalization, or feature selection."
             },
             {
-              "id": "phase-1-step-1-item-2-target-modalities-methylation-beta-value",
-              "text": "**Target Modalities:** Methylation (Beta-values), Transcriptomics (RNA-Seq), Genomics (Somatic Mutations), CNVs, and Clinical Demographics."
+              "id": "phase-1-step-1-item-2-variance-masks-train-only-compute-varian",
+              "text": "**Variance Masks (Train Only):** Compute variance-based dimensionality reduction to select the top 10,000 highly variable methylation CpG sites **strictly within the 80% training partition** to prevent test-set leakage."
             },
             {
-              "id": "phase-1-step-1-item-3-the-strict-boundary-immediately-split-th",
-              "text": "**The Strict Boundary:** Immediately split the BRCA dataset into an **80% Training/Validation Set** and a locked **20% Holdout Test Set** before any preprocessing."
+              "id": "phase-1-step-1-item-3-concatenation-architecture-build-a-unifi",
+              "text": "**Concatenation Architecture:** Build a unified PyTorch HDF5 pipeline reading Methylation, RNA-Seq, CNV, Somatic Mutation, and Clinical features; fuse via $X_{\text{fused}} = [X_{\text{methylation}} \parallel X_{\text{transcriptomics}} \parallel X_{\text{genomics}} \parallel X_{\text{cnv}} \parallel X_{\text{clinical}}]$ through an MLP trunk into a dense latent vector."
+            },
+            {
+              "id": "phase-1-step-1-item-4-multi-task-output-heads-branch-the-laten",
+              "text": "**Multi-Task Output Heads:** Branch the latent vector into three independent heads:
+*Diagnostic Head:* Binary Cross-Entropy (Tumor vs. Normal control).
+*Staging Head:* Ordinal Log-Loss (Stages I–IV).
+*Prognostic Head:* Cox Proportional Hazards Negative Log-Partial Likelihood (survival timelines with right-censored data)."
+            },
+            {
+              "id": "phase-1-step-1-item-5-optuna-verification-connect-the-early-fu",
+              "text": "**Optuna Verification:** Connect the early fusion model to the Dockerized PostgreSQL database on the Hetzner server and execute a small Optuna search space to verify parallel workers can read, train, and log metrics successfully."
             }
           ]
         },
         {
-          "id": "p1-step2",
+          "id": "p1-stage2",
           "num": 2,
-          "title": "Infrastructure & Database Orchestration",
-          "goal": "Establish the remote environments required for distributed Optuna execution.",
+          "kind": "stage",
+          "title": "Stacking Late Fusion Upgrade",
+          "goal": "Refactor the validated Stage 1 pipeline into a modular Late Fusion architecture with rigorous OOF stacking and an interpretable ElasticNet meta-classifier—eliminating data leakage entirely.",
           "tasks": [
             {
-              "id": "phase-1-step-2-item-1-central-hub-deploy-a-dockerized-postgres",
-              "text": "**Central Hub:** Deploy a Dockerized PostgreSQL instance on your Hetzner Linux server to act as the permanent, centralized Optuna study hub."
+              "id": "phase-1-step-2-item-1-modality-specific-expert-networks-discar",
+              "text": "**Modality-Specific Expert Networks:** Discard immediate concatenation; instantiate 4 isolated feature extraction networks (1D-CNN for Methylation, deep MLP for RNA-Seq, sparse linear for Genomics/CNV); each expert outputs independent multi-task predictions."
             },
             {
-              "id": "phase-1-step-2-item-2-ci-cd-pipeline-configure-a-github-action",
-              "text": "**CI/CD Pipeline:** Configure a GitHub Actions runner to orchestrate and deploy your PyTorch worker scripts natively from your repository to your university's Slurm compute clusters."
-            }
-          ]
-        },
-        {
-          "id": "p1-step3",
-          "num": 3,
-          "title": "Engineering the Multi-Task Architecture",
-          "goal": "Write the PyTorch modules that handle multi-modal fusion and multi-task learning.",
-          "tasks": [
-            {
-              "id": "phase-1-step-3-item-1-input-branches-construct-flexible-ingest",
-              "text": "**Input Branches:** Construct flexible ingestion layers for dense continuous data (1D-CNNs/Transformers for Methylation/RNA) and sparse data (Linear layers for Genomics)."
+              "id": "phase-1-step-2-item-2-rigorous-stacking-cross-validation-oof-d",
+              "text": "**Rigorous Stacking Cross-Validation (OOF):** Divide the 80% training pool into 5 folds; for each fold $k$, train all 4 expert networks on the remaining 4 folds and generate predictions on fold $k$; concatenate validation predictions across all folds to construct a complete **Clean Out-of-Fold Predictions** matrix ($P_{\text{OOF}}$) for the entire 80% dataset."
             },
             {
-              "id": "phase-1-step-3-item-2-mtl-output-heads-program-the-network-to",
-              "text": "**MTL Output Heads:** Program the network to branch into three specific loss targets:
-*Diagnostic (Cross-Entropy Loss):* Tumor vs. Normal matched tissue.
-*Staging (Ordinal Loss):* Stage I, II, III, or IV.
-*Prognostic (Cox-PH Loss):* Survival timeline (Days to Live) accounting for censored data."
-            }
-          ]
-        },
-        {
-          "id": "p1-step4",
-          "num": 4,
-          "title": "Optuna NAS & Baseline Benchmarking",
-          "goal": "Execute the search space specifically for BRCA on the 80% Training Set using 5-Fold Cross Validation.",
-          "tasks": [
-            {
-              "id": "phase-1-step-4-item-1-neural-search-optuna-tune-the-5-deep-lea",
-              "text": "**Neural Search (Optuna):** Tune the 5 deep learning topologies (MLP, 1D-CNN, Transformer, TabNet, Cross-Attention Fusion) to find the optimal BRCA network. Have Optuna dynamically weigh the multi-task loss functions."
-            },
-            {
-              "id": "phase-1-step-4-item-2-classical-baselines-train-xgboost-lightg",
-              "text": "**Classical Baselines:** Train XGBoost, LightGBM, and ElasticNet strictly on the tabular/methylation data to establish a performance floor."
-            },
-            {
-              "id": "phase-1-step-4-item-3-the-poc-validation-evaluate-the-single-b",
-              "text": "**The PoC Validation:** Evaluate the single best Optuna-discovered model against the classical baselines using the locked 20% Holdout Test Set."
+              "id": "phase-1-step-2-item-3-elasticnet-meta-classifier-integration-t",
+              "text": "**ElasticNet Meta-Classifier Integration:** Train a downstream **Logistic Regression with ElasticNet Regularization** (`penalty='elasticnet'`, `solver='saga'`) on $P_{\text{OOF}}$ with true biological labels; tune $\lambda$ and $\alpha$ via Optuna; extract sparse non-zero coefficients ($w$) to chart how much weight each omic expert network receives for diagnostic outcomes."
             }
           ]
         }
@@ -255,6 +233,7 @@
         {
           "id": "p2-step1",
           "num": 1,
+          "kind": "step",
           "title": "Refactoring the Base Classes",
           "goal": "Transition the hardcoded BRCA script into a universal disease pipeline.",
           "tasks": [
@@ -279,6 +258,7 @@
         {
           "id": "p3-step1",
           "num": 1,
+          "kind": "step",
           "title": "Sourcing the 4 Distinct Pathologies",
           "goal": "Gather the datasets that represent the remaining functional disease categories.",
           "tasks": [
@@ -303,6 +283,7 @@
         {
           "id": "p3-step2",
           "num": 2,
+          "kind": "step",
           "title": "High-Throughput Distributed Execution",
           "goal": "Push the generalized pipeline to the university cluster.",
           "tasks": [
@@ -327,6 +308,7 @@
         {
           "id": "p4-step1",
           "num": 1,
+          "kind": "step",
           "title": "The Comparative Analysis (The Core Thesis)",
           "goal": "Mine the Optuna database to answer the primary research question.",
           "tasks": [
@@ -343,6 +325,7 @@
         {
           "id": "p4-step2",
           "num": 2,
+          "kind": "step",
           "title": "The Patient-Facing Software App",
           "goal": "Deliver a production-ready diagnostic UI.",
           "tasks": [
@@ -361,7 +344,7 @@
   ]
 };
 
-    const STORAGE_KEY = 'phd_plan_progress_v3';
+    const STORAGE_KEY = 'phd_plan_progress_v4';
 
     // ─── State ────────────────────────────────────────────────────────────────
     let progress = loadProgress();
@@ -432,7 +415,7 @@
             <button data-step="${step.id}"
               class="timeline-node flex-1 min-w-[100px] max-w-[140px] rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-center cursor-pointer hover:bg-slate-800 hover:border-slate-600"
               style="border-top: 3px solid ${phase.color}">
-              <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${phase.color}">Step ${step.num}</p>
+              <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${phase.color}">${(step.kind === 'stage' ? 'Stage' : 'Step')} ${step.num}</p>
               <p class="text-[11px] text-slate-300 mt-1 leading-tight line-clamp-2">${step.title.split(' ').slice(0, 3).join(' ')}…</p>
               <div class="mt-2 h-1 bg-slate-700 rounded-full overflow-hidden">
                 <div class="h-full rounded-full progress-bar-fill" style="width:${stats.pct}%;background:${phase.color}"></div>
@@ -510,7 +493,7 @@
             <article id="card-${step.id}" class="step-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
               <button class="collapse-toggle w-full text-left px-5 sm:px-6 py-4 flex items-center gap-4 hover:bg-slate-800/50 transition">
                 <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border" style="border-color:${phase.color}33;background:${phase.color}15">
-                  <span class="text-[10px] font-bold uppercase" style="color:${phase.color}">Step ${step.num}</span>
+                  <span class="text-[10px] font-bold uppercase" style="color:${phase.color}">${(step.kind === 'stage' ? 'Stage' : 'Step')} ${step.num}</span>
                   <span class="text-lg font-bold text-white">${stepStats.pct}%</span>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -523,7 +506,7 @@
               <div class="collapse-content border-t border-slate-800">
                 <div class="px-5 sm:px-6 py-5 space-y-5">
                   <div class="bg-indigo-950/30 border border-indigo-800/30 rounded-lg px-4 py-3">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-1">Step Goal</p>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-1">${step.kind === 'stage' ? 'Stage' : 'Step'} Goal</p>
                     <p class="text-sm text-slate-300">${step.goal}</p>
                   </div>
                   <ul class="space-y-2 ml-1">`;

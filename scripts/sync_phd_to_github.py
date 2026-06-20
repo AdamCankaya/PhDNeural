@@ -36,6 +36,8 @@ LABEL_COLORS = {
     "phase-2": "1d76db",
     "phase-3": "d93f0b",
     "phase-4": "5319e7",
+    "stage-1": "fbca04",
+    "stage-2": "c2e0c6",
     "step-1": "fbca04",
     "step-2": "c2e0c6",
     "step-3": "fef2c0",
@@ -96,8 +98,8 @@ def save_state(path: Path, state: dict) -> None:
     path.write_text(json.dumps(state, indent=2), encoding="utf-8")
 
 
-def step_display(step: int) -> str:
-    return f"Step {step}"
+def step_display(task: PhdTask) -> str:
+    return task.section_label()
 
 
 def status_option_name(project_fields: dict, desired: str = "Todo") -> str | None:
@@ -128,7 +130,7 @@ def setup_project_fields(
     project_fields: dict,
     tasks: list[PhdTask],
 ) -> tuple[dict, dict, dict]:
-    steps = sorted({step_display(t.step) for t in tasks}, key=_step_sort_key)
+    steps = sorted({step_display(t) for t in tasks}, key=_step_sort_key)
 
     step_field = client.ensure_single_select_field(
         project_id, "Step", steps, project_fields
@@ -142,14 +144,19 @@ def setup_project_fields(
             "step": step_field,
             "phase": phase_field,
         },
-        {step_display(t.step): step_display(t.step) for t in tasks},
+        {step_display(t): step_display(t) for t in tasks},
         {t.phase_label(): t.phase_label() for t in tasks},
     )
 
 
-def _step_sort_key(name: str) -> int:
-    match = re.match(r"Step (\d+)", name)
-    return int(match.group(1)) if match else 99
+def _step_sort_key(name: str) -> tuple[int, int]:
+    stage = re.match(r"Stage (\d+)", name)
+    if stage:
+        return (0, int(stage.group(1)))
+    step = re.match(r"Step (\d+)", name)
+    if step:
+        return (1, int(step.group(1)))
+    return (2, 99)
 
 
 def apply_project_fields(
@@ -163,7 +170,7 @@ def apply_project_fields(
     phase_field = custom_fields.get("phase")
 
     if step_field:
-        step_name = step_display(task.step)
+        step_name = step_display(task)
         option_id = step_field.options.get(step_name)
         if option_id:
             client.set_single_select_field(
@@ -193,11 +200,11 @@ def print_parse_summary(tasks: list[PhdTask]) -> None:
     print(f"Parsed {len(tasks)} tasks from master plan.\n")
     current_key = None
     for task in tasks:
-        key = (task.phase, task.step)
+        key = (task.phase, task.section_kind, task.step)
         if key != current_key:
             current_key = key
             print(
-                f"\nPhase {task.phase} / Step {task.step}: {task.step_title}"
+                f"\nPhase {task.phase} / {task.section_label()}: {task.step_title}"
             )
             print(f"  Goal: {task.goal}")
         print(f"  - [{task.task_id}] {task.title}")

@@ -11,10 +11,12 @@ from pathlib import Path
 
 PHASE_RE = re.compile(r"^## Phase (\d+):\s*(.+?)\s*$")
 STEP_RE = re.compile(r"^### Step (\d+):\s*(.+?)\s*$")
+STAGE_RE = re.compile(r"^### Stage (\d+):\s*(.+?)\s*$")
 GOAL_RE = re.compile(r"^\*\*Goal:\*\*\s*(.+?)\s*$")
 CHECKLIST_RE = re.compile(r"^(\s*)[*-]\s+(.+?)\s*$")
 NUMBERED_RE = re.compile(r"^(\s*)(\d+)\.\s+(.+?)\s*$")
 CORE_OBJECTIVE_RE = re.compile(r"^## Core Objective\s*$")
+IMPLEMENTATION_TARGETS_RE = re.compile(r"^## Implementation Targets\s*$")
 TITLE_RE = re.compile(r"^# (.+?)\s*$")
 
 
@@ -43,6 +45,9 @@ PHASE_BY_NUMBER = {
     4: "Phase 4: Thesis Synthesis & Final Deliverables",
 }
 
+SECTION_KIND_STEP = "step"
+SECTION_KIND_STAGE = "stage"
+
 PHASE_OPTIONS = list(PHASE_BY_NUMBER.values())
 
 
@@ -58,24 +63,32 @@ class PhdTask:
     goal: str
     title: str
     detail: str
+    section_kind: str = SECTION_KIND_STEP
     labels: tuple[str, ...] = field(default_factory=tuple)
 
     def phase_label(self) -> str:
         return PHASE_BY_NUMBER.get(self.phase, f"Phase {self.phase}")
 
+    def section_label(self) -> str:
+        if self.section_kind == SECTION_KIND_STAGE:
+            return f"Stage {self.step}"
+        return f"Step {self.step}"
+
     def issue_title(self) -> str:
-        prefix = f"[P{self.phase} S{self.step}]"
+        tag = "St" if self.section_kind == SECTION_KIND_STAGE else "S"
+        prefix = f"[P{self.phase} {tag}{self.step}]"
         return f"{prefix} {self.title}"
 
     def issue_body(self) -> str:
         sync_marker = f"<!-- phd-sync-id: {self.task_id} -->"
+        section_name = "Stage" if self.section_kind == SECTION_KIND_STAGE else "Step"
         lines = [
             sync_marker,
             "",
             "## Context",
             "",
             f"- **Phase:** {self.phase} — {self.phase_title}",
-            f"- **Step:** {self.step} — {self.step_title}",
+            f"- **{section_name}:** {self.step} — {self.step_title}",
             f"- **Goal:** {self.goal}",
             "",
             "## Task",
@@ -95,14 +108,17 @@ class _ParseState:
     phase_title: str = ""
     step: int = 0
     step_title: str = ""
+    section_kind: str = SECTION_KIND_STEP
     goal: str = ""
     core_objective_lines: list[str] = field(default_factory=list)
     in_core_objective: bool = False
+    in_implementation_targets: bool = False
 
 
-def _build_labels(phase: int, step: int) -> tuple[str, ...]:
+def _build_labels(phase: int, step: int, section_kind: str) -> tuple[str, ...]:
     category = PHASE_CATEGORY_LABELS.get(phase, "phd")
-    return ("phd-sync", f"phase-{phase}", f"step-{step}", category)
+    section_tag = f"stage-{step}" if section_kind == SECTION_KIND_STAGE else f"step-{step}"
+    return ("phd-sync", f"phase-{phase}", section_tag, category)
 
 
 def _make_task_id(
@@ -186,7 +202,8 @@ def _append_task(
             goal=state.goal,
             title=title,
             detail=detail,
-            labels=_build_labels(state.phase, state.step),
+            section_kind=state.section_kind,
+            labels=_build_labels(state.phase, state.step, state.section_kind),
         )
     )
     return item_counter
@@ -210,7 +227,16 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
 
         if CORE_OBJECTIVE_RE.match(line):
             state.in_core_objective = True
+            state.in_implementation_targets = False
             state.core_objective_lines = []
+            continue
+
+        if IMPLEMENTATION_TARGETS_RE.match(line):
+            state.in_implementation_targets = True
+            state.in_core_objective = False
+            continue
+
+        if state.in_implementation_targets:
             continue
 
         if state.in_core_objective:
@@ -224,11 +250,23 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
 
         phase_match = PHASE_RE.match(line)
         if phase_match:
+            state.in_implementation_targets = False
             state.phase = int(phase_match.group(1))
             state.phase_title = phase_match.group(2).strip()
             state.step = 0
             state.step_title = ""
+            state.section_kind = SECTION_KIND_STEP
             state.goal = ""
+            base_indent = None
+            continue
+
+        stage_match = STAGE_RE.match(line)
+        if stage_match:
+            state.step = int(stage_match.group(1))
+            state.step_title = stage_match.group(2).strip()
+            state.section_kind = SECTION_KIND_STAGE
+            state.goal = ""
+            item_counter = 0
             base_indent = None
             continue
 
@@ -236,6 +274,7 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
         if step_match:
             state.step = int(step_match.group(1))
             state.step_title = step_match.group(2).strip()
+            state.section_kind = SECTION_KIND_STEP
             state.goal = ""
             item_counter = 0
             base_indent = None
@@ -275,6 +314,7 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
                     goal=last.goal,
                     title=last.title,
                     detail=updated_detail,
+                    section_kind=last.section_kind,
                     labels=last.labels,
                 )
 
@@ -333,9 +373,12 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
         phase_entry = phases_map[task.phase]
         step_key = task.step
         if step_key not in phase_entry["steps"]:
+            kind = task.section_kind
+            section_slug = "stage" if kind == SECTION_KIND_STAGE else "step"
             phase_entry["steps"][step_key] = {
-                "id": f"p{task.phase}-step{task.step}",
+                "id": f"p{task.phase}-{section_slug}{task.step}",
                 "num": task.step,
+                "kind": kind,
                 "title": task.step_title,
                 "goal": task.goal,
                 "tasks": [],
