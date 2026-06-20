@@ -69,25 +69,60 @@ def run_git(args: list[str], cwd: Path, *, check: bool = True) -> subprocess.Com
     )
 
 
-def init_empty_wiki_repo(wiki_root: Path, auth_url: str) -> None:
+def detect_wiki_branch(clone_url: str) -> str:
+    """Return the default branch for the GitHub wiki repo (usually master)."""
+    result = subprocess.run(
+        ["git", "ls-remote", "--symref", clone_url, "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    for line in result.stdout.splitlines():
+        if line.startswith("ref: refs/heads/"):
+            return line.split("refs/heads/")[1].split()[0]
+
+    for branch in ("master", "main"):
+        check = subprocess.run(
+            ["git", "ls-remote", "--heads", clone_url, branch],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if check.stdout.strip():
+            return branch
+
+    # GitHub wiki repos created via the UI use master by default.
+    return "master"
+
+
+def checkout_wiki_branch(wiki_root: Path, branch: str) -> None:
+    """Check out the wiki default branch, tracking origin when it exists."""
+    remote_ref = f"origin/{branch}"
+    if run_git(["rev-parse", "--verify", remote_ref], wiki_root, check=False).returncode == 0:
+        run_git(["checkout", "-B", branch, remote_ref], wiki_root)
+    else:
+        run_git(["checkout", "-B", branch], wiki_root)
+
+
+def init_empty_wiki_repo(wiki_root: Path, auth_url: str, branch: str) -> None:
     """Initialize a new local wiki repo when .wiki.git does not exist yet."""
     if wiki_root.exists():
         shutil.rmtree(wiki_root)
     wiki_root.mkdir(parents=True)
     run_git(["init"], wiki_root)
-    run_git(["branch", "-M", "main"], wiki_root)
+    run_git(["branch", "-M", branch], wiki_root)
     run_git(["remote", "add", "origin", auth_url], wiki_root)
 
 
-def clone_or_update_wiki(clone_url: str, token: str) -> Path:
+def clone_or_update_wiki(clone_url: str, token: str) -> tuple[Path, str]:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     auth_url = clone_url.replace("https://", f"https://x-access-token:{token}@")
+    branch = detect_wiki_branch(auth_url)
 
     if (CACHE_DIR / ".git").is_dir():
         run_git(["fetch", "origin"], CACHE_DIR, check=False)
-        run_git(["reset", "--hard", "origin/main"], CACHE_DIR, check=False)
-        run_git(["checkout", "main"], CACHE_DIR, check=False)
-        return CACHE_DIR
+        checkout_wiki_branch(CACHE_DIR, branch)
+        return CACHE_DIR, branch
 
     if any(CACHE_DIR.iterdir()):
         shutil.rmtree(CACHE_DIR)
@@ -99,15 +134,16 @@ def clone_or_update_wiki(clone_url: str, token: str) -> Path:
         text=True,
     )
     if result.returncode == 0:
-        return CACHE_DIR
+        checkout_wiki_branch(CACHE_DIR, branch)
+        return CACHE_DIR, branch
 
     stderr = result.stderr.strip()
     if "not found" in stderr.lower() or "404" in stderr:
         print("Wiki git repo not found — initializing empty wiki for first push.")
         if CACHE_DIR.exists():
             shutil.rmtree(CACHE_DIR)
-        init_empty_wiki_repo(CACHE_DIR, auth_url)
-        return CACHE_DIR
+        init_empty_wiki_repo(CACHE_DIR, auth_url, branch)
+        return CACHE_DIR, branch
 
     raise RuntimeError(f"git clone failed: {stderr}")
 
@@ -135,6 +171,16 @@ def sync_files(source_files: list[Path], wiki_root: Path) -> list[str]:
     return changed
 
 
+def remote_branch_head(wiki_root: Path, branch: str) -> str | None:
+    result = run_git(
+        ["ls-remote", "origin", f"refs/heads/{branch}"],
+        wiki_root,
+        check=False,
+    )
+    line = result.stdout.strip().splitlines()
+    return line[0].split()[0] if line else None
+
+
 def publish(message: str) -> int:
     config = load_config()
     token = resolve_token(config)
@@ -152,34 +198,44 @@ def publish(message: str) -> int:
     source_files = wiki_source_files()
     print(f"Publishing {len(source_files)} file(s) to {owner}/{repo} wiki")
 
-    wiki_root = clone_or_update_wiki(clone_url, token)
+    wiki_root, branch = clone_or_update_wiki(clone_url, token)
+    print(f"Wiki branch: {branch}")
     ensure_git_identity(wiki_root)
     changed = sync_files(source_files, wiki_root)
 
     run_git(["add", "-A"], wiki_root)
     status = run_git(["status", "--porcelain"], wiki_root, check=False)
-    if not status.stdout.strip():
-        print("Wiki already up to date.")
-        print(f"Wiki URL: {wiki_url}")
-        return 0
+    needs_push = bool(status.stdout.strip())
+    if not needs_push:
+        local_head = run_git(["rev-parse", "HEAD"], wiki_root, check=False).stdout.strip()
+        remote_head = remote_branch_head(wiki_root, branch)
+        needs_push = bool(local_head and local_head != remote_head)
+        if needs_push:
+            print(
+                f"Local cache matches source but remote {branch} is behind; pushing."
+            )
+        else:
+            print("Wiki already up to date.")
+            print(f"Wiki URL: {wiki_url}")
+            return 0
 
     if changed:
         print("Updated files:")
         for name in changed:
             print(f"  - {name}")
-    else:
+    elif needs_push:
         print("Changes detected in wiki clone (non-content or deletions).")
 
-    run_git(["commit", "-m", message], wiki_root, check=False)
-    if run_git(["rev-parse", "HEAD"], wiki_root, check=False).returncode != 0:
-        print("Nothing to commit after sync.")
-        print(f"Wiki URL: {wiki_url}")
-        return 0
-    push = run_git(["push", "origin", "main"], wiki_root, check=False)
+    if status.stdout.strip():
+        run_git(["commit", "-m", message], wiki_root, check=False)
+        if run_git(["rev-parse", "HEAD"], wiki_root, check=False).returncode != 0:
+            print("Nothing to commit after sync.")
+            print(f"Wiki URL: {wiki_url}")
+            return 0
+
+    push = run_git(["push", "-u", "origin", branch], wiki_root, check=False)
     if push.returncode != 0:
-        push = run_git(["push", "-u", "origin", "HEAD:main"], wiki_root, check=False)
-    if push.returncode != 0:
-        push = run_git(["push", "-u", "origin", "main", "--force"], wiki_root, check=False)
+        push = run_git(["push", "-u", "origin", f"HEAD:{branch}"], wiki_root, check=False)
     if push.returncode != 0:
         stderr = push.stderr.strip()
         print(f"git push failed: {stderr}", file=sys.stderr)
@@ -189,6 +245,21 @@ def publish(message: str) -> int:
                 "GitHub UI (Wiki tab → create page), then re-run this script.",
                 file=sys.stderr,
             )
+        return 1
+
+    local_head = run_git(["rev-parse", "HEAD"], wiki_root).stdout.strip()
+    remote_head = remote_branch_head(wiki_root, branch)
+    if remote_head != local_head:
+        print(
+            f"Push reported success but origin/{branch} ({remote_head or 'missing'}) "
+            f"does not match local HEAD ({local_head}).",
+            file=sys.stderr,
+        )
+        print(
+            f"GitHub wikis use the {branch} branch. If you created the wiki in the UI, "
+            "ensure you are not pushing to a different branch.",
+            file=sys.stderr,
+        )
         return 1
 
     print(f"Wiki published: {wiki_url}")
