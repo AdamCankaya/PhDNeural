@@ -30,7 +30,7 @@ def main() -> int:
     plan_js = json.dumps(plan, indent=2, ensure_ascii=False)
 
     html = re.sub(
-        r"(const PLAN = )\{[\s\S]*?\n    \};",
+        r"const PLAN = \{[\s\S]*?\n\};",
         f"const PLAN = {plan_js};",
         html,
         count=1,

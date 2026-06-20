@@ -228,10 +228,11 @@ class GitHubProjectsClient:
         query($owner: String!, $repo: String!, $cursor: String) {
           repository(owner: $owner, name: $repo) {
             issues(
-              first: 100
+              first: 50
               after: $cursor
               labels: ["phd-sync"]
               states: [OPEN, CLOSED]
+              orderBy: {field: CREATED_AT, direction: ASC}
             ) {
               nodes {
                 number
