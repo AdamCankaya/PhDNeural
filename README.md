@@ -9,6 +9,7 @@ A PhD research program that builds a generalized, multi-task Neural Architecture
 | Resource | Link |
 |----------|------|
 | Repository | [github.com/AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural) |
+| Wiki | [github.com/AdamCankaya/PhDNeural/wiki](https://github.com/AdamCankaya/PhDNeural/wiki) |
 | Project board | [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2) |
 | Live dashboard | [adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html) |
 | Master plan | [phd_master_plan.md](phd_master_plan.md) |

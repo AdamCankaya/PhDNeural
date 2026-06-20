@@ -499,7 +499,7 @@ def sync_tasks(
             f"  Issues closed:      {pruned['issues_closed']}\n"
         )
 
-    if close_stale and not additive and not prune_project:
+    if close_stale and not additive:
         closed = close_stale_issues(client, owner, repo, current_task_ids)
 
     for index, task in enumerate(tasks, start=1):
