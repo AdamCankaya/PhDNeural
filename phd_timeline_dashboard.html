@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PhD Roadmap Dashboard — Two-Stage Multi-Omic Fusion NAS</title>
+  <title>PhD Roadmap Dashboard — PhD Roadmap 2026–2029</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
@@ -72,8 +72,8 @@
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">PhD Roadmap Dashboard</h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Two-Stage Multi-Omic Fusion NAS</p>
+        <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">PhD Roadmap 2026–2029</h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">PhD Roadmap 2026–2029</p>
       </div>
       <div class="flex items-center gap-3">
         <div class="text-right hidden sm:block">
@@ -129,26 +129,29 @@
         </div>
       </div>
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-        <h3 class="text-sm font-semibold text-slate-300 mb-4">Progress by Phase</h3>
+        <h3 class="text-sm font-semibold text-slate-300 mb-4">Progress by Year</h3>
         <div class="relative h-52">
           <canvas id="bar-chart"></canvas>
         </div>
       </div>
     </section>
 
+    <!-- Phase Summary (secondary) -->
+    <section id="phase-bars" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></section>
+
     <!-- Interactive Timeline -->
     <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6">
       <h3 class="text-sm font-semibold text-slate-300 mb-6 flex items-center gap-2">
-        <span>📅</span> 4-Phase Timeline
-        <span class="text-xs font-normal text-slate-500 ml-auto">Click a step to jump</span>
+        <span>📅</span> 3-Year Academic Timeline
+        <span class="text-xs font-normal text-slate-500 ml-auto">Click a semester to jump</span>
       </h3>
       <div id="timeline" class="overflow-x-auto pb-2"></div>
     </section>
 
-    <!-- Phase Progress Bars -->
-    <section id="phase-bars" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></section>
+    <!-- Year Progress Bars -->
+    <section id="year-bars" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></section>
 
-    <!-- Step Detail Cards -->
+    <!-- Semester Detail Cards -->
     <section id="steps" class="space-y-6"></section>
 
   </main>
@@ -162,301 +165,510 @@
     const PLAN = {
   "title": "PhD Master Roadmap: Vertical Slice + Two-Stage Multi-Omic Fusion (BRCA Anchor)",
   "coreObjective": "Develop a generalized, multi-task Neural Architecture Search (NAS) framework using a **vertical slice** methodology on Breast Invasive Carcinoma (BRCA). Engineering proceeds in two additive layers: first, the full end-to-end BRCA pipeline (sourcing, infrastructure, architecture, Optuna NAS); second, a **two-stage fusion evolution**—Stage 1 stress-tests ingestion via **Early Fusion (concatenation)**, Stage 2 upgrades to a **Stacked Late Fusion Ensemble** with modality-specific expert networks and an ElasticNet meta-classifier on clean Out-of-Fold predictions. Once validated, the pipeline abstracts and scales across four additional disease categories for comparative analysis.",
-  "phases": [
+  "years": [
     {
-      "id": "p1",
-      "label": "Phase 1",
-      "subtitle": "The Anchor (BRCA Proof of Concept)",
+      "id": "y1",
+      "label": "Year 1",
+      "subtitle": "BRCA Anchor & Two-Stage Fusion (2026–2027)",
       "color": "#6366f1",
-      "steps": [
+      "semesters": [
         {
-          "id": "p1-step1",
-          "num": 1,
-          "kind": "step",
-          "title": "BRCA Multi-Omic Sourcing & Split",
-          "goal": "Acquire the most feature-dense dataset to stress-test every branch of the neural network.",
-          "tasks": [
+          "id": "y1-summer-2026",
+          "label": "Summer 2026",
+          "title": "TCGA Sourcing & Data Foundation",
+          "phase": 1,
+          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "color": "#6366f1",
+          "steps": [
             {
-              "id": "phase-1-step-1-item-1-source-tcga-level-3-open-access",
-              "text": "**Source:** TCGA (Level 3 Open Access)."
-            },
-            {
-              "id": "phase-1-step-1-item-2-target-modalities-methylation-beta-value",
-              "text": "**Target Modalities:** Methylation (Beta-values), Transcriptomics (RNA-Seq), Genomics (Somatic Mutations), CNVs, and Clinical Demographics."
-            },
-            {
-              "id": "phase-1-step-1-item-3-the-strict-boundary-immediately-split-th",
-              "text": "**The Strict Boundary:** Immediately split the BRCA dataset into an **80% Training/Validation Set** and a locked **20% Holdout Test Set** before any preprocessing."
-            },
-            {
-              "id": "phase-1-step-1-item-4-hdf5-storage-serialize-aligned-preproces",
-              "text": "**HDF5 Storage:** Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 databases for memory-mapped PyTorch ingestion."
-            },
-            {
-              "id": "phase-1-step-1-item-1-data-splitting-leakage-guardrails-isolat",
-              "text": "**Data Splitting & Leakage Guardrails:** Isolate a strict **20% Holdout Test Set** from the TCGA-BRCA cohort prior to any scaling, normalization, or feature selection."
-            },
-            {
-              "id": "phase-1-step-1-item-2-variance-masks-train-only-compute-varian",
-              "text": "**Variance Masks (Train Only):** Compute variance-based dimensionality reduction to select the top 10,000 highly variable methylation CpG sites **strictly within the 80% training partition** to prevent test-set leakage."
-            },
-            {
-              "id": "phase-1-step-1-item-3-concatenation-architecture-build-a-unifi",
-              "text": "**Concatenation Architecture:** Build a unified PyTorch HDF5 pipeline reading Methylation, RNA-Seq, CNV, Somatic Mutation, and Clinical features; fuse via $X_{\text{fused}} = [X_{\text{methylation}} \parallel X_{\text{transcriptomics}} \parallel X_{\text{genomics}} \parallel X_{\text{cnv}} \parallel X_{\text{clinical}}]$ through an MLP trunk into a dense latent vector."
-            },
-            {
-              "id": "phase-1-step-1-item-4-diagnostic-head-early-fusion-binary-cros",
-              "text": "**Diagnostic Head (Early Fusion):** Binary Cross-Entropy (Tumor vs. Normal control)."
-            },
-            {
-              "id": "phase-1-step-1-item-5-staging-head-early-fusion-ordinal-log-lo",
-              "text": "**Staging Head (Early Fusion):** Ordinal Log-Loss (Stages I–IV)."
-            },
-            {
-              "id": "phase-1-step-1-item-6-prognostic-head-early-fusion-cox-proport",
-              "text": "**Prognostic Head (Early Fusion):** Cox Proportional Hazards Negative Log-Partial Likelihood (survival timelines with right-censored data)."
-            },
-            {
-              "id": "phase-1-step-1-item-7-optuna-verification-connect-the-early-fu",
-              "text": "**Optuna Verification:** Connect the early fusion model to the Dockerized PostgreSQL database on the Hetzner server and execute a small Optuna search space to verify parallel workers can read, train, and log metrics successfully."
+              "id": "y1-summer-2026-p1-step1",
+              "num": 1,
+              "kind": "step",
+              "title": "BRCA Multi-Omic Sourcing & Split",
+              "goal": "Acquire the most feature-dense dataset to stress-test every branch of the neural network.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-1-summer-2026-phase-1-step-1-item-1-source-tcga-level-3-open-access",
+                  "text": "**Source:** TCGA (Level 3 Open Access).",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-summer-2026-phase-1-step-1-item-2-target-modalities-methylation-beta-value",
+                  "text": "**Target Modalities:** Methylation (Beta-values), Transcriptomics (RNA-Seq), Genomics (Somatic Mutations), CNVs, and Clinical Demographics.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-summer-2026-phase-1-step-1-item-3-the-strict-boundary-immediately-split-th",
+                  "text": "**The Strict Boundary:** Immediately split the BRCA dataset into an **80% Training/Validation Set** and a locked **20% Holdout Test Set** before any preprocessing.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-summer-2026-phase-1-step-1-item-4-hdf5-storage-serialize-aligned-preproces",
+                  "text": "**HDF5 Storage:** Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 databases for memory-mapped PyTorch ingestion.",
+                  "phase": 1
+                }
+              ]
             }
           ]
         },
         {
-          "id": "p1-step2",
-          "num": 2,
-          "kind": "step",
-          "title": "Infrastructure & Database Orchestration",
-          "goal": "Establish the remote environments required for distributed Optuna execution.",
-          "tasks": [
+          "id": "y1-fall-2026",
+          "label": "Fall 2026",
+          "title": "Infrastructure & Static MTL Architecture",
+          "phase": 1,
+          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "color": "#6366f1",
+          "steps": [
             {
-              "id": "phase-1-step-2-item-1-central-hub-deploy-a-dockerized-postgres",
-              "text": "**Central Hub:** Deploy a Dockerized PostgreSQL instance on your Hetzner Linux server to act as the permanent, centralized Optuna study hub."
+              "id": "y1-fall-2026-p1-step2",
+              "num": 2,
+              "kind": "step",
+              "title": "Infrastructure & Database Orchestration",
+              "goal": "Establish the remote environments required for distributed Optuna execution.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-1-fall-2026-phase-1-step-2-item-1-central-hub-deploy-a-dockerized-postgres",
+                  "text": "**Central Hub:** Deploy a Dockerized PostgreSQL instance on your Hetzner Linux server to act as the permanent, centralized Optuna study hub.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-fall-2026-phase-1-step-2-item-2-ci-cd-pipeline-configure-a-github-action",
+                  "text": "**CI/CD Pipeline:** Configure a GitHub Actions runner to orchestrate and deploy your PyTorch worker scripts natively from your repository to your university's Slurm compute clusters.",
+                  "phase": 1
+                }
+              ]
             },
             {
-              "id": "phase-1-step-2-item-2-ci-cd-pipeline-configure-a-github-action",
-              "text": "**CI/CD Pipeline:** Configure a GitHub Actions runner to orchestrate and deploy your PyTorch worker scripts natively from your repository to your university's Slurm compute clusters."
-            },
-            {
-              "id": "phase-1-step-2-item-1-methylation-expert-1d-cnn-train-an-isola",
-              "text": "**Methylation Expert (1D-CNN):** Train an isolated 1D-CNN feature extractor on methylation beta-values; output independent multi-task predictions."
-            },
-            {
-              "id": "phase-1-step-2-item-2-transcriptomics-expert-deep-mlp-train-an",
-              "text": "**Transcriptomics Expert (Deep MLP):** Train an isolated deep MLP on RNA-Seq expression; output independent multi-task predictions."
-            },
-            {
-              "id": "phase-1-step-2-item-3-genomics-expert-sparse-linear-train-an-i",
-              "text": "**Genomics Expert (Sparse Linear):** Train an isolated sparse linear network on somatic mutation features; output independent multi-task predictions."
-            },
-            {
-              "id": "phase-1-step-2-item-4-cnv-expert-sparse-linear-train-an-isolat",
-              "text": "**CNV Expert (Sparse Linear):** Train an isolated sparse linear network on copy-number variation features; output independent multi-task predictions."
-            },
-            {
-              "id": "phase-1-step-2-item-5-rigorous-stacking-cross-validation-oof-d",
-              "text": "**Rigorous Stacking Cross-Validation (OOF):** Divide the 80% training pool into 5 folds; for each fold $k$, train all 4 expert networks on the remaining 4 folds and generate predictions on fold $k$; concatenate validation predictions across all folds to construct a complete **Clean Out-of-Fold Predictions** matrix ($P_{\text{OOF}}$) for the entire 80% dataset."
-            },
-            {
-              "id": "phase-1-step-2-item-6-elasticnet-meta-classifier-integration-t",
-              "text": "**ElasticNet Meta-Classifier Integration:** Train a downstream **Logistic Regression with ElasticNet Regularization** (`penalty='elasticnet'`, `solver='saga'`) on $P_{\text{OOF}}$ with true biological labels; tune $\lambda$ and $\alpha$ via Optuna; extract sparse non-zero coefficients ($w$) to chart how much weight each omic expert network receives for diagnostic outcomes."
+              "id": "y1-fall-2026-p1-step3",
+              "num": 3,
+              "kind": "step",
+              "title": "Engineering the Multi-Task Architecture",
+              "goal": "Write the PyTorch modules that handle multi-modal fusion and multi-task learning.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-1-fall-2026-phase-1-step-3-item-1-input-branches-construct-flexible-ingest",
+                  "text": "**Input Branches:** Construct flexible ingestion layers for dense continuous data (1D-CNNs/Transformers for Methylation/RNA) and sparse data (Linear layers for Genomics).",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-fall-2026-phase-1-step-3-item-2-phenotype-head-binary-cross-entropy-loss",
+                  "text": "**Phenotype Head (Binary Cross-Entropy Loss):** Healthy vs. Diseased (BRCA: tumor vs. normal matched tissue).",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-fall-2026-phase-1-step-3-item-3-severity-head-ordinal-loss-stage-i-ii-ii",
+                  "text": "**Severity Head (Ordinal Loss):** Stage I, II, III, or IV (K=4 for BRCA; configurable per disease).",
+                  "phase": 1
+                }
+              ]
             }
           ]
         },
         {
-          "id": "p1-step3",
-          "num": 3,
-          "kind": "step",
-          "title": "Engineering the Multi-Task Architecture",
-          "goal": "Write the PyTorch modules that handle multi-modal fusion and multi-task learning.",
-          "tasks": [
+          "id": "y1-spring-2027",
+          "label": "Spring 2027",
+          "title": "NAS Benchmarking & Early Fusion Baseline",
+          "phase": 1,
+          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "color": "#6366f1",
+          "steps": [
             {
-              "id": "phase-1-step-3-item-1-input-branches-construct-flexible-ingest",
-              "text": "**Input Branches:** Construct flexible ingestion layers for dense continuous data (1D-CNNs/Transformers for Methylation/RNA) and sparse data (Linear layers for Genomics)."
+              "id": "y1-spring-2027-p1-stage1",
+              "num": 1,
+              "kind": "stage",
+              "title": "Early Fusion Proof-of-Concept",
+              "goal": "Establish an end-to-end software baseline using immediate feature concatenation to stress-test data ingestion, PyTorch tensor formatting, multi-task heads, and distributed Optuna logging without algorithmic complexity.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-1-item-1-data-splitting-leakage-guardrails-isolat",
+                  "text": "**Data Splitting & Leakage Guardrails:** Isolate a strict **20% Holdout Test Set** from the TCGA-BRCA cohort prior to any scaling, normalization, or feature selection.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-1-item-2-variance-masks-train-only-compute-varian",
+                  "text": "**Variance Masks (Train Only):** Compute variance-based dimensionality reduction to select the top 10,000 highly variable methylation CpG sites **strictly within the 80% training partition** to prevent test-set leakage.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-1-item-3-concatenation-architecture-build-a-unifi",
+                  "text": "**Concatenation Architecture:** Build a unified PyTorch HDF5 pipeline reading Methylation, RNA-Seq, CNV, Somatic Mutation, and Clinical features; fuse via $X_{\text{fused}} = [X_{\text{methylation}} \parallel X_{\text{transcriptomics}} \parallel X_{\text{genomics}} \parallel X_{\text{cnv}} \parallel X_{\text{clinical}}]$ through an MLP trunk into a dense latent vector.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-1-item-4-phenotype-head-early-fusion-binary-cross",
+                  "text": "**Phenotype Head (Early Fusion):** Binary Cross-Entropy (Healthy vs. Diseased; BRCA: tumor vs. normal control).",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-1-item-5-severity-head-early-fusion-ordinal-log-l",
+                  "text": "**Severity Head (Early Fusion):** Ordinal Log-Loss (Stages I–IV; K configurable via disease registry).",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-1-item-6-optuna-verification-connect-the-early-fu",
+                  "text": "**Optuna Verification:** Connect the early fusion model to the Dockerized PostgreSQL database on the Hetzner server and execute a small Optuna search space to verify parallel workers can read, train, and log metrics successfully.",
+                  "phase": 1
+                }
+              ]
             },
             {
-              "id": "phase-1-step-3-item-2-diagnostic-head-cross-entropy-loss-tumor",
-              "text": "**Diagnostic Head (Cross-Entropy Loss):** Tumor vs. Normal matched tissue."
+              "id": "y1-spring-2027-p1-stage2",
+              "num": 2,
+              "kind": "stage",
+              "title": "Stacking Late Fusion Upgrade (Begin)",
+              "goal": "Begin training isolated modality expert networks for the stacked late fusion ensemble.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-2-item-1-methylation-expert-1d-cnn-train-an-isola",
+                  "text": "**Methylation Expert (1D-CNN):** Train an isolated 1D-CNN feature extractor on methylation beta-values; output independent multi-task predictions.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-stage-2-item-2-transcriptomics-expert-deep-mlp-train-an",
+                  "text": "**Transcriptomics Expert (Deep MLP):** Train an isolated deep MLP on RNA-Seq expression; output independent multi-task predictions.",
+                  "phase": 1
+                }
+              ]
             },
             {
-              "id": "phase-1-step-3-item-3-staging-head-ordinal-loss-stage-i-ii-iii",
-              "text": "**Staging Head (Ordinal Loss):** Stage I, II, III, or IV."
-            },
-            {
-              "id": "phase-1-step-3-item-4-prognostic-head-cox-ph-loss-survival-tim",
-              "text": "**Prognostic Head (Cox-PH Loss):** Survival timeline (Days to Live) accounting for censored data."
-            }
-          ]
-        },
-        {
-          "id": "p1-step4",
-          "num": 4,
-          "kind": "step",
-          "title": "Optuna NAS & Baseline Benchmarking",
-          "goal": "Execute the search space specifically for BRCA on the 80% Training Set using 5-Fold Cross Validation.",
-          "tasks": [
-            {
-              "id": "phase-1-step-4-item-1-neural-search-optuna-tune-the-5-deep-lea",
-              "text": "**Neural Search (Optuna):** Tune the 5 deep learning topologies (MLP, 1D-CNN, Transformer, TabNet, Cross-Attention Fusion) to find the optimal BRCA network. Have Optuna dynamically weigh the multi-task loss functions."
-            },
-            {
-              "id": "phase-1-step-4-item-2-classical-baselines-train-xgboost-lightg",
-              "text": "**Classical Baselines:** Train XGBoost, LightGBM, and ElasticNet strictly on the tabular/methylation data to establish a performance floor."
-            },
-            {
-              "id": "phase-1-step-4-item-3-the-poc-validation-evaluate-the-single-b",
-              "text": "**The PoC Validation:** Evaluate the single best Optuna-discovered model against the classical baselines using the locked 20% Holdout Test Set."
-            }
-          ]
-        },
-        {
-          "id": "p1-step5",
-          "num": 5,
-          "kind": "step",
-          "title": "Implementation Targets",
-          "goal": "Scaffold core `src/` modules that implement the two-stage fusion pipeline.",
-          "tasks": [
-            {
-              "id": "phase-1-step-5-item-1-src-data-brca-dataset-py-pytorch-dataset",
-              "text": "`src/data/brca_dataset.py` — PyTorch Dataset switching between flat concatenated tensor (Stage 1) and modality dict (Stage 2)."
-            },
-            {
-              "id": "phase-1-step-5-item-2-src-models-brca-early-fusion-py-stage-1",
-              "text": "`src/models/brca_early_fusion.py` — Stage 1 `torch.cat` model with MLP trunk and three MTL heads (BCE, ordinal, Cox-PH)."
-            },
-            {
-              "id": "phase-1-step-5-item-3-src-pipelines-train-stacking-py-stage-2",
-              "text": "`src/pipelines/train_stacking.py` — Stage 2 five-fold OOF loop and sklearn ElasticNet meta-classifier on $P_{\text{OOF}}$."
+              "id": "y1-spring-2027-p1-step4",
+              "num": 4,
+              "kind": "step",
+              "title": "Optuna NAS & Baseline Benchmarking",
+              "goal": "Execute the search space specifically for BRCA on the 80% Training Set using 5-Fold Cross Validation.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-1-spring-2027-phase-1-step-4-item-1-neural-search-optuna-tune-the-5-deep-lea",
+                  "text": "**Neural Search (Optuna):** Tune the 5 deep learning topologies (MLP, 1D-CNN, Transformer, TabNet, Cross-Attention Fusion) to find the optimal BRCA network. Have Optuna dynamically weigh the multi-task loss functions.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-step-4-item-2-classical-baselines-train-xgboost-lightg",
+                  "text": "**Classical Baselines:** Train XGBoost, LightGBM, and ElasticNet strictly on the tabular/methylation data to establish a performance floor.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-1-spring-2027-phase-1-step-4-item-3-the-poc-validation-evaluate-the-single-b",
+                  "text": "**The PoC Validation:** Evaluate the single best Optuna-discovered model against the classical baselines using the locked 20% Holdout Test Set.",
+                  "phase": 1
+                }
+              ]
             }
           ]
         }
       ]
+    },
+    {
+      "id": "y2",
+      "label": "Year 2",
+      "subtitle": "Abstraction & Comparative Scaling (2027–2028)",
+      "color": "#8b5cf6",
+      "semesters": [
+        {
+          "id": "y2-summer-2027",
+          "label": "Summer 2027",
+          "title": "Complete Stacked Fusion & Implementation Scaffolds",
+          "phase": 1,
+          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "color": "#8b5cf6",
+          "steps": [
+            {
+              "id": "y2-summer-2027-p1-stage2",
+              "num": 2,
+              "kind": "stage",
+              "title": "Stacking Late Fusion Upgrade (Complete)",
+              "goal": "Refactor the validated Stage 1 pipeline into a modular Late Fusion architecture with rigorous OOF stacking and an interpretable ElasticNet meta-classifier—eliminating data leakage entirely.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-2-summer-2027-phase-1-stage-2-item-1-genomics-expert-sparse-linear-train-an-i",
+                  "text": "**Genomics Expert (Sparse Linear):** Train an isolated sparse linear network on somatic mutation features; output independent multi-task predictions.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-stage-2-item-2-cnv-expert-sparse-linear-train-an-isolat",
+                  "text": "**CNV Expert (Sparse Linear):** Train an isolated sparse linear network on copy-number variation features; output independent multi-task predictions.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-stage-2-item-3-rigorous-stacking-cross-validation-oof-d",
+                  "text": "**Rigorous Stacking Cross-Validation (OOF):** Divide the 80% training pool into 5 folds; for each fold $k$, train all 4 expert networks on the remaining 4 folds and generate predictions on fold $k$; concatenate validation predictions across all folds to construct a complete **Clean Out-of-Fold Predictions** matrix ($P_{\text{OOF}}$) for the entire 80% dataset.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-stage-2-item-4-elasticnet-meta-classifier-integration-t",
+                  "text": "**ElasticNet Meta-Classifier Integration:** Train downstream **Logistic Regression with ElasticNet Regularization** (`penalty='elasticnet'`, `solver='saga'`) meta-models on $P_{\text{OOF}}$ (8 meta-features: 4 experts × 2 tasks) with true biological labels; tune $\lambda$ and $\alpha$ via Optuna; extract sparse non-zero coefficients ($w$) to chart how much weight each omic expert network receives for phenotype and severity outcomes.",
+                  "phase": 1
+                }
+              ]
+            },
+            {
+              "id": "y2-summer-2027-p1-step5",
+              "num": 5,
+              "kind": "step",
+              "title": "Implementation Targets",
+              "goal": "Scaffold core `src/` modules that implement the two-stage fusion pipeline.",
+              "phase": 1,
+              "tasks": [
+                {
+                  "id": "year-2-summer-2027-phase-1-step-5-item-1-src-config-disease-registry-yaml-per-dis",
+                  "text": "`src/config/disease_registry.yaml` — Per-disease phenotype/severity label mappings and `n_severity_classes`.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-step-5-item-2-src-data-clinical-time-py-normalize-raw",
+                  "text": "`src/data/clinical_time.py` — Normalize raw dates/durations into canonical Z-scored time tabular features.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-step-5-item-3-src-data-brca-dataset-py-pytorch-dataset",
+                  "text": "`src/data/brca_dataset.py` — PyTorch Dataset switching between flat concatenated tensor (Stage 1) and modality dict (Stage 2); clinical inputs exclude severity labels.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-step-5-item-4-src-models-brca-early-fusion-py-stage-1",
+                  "text": "`src/models/brca_early_fusion.py` — Stage 1 `torch.cat` model with MLP trunk and two Static MTL heads (phenotype BCE, severity ordinal).",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-step-5-item-5-src-models-losses-py-phenotypebceloss-an",
+                  "text": "`src/models/losses.py` — `PhenotypeBCELoss` and `OrdinalSeverityLoss` for the two-task baseline.",
+                  "phase": 1
+                },
+                {
+                  "id": "year-2-summer-2027-phase-1-step-5-item-6-src-pipelines-train-stacking-py-stage-2",
+                  "text": "`src/pipelines/train_stacking.py` — Stage 2 five-fold OOF loop and sklearn ElasticNet meta-classifier on $P_{\text{OOF}}$ (4 experts × 2 tasks = 8 meta-features).",
+                  "phase": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y2-fall-2027",
+          "label": "Fall 2027",
+          "title": "Code Abstraction & Disease Sourcing",
+          "phase": 2,
+          "phaseLabel": "Phase 2: Code Abstraction & Generalization",
+          "color": "#8b5cf6",
+          "steps": [
+            {
+              "id": "y2-fall-2027-p2-step1",
+              "num": 1,
+              "kind": "step",
+              "title": "Refactoring the Base Classes",
+              "goal": "Transition the hardcoded BRCA script into a universal disease pipeline.",
+              "phase": 2,
+              "tasks": [
+                {
+                  "id": "year-2-fall-2027-phase-2-step-1-item-1-abstract-data-loaders-refactor-the-pytor",
+                  "text": "**Abstract Data Loaders:** Refactor the PyTorch `Dataset` class so it dynamically counts the number of available omic layers. If a dataset is missing RNA-Seq, the loader simply drops that tensor branch without crashing the network.",
+                  "phase": 2
+                },
+                {
+                  "id": "year-2-fall-2027-phase-2-step-1-item-2-configurable-severity-cardinality-keep-t",
+                  "text": "**Configurable Severity Cardinality:** Keep the same ordinal `severity_head` topology across diseases; vary K and per-cohort label mapping via `disease_registry.yaml` (e.g., BRCA Stage I–IV vs. Alzheimer's CDR/MMSE bands).",
+                  "phase": 2
+                }
+              ]
+            },
+            {
+              "id": "y2-fall-2027-p3-step1",
+              "num": 1,
+              "kind": "step",
+              "title": "Sourcing the 4 Distinct Pathologies",
+              "goal": "Gather the datasets that represent the remaining functional disease categories.",
+              "phase": 3,
+              "tasks": [
+                {
+                  "id": "year-2-fall-2027-phase-3-step-1-item-1-neurological-alzheimer-s-disease-geo-foc",
+                  "text": "**Neurological:** Alzheimer's Disease (GEO) - Focus on progressive structural shifts.",
+                  "phase": 3
+                },
+                {
+                  "id": "year-2-fall-2027-phase-3-step-1-item-2-autoimmune-rheumatoid-arthritis-geo-focu",
+                  "text": "**Autoimmune:** Rheumatoid Arthritis (GEO) - Focus on systemic inflammation.",
+                  "phase": 3
+                },
+                {
+                  "id": "year-2-fall-2027-phase-3-step-1-item-3-metabolic-type-2-diabetes-geo-recountmet",
+                  "text": "**Metabolic:** Type 2 Diabetes (GEO / `recountmethylation`) - Focus on lifestyle-driven epigenetic markers.",
+                  "phase": 3
+                },
+                {
+                  "id": "year-2-fall-2027-phase-3-step-1-item-4-genetic-down-syndrome-geo-focus-on-innat",
+                  "text": "**Genetic:** Down Syndrome (GEO) - Focus on innate chromosomal baseline differences.",
+                  "phase": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y2-spring-2028",
+          "label": "Spring 2028",
+          "title": "Distributed Optuna Execution",
+          "phase": 3,
+          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
+          "color": "#8b5cf6",
+          "steps": [
+            {
+              "id": "y2-spring-2028-p3-step2",
+              "num": 2,
+              "kind": "step",
+              "title": "High-Throughput Distributed Execution",
+              "goal": "Push the generalized pipeline to the university cluster.",
+              "phase": 3,
+              "tasks": [
+                {
+                  "id": "year-2-spring-2028-phase-3-step-2-item-1-run-4-parallel-optuna-studies-pointing-t",
+                  "text": "Run 4 parallel Optuna studies pointing to the Hetzner PostgreSQL database.",
+                  "phase": 3
+                },
+                {
+                  "id": "year-2-spring-2028-phase-3-step-2-item-2-because-the-infrastructure-and-code-were",
+                  "text": "Because the infrastructure and code were proven in Phase 1, this phase is strictly computational execution and monitoring.",
+                  "phase": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "y3",
+      "label": "Year 3",
+      "subtitle": "Thesis & Deliverables (2028–2029)",
+      "color": "#06b6d4",
+      "semesters": [
+        {
+          "id": "y3-summer-2028",
+          "label": "Summer 2028",
+          "title": "Comparative Analysis & Interpretability",
+          "phase": 4,
+          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
+          "color": "#06b6d4",
+          "steps": [
+            {
+              "id": "y3-summer-2028-p4-step1",
+              "num": 1,
+              "kind": "step",
+              "title": "The Comparative Analysis (The Core Thesis)",
+              "goal": "Mine the Optuna database to answer the primary research question.",
+              "phase": 4,
+              "tasks": [
+                {
+                  "id": "year-3-summer-2028-phase-4-step-1-item-1-structural-taxonomy-map-the-final-archit",
+                  "text": "**Structural Taxonomy:** Map the final architectures against the disease types. Compare if localized, highly mutated cancers (BRCA) inherently select spatial architectures (CNNs) while systemic, slow-progressing conditions (Alzheimer's) favor self-attention mechanisms (Transformers) or classical models.",
+                  "phase": 4
+                },
+                {
+                  "id": "year-3-summer-2028-phase-4-step-1-item-2-interpretability-use-shap-to-determine-w",
+                  "text": "**Interpretability:** Use SHAP to determine which specific omic layers carried the most predictive weight across different disease categories.",
+                  "phase": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y3-fall-2028",
+          "label": "Fall 2028",
+          "title": "Patient-Facing Software Portal",
+          "phase": 4,
+          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
+          "color": "#06b6d4",
+          "steps": [
+            {
+              "id": "y3-fall-2028-p4-step2",
+              "num": 2,
+              "kind": "step",
+              "title": "The Patient-Facing Software App",
+              "goal": "Deliver a production-ready diagnostic UI.",
+              "phase": 4,
+              "tasks": [
+                {
+                  "id": "year-3-fall-2028-phase-4-step-2-item-1-build-a-streamlit-web-dashboard",
+                  "text": "Build a `streamlit` web dashboard.",
+                  "phase": 4
+                },
+                {
+                  "id": "year-3-fall-2028-phase-4-step-2-item-2-users-select-a-disease-track-upload-mult",
+                  "text": "Users select a disease track, upload multi-omic `.CSV` data, and receive a phenotype probability and severity stage powered by the highly optimized Static MTL models.",
+                  "phase": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y3-spring-2029",
+          "label": "Spring 2029",
+          "title": "Thesis Synthesis & Publication",
+          "phase": 4,
+          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
+          "color": "#06b6d4",
+          "steps": [
+            {
+              "id": "y3-spring-2029-p4-step2",
+              "num": 2,
+              "kind": "step",
+              "title": "The Patient-Facing Software App (Publication)",
+              "goal": "Open-source the multi-pipeline framework and submit comparative findings.",
+              "phase": 4,
+              "tasks": [
+                {
+                  "id": "year-3-spring-2029-phase-4-step-2-item-1-publication-open-source-the-multi-pipeli",
+                  "text": "**Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit comparative findings to a computational biology or applied machine learning venue.",
+                  "phase": 4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "p1",
+      "label": "Phase 1",
+      "subtitle": "The Anchor (BRCA PoC)",
+      "color": "#6366f1",
+      "taskCount": 30
     },
     {
       "id": "p2",
       "label": "Phase 2",
       "subtitle": "Code Abstraction & Generalization",
       "color": "#8b5cf6",
-      "steps": [
-        {
-          "id": "p2-step1",
-          "num": 1,
-          "kind": "step",
-          "title": "Refactoring the Base Classes",
-          "goal": "Transition the hardcoded BRCA script into a universal disease pipeline.",
-          "tasks": [
-            {
-              "id": "phase-2-step-1-item-1-abstract-data-loaders-refactor-the-pytor",
-              "text": "**Abstract Data Loaders:** Refactor the PyTorch `Dataset` class so it dynamically counts the number of available omic layers. If a dataset is missing RNA-Seq, the loader simply drops that tensor branch without crashing the network."
-            },
-            {
-              "id": "phase-2-step-1-item-2-dynamic-output-heads-ensure-the-mtl-head",
-              "text": "**Dynamic Output Heads:** Ensure the MTL heads adapt to the clinical data available (e.g., swapping \"Tumor Stage\" for \"Cognitive Score\")."
-            }
-          ]
-        }
-      ]
+      "taskCount": 2
     },
     {
       "id": "p3",
       "label": "Phase 3",
       "subtitle": "Scaling to the Comparative Matrix",
       "color": "#06b6d4",
-      "steps": [
-        {
-          "id": "p3-step1",
-          "num": 1,
-          "kind": "step",
-          "title": "Sourcing the 4 Distinct Pathologies",
-          "goal": "Gather the datasets that represent the remaining functional disease categories.",
-          "tasks": [
-            {
-              "id": "phase-3-step-1-item-1-neurological-alzheimer-s-disease-geo-foc",
-              "text": "**Neurological:** Alzheimer's Disease (GEO) - Focus on progressive structural shifts."
-            },
-            {
-              "id": "phase-3-step-1-item-2-autoimmune-rheumatoid-arthritis-geo-focu",
-              "text": "**Autoimmune:** Rheumatoid Arthritis (GEO) - Focus on systemic inflammation."
-            },
-            {
-              "id": "phase-3-step-1-item-3-metabolic-type-2-diabetes-geo-recountmet",
-              "text": "**Metabolic:** Type 2 Diabetes (GEO / `recountmethylation`) - Focus on lifestyle-driven epigenetic markers."
-            },
-            {
-              "id": "phase-3-step-1-item-4-genetic-down-syndrome-geo-focus-on-innat",
-              "text": "**Genetic:** Down Syndrome (GEO) - Focus on innate chromosomal baseline differences."
-            }
-          ]
-        },
-        {
-          "id": "p3-step2",
-          "num": 2,
-          "kind": "step",
-          "title": "High-Throughput Distributed Execution",
-          "goal": "Push the generalized pipeline to the university cluster.",
-          "tasks": [
-            {
-              "id": "phase-3-step-2-item-1-run-4-parallel-optuna-studies-pointing-t",
-              "text": "Run 4 parallel Optuna studies pointing to the Hetzner PostgreSQL database."
-            },
-            {
-              "id": "phase-3-step-2-item-2-because-the-infrastructure-and-code-were",
-              "text": "Because the infrastructure and code were proven in Phase 1, this phase is strictly computational execution and monitoring."
-            }
-          ]
-        }
-      ]
+      "taskCount": 6
     },
     {
       "id": "p4",
       "label": "Phase 4",
       "subtitle": "Thesis Synthesis & Final Deliverables",
       "color": "#10b981",
-      "steps": [
-        {
-          "id": "p4-step1",
-          "num": 1,
-          "kind": "step",
-          "title": "The Comparative Analysis (The Core Thesis)",
-          "goal": "Mine the Optuna database to answer the primary research question.",
-          "tasks": [
-            {
-              "id": "phase-4-step-1-item-1-structural-taxonomy-map-the-final-archit",
-              "text": "**Structural Taxonomy:** Map the final architectures against the disease types. Compare if localized, highly mutated cancers (BRCA) inherently select spatial architectures (CNNs) while systemic, slow-progressing conditions (Alzheimer's) favor self-attention mechanisms (Transformers) or classical models."
-            },
-            {
-              "id": "phase-4-step-1-item-2-interpretability-use-shap-to-determine-w",
-              "text": "**Interpretability:** Use SHAP to determine which specific omic layers carried the most predictive weight across different disease categories."
-            }
-          ]
-        },
-        {
-          "id": "p4-step2",
-          "num": 2,
-          "kind": "step",
-          "title": "The Patient-Facing Software App",
-          "goal": "Deliver a production-ready diagnostic UI.",
-          "tasks": [
-            {
-              "id": "phase-4-step-2-item-1-build-a-streamlit-web-dashboard",
-              "text": "Build a `streamlit` web dashboard."
-            },
-            {
-              "id": "phase-4-step-2-item-2-users-select-a-disease-track-upload-mult",
-              "text": "Users select a disease track, upload multi-omic `.CSV` data, and receive a phenotype probability, severity stage, and prognostic timeline powered by the highly optimized models."
-            },
-            {
-              "id": "phase-4-step-2-item-3-publication-open-source-the-multi-pipeli",
-              "text": "**Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit comparative findings to a computational biology or applied machine learning venue."
-            }
-          ]
-        }
-      ]
+      "taskCount": 5
     }
   ]
 };
 
-    const STORAGE_KEY = 'phd_plan_progress_v6';
+    const STORAGE_KEY = 'phd_plan_progress_v7';
 
     // ─── State ────────────────────────────────────────────────────────────────
     let progress = loadProgress();
@@ -476,7 +688,7 @@
 
     function allTaskIds() {
       const ids = [];
-      PLAN.phases.forEach(p => p.steps.forEach(st => st.tasks.forEach(t => ids.push(t.id))));
+      (PLAN.years || []).forEach(y => y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => ids.push(t.id)))));
       return ids;
     }
 
@@ -486,27 +698,46 @@
       const total = ids.length;
       const pct = total ? Math.round((done / total) * 100) : 0;
 
-      const phaseStats = PLAN.phases.map(p => {
-        const pIds = [];
-        p.steps.forEach(st => st.tasks.forEach(t => pIds.push(t.id)));
-        const pDone = pIds.filter(id => progress[id]).length;
-        return { id: p.id, label: p.label, done: pDone, total: pIds.length, pct: pIds.length ? Math.round((pDone / pIds.length) * 100) : 0, color: p.color };
+      const yearStats = (PLAN.years || []).map(y => {
+        const yIds = [];
+        y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => yIds.push(t.id))));
+        const yDone = yIds.filter(id => progress[id]).length;
+        return { id: y.id, label: y.label, subtitle: y.subtitle, done: yDone, total: yIds.length, pct: yIds.length ? Math.round((yDone / yIds.length) * 100) : 0, color: y.color };
       });
 
+      const semesterStats = {};
+      (PLAN.years || []).forEach(y => y.semesters.forEach(s => {
+        const sIds = [];
+        s.steps.forEach(st => st.tasks.forEach(t => sIds.push(t.id)));
+        const sDone = sIds.filter(id => progress[id]).length;
+        semesterStats[s.id] = { done: sDone, total: sIds.length, pct: sIds.length ? Math.round((sDone / sIds.length) * 100) : 0 };
+      }));
+
       const stepStats = {};
-      PLAN.phases.forEach(p => p.steps.forEach(st => {
+      (PLAN.years || []).forEach(y => y.semesters.forEach(s => s.steps.forEach(st => {
         const stIds = st.tasks.map(t => t.id);
         const stDone = stIds.filter(id => progress[id]).length;
         stepStats[st.id] = { done: stDone, total: stIds.length, pct: stIds.length ? Math.round((stDone / stIds.length) * 100) : 0 };
-      }));
+      })));
 
-      return { ids, done, total, pct, phaseStats, stepStats };
+      const phaseStats = (PLAN.phases || []).map(p => {
+        const phaseNum = parseInt(p.id.replace('p', ''), 10);
+        const pIds = [];
+        (PLAN.years || []).forEach(y => y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => {
+          if ((t.phase || st.phase || s.phase) === phaseNum) pIds.push(t.id);
+        }))));
+        const pDone = pIds.filter(id => progress[id]).length;
+        return { id: p.id, label: p.label, subtitle: p.subtitle, done: pDone, total: pIds.length, pct: pIds.length ? Math.round((pDone / pIds.length) * 100) : 0, color: p.color };
+      });
+
+      return { ids, done, total, pct, yearStats, semesterStats, stepStats, phaseStats };
     }
 
     // ─── Render ───────────────────────────────────────────────────────────────
     function render() {
       document.getElementById('core-objective').textContent = PLAN.coreObjective;
       renderTimeline();
+      renderYearBars();
       renderPhaseBars();
       renderSteps();
       updateStats();
@@ -515,24 +746,26 @@
 
     function renderTimeline() {
       const el = document.getElementById('timeline');
-      let html = '<div class="flex gap-0 min-w-[700px]">';
+      const stats = getCompletionStats();
+      let html = '<div class="flex gap-0 min-w-[900px]">';
 
-      PLAN.phases.forEach((phase, pi) => {
-        html += `<div class="flex-1 ${pi > 0 ? 'border-l border-slate-700/50 pl-2' : ''}">`;
-        html += `<p class="text-xs font-bold uppercase tracking-wider mb-3 text-center" style="color:${phase.color}">${phase.label}</p>`;
-        html += '<div class="flex gap-2 justify-center flex-wrap">';
-        phase.steps.forEach(step => {
-          const stats = getCompletionStats().stepStats[step.id];
+      (PLAN.years || []).forEach((year, yi) => {
+        html += `<div class="flex-1 ${yi > 0 ? 'border-l border-slate-700/50 pl-3' : ''}">`;
+        html += `<p class="text-xs font-bold uppercase tracking-wider mb-3 text-center" style="color:${year.color}">${year.label}</p>`;
+        html += '<div class="flex gap-2 justify-center">';
+        year.semesters.forEach(sem => {
+          const semStats = stats.semesterStats[sem.id];
           html += `
-            <button data-step="${step.id}"
-              class="timeline-node flex-1 min-w-[100px] max-w-[140px] rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-center cursor-pointer hover:bg-slate-800 hover:border-slate-600"
-              style="border-top: 3px solid ${phase.color}">
-              <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${phase.color}">${(step.kind === 'stage' ? 'Stage' : 'Step')} ${step.num}</p>
-              <p class="text-[11px] text-slate-300 mt-1 leading-tight line-clamp-2">${step.title.split(' ').slice(0, 3).join(' ')}…</p>
+            <button data-semester="${sem.id}"
+              class="timeline-node flex-1 min-w-[90px] max-w-[120px] rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-center cursor-pointer hover:bg-slate-800 hover:border-slate-600"
+              style="border-top: 3px solid ${sem.color || year.color}">
+              <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${sem.color || year.color}">${sem.label}</p>
+              <p class="text-[10px] text-slate-500 mt-0.5">${sem.phaseLabel || ''}</p>
+              <p class="text-[11px] text-slate-300 mt-1 leading-tight line-clamp-2">${sem.title.split(' ').slice(0, 3).join(' ')}…</p>
               <div class="mt-2 h-1 bg-slate-700 rounded-full overflow-hidden">
-                <div class="h-full rounded-full progress-bar-fill" style="width:${stats.pct}%;background:${phase.color}"></div>
+                <div class="h-full rounded-full progress-bar-fill" style="width:${semStats.pct}%;background:${sem.color || year.color}"></div>
               </div>
-              <p class="text-[10px] text-slate-500 mt-1">${stats.pct}%</p>
+              <p class="text-[10px] text-slate-500 mt-1">${semStats.pct}%</p>
             </button>`;
         });
         html += '</div></div>';
@@ -543,7 +776,7 @@
 
       el.querySelectorAll('.timeline-node').forEach(btn => {
         btn.addEventListener('click', () => {
-          const id = btn.dataset.step;
+          const id = btn.dataset.semester;
           const card = document.getElementById(`card-${id}`);
           if (card) {
             card.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -560,81 +793,119 @@
       document.querySelectorAll('.step-card').forEach(c => c.classList.remove('highlight'));
       document.querySelectorAll('.timeline-node').forEach(n => n.classList.remove('active'));
       const card = document.getElementById(`card-${id}`);
-      const node = document.querySelector(`[data-step="${id}"]`);
+      const node = document.querySelector(`[data-semester="${id}"]`);
       if (card) { card.classList.add('highlight'); setTimeout(() => card.classList.remove('highlight'), 2500); }
       if (node) node.classList.add('active');
+    }
+
+    function renderYearBars() {
+      const stats = getCompletionStats();
+      const el = document.getElementById('year-bars');
+      el.innerHTML = stats.yearStats.map(y => `
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-semibold" style="color:${y.color}">${y.label}</span>
+            <span class="text-sm font-bold text-white">${y.pct}%</span>
+          </div>
+          <p class="text-xs text-slate-500 mb-2 truncate">${y.subtitle || ''}</p>
+          <div class="h-2.5 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full rounded-full progress-bar-fill" style="width:${y.pct}%;background:${y.color}"></div>
+          </div>
+          <p class="text-xs text-slate-500 mt-2">${y.done} / ${y.total} tasks complete</p>
+        </div>
+      `).join('');
     }
 
     function renderPhaseBars() {
       const stats = getCompletionStats();
       const el = document.getElementById('phase-bars');
-      el.innerHTML = stats.phaseStats.map(p => `
+      if (!stats.phaseStats.length) { el.innerHTML = ''; return; }
+      el.innerHTML = `
+        <div class="col-span-full mb-1">
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Phase Summary (metadata)</p>
+        </div>` +
+        stats.phaseStats.map(p => `
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-          <div class="flex justify-between items-center mb-2">
+          <div class="flex justify-between items-center mb-1">
             <span class="text-sm font-semibold" style="color:${p.color}">${p.label}</span>
             <span class="text-sm font-bold text-white">${p.pct}%</span>
           </div>
-          <div class="h-2.5 bg-slate-800 rounded-full overflow-hidden">
+          <p class="text-[10px] text-slate-600 mb-2 truncate">${p.subtitle || ''}</p>
+          <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
             <div class="h-full rounded-full progress-bar-fill" style="width:${p.pct}%;background:${p.color}"></div>
           </div>
-          <p class="text-xs text-slate-500 mt-2">${p.done} / ${p.total} tasks complete</p>
+          <p class="text-xs text-slate-500 mt-2">${p.done} / ${p.total} tasks</p>
         </div>
       `).join('');
     }
 
     function renderSteps() {
       const el = document.getElementById('steps');
+      const stats = getCompletionStats();
       let html = '';
 
-      PLAN.phases.forEach(phase => {
+      (PLAN.years || []).forEach(year => {
         html += `
           <div class="mt-2">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-1 h-8 rounded-full" style="background:${phase.color}"></div>
+              <div class="w-1 h-8 rounded-full" style="background:${year.color}"></div>
               <div>
-                <h2 class="text-lg font-bold text-white">${phase.label}: ${phase.subtitle}</h2>
+                <h2 class="text-lg font-bold text-white">${year.label}: ${year.subtitle}</h2>
               </div>
             </div>
             <div class="space-y-4">`;
 
-        phase.steps.forEach(step => {
-          const stepStats = getCompletionStats().stepStats[step.id];
-          const taskCount = step.tasks.length;
+        year.semesters.forEach(sem => {
+          const semStats = stats.semesterStats[sem.id];
+          const taskCount = sem.steps.reduce((n, st) => n + st.tasks.length, 0);
 
           html += `
-            <article id="card-${step.id}" class="step-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <article id="card-${sem.id}" class="step-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
               <button class="collapse-toggle w-full text-left px-5 sm:px-6 py-4 flex items-center gap-4 hover:bg-slate-800/50 transition">
-                <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border" style="border-color:${phase.color}33;background:${phase.color}15">
-                  <span class="text-[10px] font-bold uppercase" style="color:${phase.color}">${(step.kind === 'stage' ? 'Stage' : 'Step')} ${step.num}</span>
-                  <span class="text-lg font-bold text-white">${stepStats.pct}%</span>
+                <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border" style="border-color:${sem.color || year.color}33;background:${(sem.color || year.color)}15">
+                  <span class="text-[10px] font-bold uppercase" style="color:${sem.color || year.color}">${sem.label.split(' ')[0]}</span>
+                  <span class="text-lg font-bold text-white">${semStats.pct}%</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <h3 class="text-base sm:text-lg font-semibold text-white truncate">${step.title}</h3>
-                  <p class="text-sm text-slate-400 mt-0.5 line-clamp-1"><span class="text-indigo-400 font-medium">Goal:</span> ${step.goal}</p>
-                  <p class="text-xs text-slate-600 mt-1">${taskCount} tasks</p>
+                  <h3 class="text-base sm:text-lg font-semibold text-white truncate">${sem.label}: ${sem.title}</h3>
+                  <p class="text-xs text-indigo-400 mt-0.5">${sem.phaseLabel || ''}</p>
+                  <p class="text-xs text-slate-600 mt-1">${taskCount} tasks · ${sem.steps.length} steps</p>
                 </div>
                 <svg class="chevron w-5 h-5 text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
               <div class="collapse-content border-t border-slate-800">
-                <div class="px-5 sm:px-6 py-5 space-y-5">
-                  <div class="bg-indigo-950/30 border border-indigo-800/30 rounded-lg px-4 py-3">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-1">${step.kind === 'stage' ? 'Stage' : 'Step'} Goal</p>
-                    <p class="text-sm text-slate-300">${step.goal}</p>
-                  </div>
-                  <ul class="space-y-2 ml-1">`;
+                <div class="px-5 sm:px-6 py-5 space-y-6">`;
 
-          step.tasks.forEach(task => {
-            const checked = progress[task.id] ? 'checked' : '';
+          sem.steps.forEach(step => {
+            const stepStats = stats.stepStats[step.id];
             html += `
-                    <li class="flex items-start gap-3 group">
-                      <input type="checkbox" id="${task.id}" data-task="${task.id}"
-                        class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 cursor-pointer flex-shrink-0"
-                        ${checked} />
-                      <label for="${task.id}" class="task-label text-sm text-slate-300 leading-relaxed cursor-pointer group-hover:text-slate-100 transition">${task.text}</label>
-                    </li>`;
+                  <div class="border-l-2 pl-4" style="border-color:${sem.color || year.color}55">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-xs font-bold uppercase px-2 py-0.5 rounded" style="background:${(sem.color || year.color)}22;color:${sem.color || year.color}">${(step.kind === 'stage' ? 'Stage' : 'Step')} ${step.num}</span>
+                      <span class="text-sm font-semibold text-white">${step.title}</span>
+                      <span class="text-xs text-slate-500 ml-auto">${stepStats.pct}%</span>
+                    </div>
+                    <div class="bg-indigo-950/30 border border-indigo-800/30 rounded-lg px-4 py-3 mb-3">
+                      <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-1">Goal</p>
+                      <p class="text-sm text-slate-300">${step.goal}</p>
+                    </div>
+                    <ul class="space-y-2 ml-1">`;
+
+            step.tasks.forEach(task => {
+              const checked = progress[task.id] ? 'checked' : '';
+              html += `
+                      <li class="flex items-start gap-3 group">
+                        <input type="checkbox" id="${task.id}" data-task="${task.id}"
+                          class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 cursor-pointer flex-shrink-0"
+                          ${checked} />
+                        <label for="${task.id}" class="task-label text-sm text-slate-300 leading-relaxed cursor-pointer group-hover:text-slate-100 transition">${task.text}</label>
+                      </li>`;
+            });
+
+            html += `</ul></div>`;
           });
 
-          html += `</ul></div></div></article>`;
+          html += `</div></div></article>`;
         });
 
         html += '</div></div>';
@@ -658,9 +929,10 @@
           saveProgress();
           updateStats();
           updateCharts();
+          renderYearBars();
           renderPhaseBars();
           renderTimeline();
-          updateStepBadges();
+          updateSemesterBadges();
         });
       });
 
@@ -668,17 +940,18 @@
       if (firstToggle) firstToggle.click();
     }
 
-    function updateStepBadges() {
-      PLAN.phases.forEach(p => p.steps.forEach(st => {
-        const stats = getCompletionStats().stepStats[st.id];
-        const card = document.getElementById(`card-${st.id}`);
+    function updateSemesterBadges() {
+      const stats = getCompletionStats();
+      (PLAN.years || []).forEach(y => y.semesters.forEach(sem => {
+        const semStats = stats.semesterStats[sem.id];
+        const card = document.getElementById(`card-${sem.id}`);
         if (!card) return;
         const badge = card.querySelector('.collapse-toggle .text-lg');
-        if (badge) badge.textContent = stats.pct + '%';
-        const node = document.querySelector(`[data-step="${st.id}"] .progress-bar-fill`);
-        if (node) node.style.width = stats.pct + '%';
-        const nodePct = document.querySelector(`[data-step="${st.id}"] p:last-child`);
-        if (nodePct) nodePct.textContent = stats.pct + '%';
+        if (badge) badge.textContent = semStats.pct + '%';
+        const node = document.querySelector(`[data-semester="${sem.id}"] .progress-bar-fill`);
+        if (node) node.style.width = semStats.pct + '%';
+        const nodePct = document.querySelector(`[data-semester="${sem.id}"] p:last-child`);
+        if (nodePct) nodePct.textContent = semStats.pct + '%';
       }));
     }
 
@@ -738,12 +1011,12 @@
       barChart = new Chart(document.getElementById('bar-chart'), {
         type: 'bar',
         data: {
-          labels: s.phaseStats.map(p => p.label),
+          labels: s.yearStats.map(y => y.label),
           datasets: [{
             label: 'Completion %',
-            data: s.phaseStats.map(p => p.pct),
-            backgroundColor: s.phaseStats.map(p => p.color + '99'),
-            borderColor: s.phaseStats.map(p => p.color),
+            data: s.yearStats.map(y => y.pct),
+            backgroundColor: s.yearStats.map(y => y.color + '99'),
+            borderColor: s.yearStats.map(y => y.color),
             borderWidth: 2,
             borderRadius: 8,
             borderSkipped: false,
@@ -762,7 +1035,7 @@
           },
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` ${ctx.raw}% (${s.phaseStats[ctx.dataIndex].done}/${s.phaseStats[ctx.dataIndex].total})` } },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.raw}% (${s.yearStats[ctx.dataIndex].done}/${s.yearStats[ctx.dataIndex].total})` } },
           },
         },
       });

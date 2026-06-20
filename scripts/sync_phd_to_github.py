@@ -40,12 +40,25 @@ LABEL_COLORS = {
     "phase-2": "1d76db",
     "phase-3": "d93f0b",
     "phase-4": "5319e7",
+    "year-1": "0e8a16",
+    "year-2": "1d76db",
+    "year-3": "d93f0b",
+    "summer-2026": "fbca04",
+    "fall-2026": "c2e0c6",
+    "spring-2027": "fef2c0",
+    "summer-2027": "bfd4f2",
+    "fall-2027": "d4c5f9",
+    "spring-2028": "f9d0c4",
+    "summer-2028": "c5def5",
+    "fall-2028": "e6ccff",
+    "spring-2029": "ffd33d",
     "stage-1": "fbca04",
     "stage-2": "c2e0c6",
     "step-1": "fbca04",
     "step-2": "c2e0c6",
     "step-3": "fef2c0",
     "step-4": "bfd4f2",
+    "step-5": "d4c5f9",
     "brca-anchor": "006b75",
     "abstraction": "0052cc",
     "scaling": "e99695",
@@ -151,8 +164,10 @@ def setup_project_fields(
     project_id: str,
     project_fields: dict,
     tasks: list[PhdTask],
-) -> tuple[dict, dict, dict]:
+) -> tuple[dict, dict, dict, dict, dict]:
     steps = sorted({step_display(t) for t in tasks}, key=_step_sort_key)
+    years = sorted({t.year_label() for t in tasks}, key=lambda y: int(y.split()[-1]))
+    semesters = sorted({t.semester_label for t in tasks}, key=_semester_sort_key)
 
     step_field = client.ensure_single_select_field(
         project_id, "Step", steps, project_fields
@@ -160,14 +175,24 @@ def setup_project_fields(
     phase_field = client.ensure_single_select_field(
         project_id, "Phase", PHASE_OPTIONS, project_fields
     )
+    year_field = client.ensure_single_select_field(
+        project_id, "Year", years, project_fields
+    )
+    semester_field = client.ensure_single_select_field(
+        project_id, "Semester", semesters, project_fields
+    )
 
     return (
         {
             "step": step_field,
             "phase": phase_field,
+            "year": year_field,
+            "semester": semester_field,
         },
         {step_display(t): step_display(t) for t in tasks},
         {t.phase_label(): t.phase_label() for t in tasks},
+        {t.year_label(): t.year_label() for t in tasks},
+        {t.semester_label: t.semester_label for t in tasks},
     )
 
 
@@ -181,6 +206,18 @@ def _step_sort_key(name: str) -> tuple[int, int]:
     return (2, 99)
 
 
+def _semester_sort_key(label: str) -> tuple[int, int]:
+    parts = label.split()
+    if len(parts) != 2:
+        return (9999, 99)
+    season, year_str = parts[0].lower(), parts[1]
+    order = {"summer": 0, "fall": 1, "spring": 2}
+    try:
+        return (int(year_str), order.get(season, 99))
+    except ValueError:
+        return (9999, 99)
+
+
 def apply_project_fields(
     client: GitHubProjectsClient,
     project_id: str,
@@ -190,6 +227,8 @@ def apply_project_fields(
 ) -> None:
     step_field = custom_fields.get("step")
     phase_field = custom_fields.get("phase")
+    year_field = custom_fields.get("year")
+    semester_field = custom_fields.get("semester")
 
     if step_field:
         step_name = step_display(task)
@@ -207,6 +246,21 @@ def apply_project_fields(
                 project_id, item_id, phase_field.field_id, option_id
             )
 
+    if year_field:
+        year_name = task.year_label()
+        option_id = year_field.options.get(year_name)
+        if option_id:
+            client.set_single_select_field(
+                project_id, item_id, year_field.field_id, option_id
+            )
+
+    if semester_field:
+        option_id = semester_field.options.get(task.semester_label)
+        if option_id:
+            client.set_single_select_field(
+                project_id, item_id, semester_field.field_id, option_id
+            )
+
     status_field = custom_fields.get("status")
     if status_field:
         option_name = status_option_name({"status": status_field})
@@ -220,13 +274,26 @@ def apply_project_fields(
 
 def print_parse_summary(tasks: list[PhdTask]) -> None:
     print(f"Parsed {len(tasks)} tasks from master plan.\n")
+    by_year: dict[int, dict[str, int]] = {}
+    for task in tasks:
+        by_year.setdefault(task.year, {})
+        by_year[task.year][task.semester_label] = (
+            by_year[task.year].get(task.semester_label, 0) + 1
+        )
+    print("Tasks per year/semester:")
+    for year in sorted(by_year):
+        for sem, count in sorted(by_year[year].items()):
+            print(f"  Year {year} / {sem}: {count}")
+    print()
+
     current_key = None
     for task in tasks:
-        key = (task.phase, task.section_kind, task.step)
+        key = (task.year, task.semester_label, task.phase, task.section_kind, task.step)
         if key != current_key:
             current_key = key
             print(
-                f"\nPhase {task.phase} / {task.section_label()}: {task.step_title}"
+                f"\nY{task.year} {task.semester_label} / "
+                f"Phase {task.phase} / {task.section_label()}: {task.step_title}"
             )
             print(f"  Goal: {task.goal}")
         print(f"  - [{task.task_id}] {task.title}")
@@ -295,7 +362,10 @@ def prune_project_board(
         issue_number = item.get("issue_number", "?")
         label = sync_id or f"issue #{issue_number}"
         print(f"Removing from project: {label} (item {item['project_item_id'][-8:]})")
-        client.delete_project_item(project_id, item["project_item_id"])
+        try:
+            client.delete_project_item(project_id, item["project_item_id"])
+        except GitHubApiError as exc:
+            print(f"  Warning: could not remove item (may already be deleted): {exc}")
         stale_removed += 1
         time.sleep(0.15)
 
@@ -307,10 +377,13 @@ def prune_project_board(
         if issue_state != "OPEN":
             continue
         print(f"Closing stale issue #{issue_number} ({sync_id or 'no sync-id'})")
-        client.close_issue(
-            issue_id,
-            "Task removed from phd_master_plan.md during roadmap update.",
-        )
+        try:
+            client.close_issue(
+                issue_id,
+                "Task removed from phd_master_plan.md during roadmap update.",
+            )
+        except GitHubApiError as exc:
+            print(f"  Warning: could not close issue: {exc}")
         closed_issue_ids.add(issue_id)
         issues_closed += 1
         time.sleep(0.2)
@@ -399,7 +472,7 @@ def sync_tasks(
     existing_issues = client.list_synced_issues(owner, repo)
     state = load_state(state_path)
 
-    custom_field_map, _, _ = setup_project_fields(
+    custom_field_map, _, _, _, _ = setup_project_fields(
         client, project.project_id, project.fields, tasks
     )
     if "status" in project.fields:

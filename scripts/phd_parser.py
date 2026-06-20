@@ -9,14 +9,21 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 
-PHASE_RE = re.compile(r"^## Phase (\d+):\s*(.+?)\s*$")
-STEP_RE = re.compile(r"^### Step (\d+):\s*(.+?)\s*$")
-STAGE_RE = re.compile(r"^### Stage (\d+):\s*(.+?)\s*$")
+YEAR_RE = re.compile(r"^## Year (\d+):\s*(.+?)\s*$")
+SEMESTER_RE = re.compile(r"^### (Summer|Fall|Spring) (\d{4}) Semester:\s*(.+?)\s*$")
+PHASE_META_RE = re.compile(
+    r"^\*\*Phases?:\*\*\s*([^|\n]+?)(?:\s*\|\s*\*\*Goal:\*\*\s*(.+))?\s*$"
+)
+STEP_PHASE_RE = re.compile(r"^\*\*Phase:\*\*\s*(\d+)\s*$")
+STEP_RE = re.compile(r"^#### Step (\d+):\s*(.+?)\s*$")
+STAGE_RE = re.compile(r"^#### Stage (\d+):\s*(.+?)\s*$")
 GOAL_RE = re.compile(r"^\*\*Goal:\*\*\s*(.+?)\s*$")
 CHECKLIST_RE = re.compile(r"^(\s*)[*-]\s+(.+?)\s*$")
 NUMBERED_RE = re.compile(r"^(\s*)(\d+)\.\s+(.+?)\s*$")
 CORE_OBJECTIVE_RE = re.compile(r"^## Core Objective\s*$")
-IMPLEMENTATION_TARGETS_RE = re.compile(r"^## Implementation Targets\s*$")
+STATIC_MTL_RE = re.compile(r"^## Static MTL Baseline\s*$")
+COX_EXTENSION_RE = re.compile(r"^## Optional Extension:")
+TIMELINE_MAPPING_RE = re.compile(r"^## Timeline Mapping\s*$")
 TITLE_RE = re.compile(r"^# (.+?)\s*$")
 
 
@@ -50,12 +57,22 @@ SECTION_KIND_STAGE = "stage"
 
 PHASE_OPTIONS = list(PHASE_BY_NUMBER.values())
 
+SEMESTER_ORDER = {"summer": 0, "fall": 1, "spring": 2}
+
+YEAR_COLORS = {1: "#6366f1", 2: "#8b5cf6", 3: "#06b6d4"}
+
 
 @dataclass(frozen=True)
 class PhdTask:
     """A single trackable checklist item from the master plan."""
 
     task_id: str
+    year: int
+    year_title: str
+    semester: str
+    semester_year: int
+    semester_label: str
+    semester_title: str
     phase: int
     phase_title: str
     step: int
@@ -69,14 +86,16 @@ class PhdTask:
     def phase_label(self) -> str:
         return PHASE_BY_NUMBER.get(self.phase, f"Phase {self.phase}")
 
+    def year_label(self) -> str:
+        return f"Year {self.year}"
+
     def section_label(self) -> str:
         if self.section_kind == SECTION_KIND_STAGE:
             return f"Stage {self.step}"
         return f"Step {self.step}"
 
     def issue_title(self) -> str:
-        tag = "St" if self.section_kind == SECTION_KIND_STAGE else "S"
-        prefix = f"[P{self.phase} {tag}{self.step}]"
+        prefix = f"[Y{self.year} {self.semester_label}]"
         return f"{prefix} {self.title}"
 
     def issue_body(self) -> str:
@@ -87,6 +106,8 @@ class PhdTask:
             "",
             "## Context",
             "",
+            f"- **Year:** {self.year} — {self.year_title}",
+            f"- **Semester:** {self.semester_label} — {self.semester_title}",
             f"- **Phase:** {self.phase} — {self.phase_title}",
             f"- **{section_name}:** {self.step} — {self.step_title}",
             f"- **Goal:** {self.goal}",
@@ -104,6 +125,13 @@ class PhdTask:
 @dataclass
 class _ParseState:
     plan_title: str = ""
+    year: int = 0
+    year_title: str = ""
+    semester: str = ""
+    semester_year: int = 0
+    semester_label: str = ""
+    semester_title: str = ""
+    semester_phase: int = 0
     phase: int = 0
     phase_title: str = ""
     step: int = 0
@@ -112,24 +140,55 @@ class _ParseState:
     goal: str = ""
     core_objective_lines: list[str] = field(default_factory=list)
     in_core_objective: bool = False
-    in_implementation_targets: bool = False
+    in_reference: bool = False
 
 
-def _build_labels(phase: int, step: int, section_kind: str) -> tuple[str, ...]:
+def _parse_phase_meta(text: str) -> int:
+    """Return primary phase number from '1' or '2, 3' style metadata."""
+    first = text.strip().split(",")[0].strip()
+    try:
+        return int(first)
+    except ValueError:
+        return 0
+
+
+def _build_labels(
+    year: int,
+    semester: str,
+    semester_year: int,
+    phase: int,
+    step: int,
+    section_kind: str,
+) -> tuple[str, ...]:
     category = PHASE_CATEGORY_LABELS.get(phase, "phd")
     section_tag = f"stage-{step}" if section_kind == SECTION_KIND_STAGE else f"step-{step}"
-    return ("phd-sync", f"phase-{phase}", section_tag, category)
+    semester_slug = f"{semester}-{semester_year}"
+    return (
+        "phd-sync",
+        f"year-{year}",
+        semester_slug,
+        f"phase-{phase}",
+        section_tag,
+        category,
+    )
 
 
 def _make_task_id(
+    year: int,
+    semester: str,
+    semester_year: int,
     phase: int,
     step: int,
+    section_kind: str,
     item_index: int,
     title_hint: str,
 ) -> str:
+    section_slug = "stage" if section_kind == SECTION_KIND_STAGE else "step"
     parts = [
+        f"year-{year}",
+        f"{semester}-{semester_year}",
         f"phase-{phase}",
-        f"step-{step}",
+        f"{section_slug}-{step}",
         f"item-{item_index}",
         slugify(title_hint, 40),
     ]
@@ -191,10 +250,25 @@ def _append_task(
 
     item_counter += 1
     title = _extract_item_title(detail)
-    task_id = _make_task_id(state.phase, state.step, item_counter, title)
+    task_id = _make_task_id(
+        state.year,
+        state.semester,
+        state.semester_year,
+        state.phase,
+        state.step,
+        state.section_kind,
+        item_counter,
+        title,
+    )
     tasks.append(
         PhdTask(
             task_id=task_id,
+            year=state.year,
+            year_title=state.year_title,
+            semester=state.semester,
+            semester_year=state.semester_year,
+            semester_label=f"{state.semester.title()} {state.semester_year}",
+            semester_title=state.semester_title,
             phase=state.phase,
             phase_title=state.phase_title,
             step=state.step,
@@ -203,10 +277,26 @@ def _append_task(
             title=title,
             detail=detail,
             section_kind=state.section_kind,
-            labels=_build_labels(state.phase, state.step, state.section_kind),
+            labels=_build_labels(
+                state.year,
+                state.semester,
+                state.semester_year,
+                state.phase,
+                state.step,
+                state.section_kind,
+            ),
         )
     )
     return item_counter
+
+
+def _is_reference_section(line: str) -> bool:
+    return bool(
+        CORE_OBJECTIVE_RE.match(line)
+        or STATIC_MTL_RE.match(line)
+        or COX_EXTENSION_RE.match(line)
+        or TIMELINE_MAPPING_RE.match(line)
+    )
 
 
 def parse_master_plan(path: Path) -> list[PhdTask]:
@@ -225,56 +315,64 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
             state.plan_title = title_match.group(1).strip()
             continue
 
-        if CORE_OBJECTIVE_RE.match(line):
-            state.in_core_objective = True
-            state.in_implementation_targets = False
-            state.core_objective_lines = []
+        if _is_reference_section(line):
+            state.in_reference = True
+            state.in_core_objective = CORE_OBJECTIVE_RE.match(line) is not None
+            if state.in_core_objective:
+                state.core_objective_lines = []
             continue
 
-        if IMPLEMENTATION_TARGETS_RE.match(line):
-            state.in_implementation_targets = True
-            state.in_core_objective = False
-            state.phase = 1
-            state.phase_title = "The Anchor (BRCA Proof of Concept)"
-            state.step = 5
-            state.step_title = "Implementation Targets"
+        if state.in_reference:
+            if line.startswith("## ") and not line.startswith("### "):
+                state.in_reference = False
+                state.in_core_objective = False
+            elif state.in_core_objective and line.strip() and not line.startswith("---"):
+                state.core_objective_lines.append(line.strip())
+                continue
+            elif line.startswith("---"):
+                continue
+            else:
+                continue
+
+        year_match = YEAR_RE.match(line)
+        if year_match:
+            state.year = int(year_match.group(1))
+            state.year_title = year_match.group(2).strip()
+            continue
+
+        semester_match = SEMESTER_RE.match(line)
+        if semester_match:
+            season = semester_match.group(1).lower()
+            year4 = int(semester_match.group(2))
+            state.semester = season
+            state.semester_year = year4
+            state.semester_label = f"{season.title()} {year4}"
+            state.semester_title = semester_match.group(3).strip()
+            state.step = 0
+            state.step_title = ""
             state.section_kind = SECTION_KIND_STEP
             state.goal = ""
             item_counter = 0
             base_indent = None
             continue
 
-        if state.in_implementation_targets:
-            impl_goal = GOAL_RE.match(line)
-            if impl_goal:
-                state.goal = impl_goal.group(1).strip()
-                continue
-            if not _is_checklist_item(line):
-                continue
-            detail = _checklist_detail(line)
-            if detail:
-                item_counter = _append_task(tasks, state, detail, item_counter)
+        phase_meta = PHASE_META_RE.match(line)
+        if phase_meta:
+            state.semester_phase = _parse_phase_meta(phase_meta.group(1))
+            state.phase = state.semester_phase
+            state.phase_title = PHASE_BY_NUMBER.get(
+                state.phase, f"Phase {state.phase}"
+            ).split(": ", 1)[-1]
+            if phase_meta.group(2):
+                state.goal = phase_meta.group(2).strip()
             continue
 
-        if state.in_core_objective:
-            if line.startswith("## ") and not line.startswith("### "):
-                state.in_core_objective = False
-            elif line.strip() and not line.startswith("---"):
-                state.core_objective_lines.append(line.strip())
-                continue
-            elif line.startswith("---"):
-                continue
-
-        phase_match = PHASE_RE.match(line)
-        if phase_match:
-            state.in_implementation_targets = False
-            state.phase = int(phase_match.group(1))
-            state.phase_title = phase_match.group(2).strip()
-            state.step = 0
-            state.step_title = ""
-            state.section_kind = SECTION_KIND_STEP
-            state.goal = ""
-            base_indent = None
+        step_phase = STEP_PHASE_RE.match(line)
+        if step_phase:
+            state.phase = int(step_phase.group(1))
+            state.phase_title = PHASE_BY_NUMBER.get(
+                state.phase, f"Phase {state.phase}"
+            ).split(": ", 1)[-1]
             continue
 
         stage_match = STAGE_RE.match(line)
@@ -305,7 +403,7 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
         if not _is_checklist_item(line):
             continue
 
-        if not state.phase or not state.step:
+        if not state.year or not state.semester or not state.step:
             continue
 
         indent = _checklist_indent(line)
@@ -324,6 +422,12 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
                 updated_detail = f"{last.detail}\n{detail}"
                 tasks[-1] = PhdTask(
                     task_id=last.task_id,
+                    year=last.year,
+                    year_title=last.year_title,
+                    semester=last.semester,
+                    semester_year=last.semester_year,
+                    semester_label=last.semester_label,
+                    semester_title=last.semester_title,
                     phase=last.phase,
                     phase_title=last.phase_title,
                     step=last.step,
@@ -369,59 +473,117 @@ def parse_plan_metadata(path: Path) -> tuple[str, str]:
 
 def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) -> dict:
     """Build the PLAN object structure used by phd_timeline_dashboard.html."""
-    phase_colors = {
-        1: "#6366f1",
-        2: "#8b5cf6",
-        3: "#06b6d4",
-        4: "#10b981",
-    }
+    years_map: dict[int, dict] = {}
     phases_map: dict[int, dict] = {}
 
     for task in tasks:
-        if task.phase not in phases_map:
-            phases_map[task.phase] = {
-                "id": f"p{task.phase}",
-                "label": f"Phase {task.phase}",
-                "subtitle": task.phase_title,
-                "color": phase_colors.get(task.phase, "#6366f1"),
+        if task.year not in years_map:
+            years_map[task.year] = {
+                "id": f"y{task.year}",
+                "label": f"Year {task.year}",
+                "subtitle": task.year_title,
+                "color": YEAR_COLORS.get(task.year, "#6366f1"),
+                "semesters": {},
+            }
+
+        year_entry = years_map[task.year]
+        sem_key = f"{task.semester}-{task.semester_year}"
+        if sem_key not in year_entry["semesters"]:
+            year_entry["semesters"][sem_key] = {
+                "id": f"y{task.year}-{task.semester}-{task.semester_year}",
+                "label": task.semester_label,
+                "title": task.semester_title,
+                "phase": task.phase,
+                "phaseLabel": task.phase_label(),
+                "color": YEAR_COLORS.get(task.year, "#6366f1"),
                 "steps": {},
             }
 
-        phase_entry = phases_map[task.phase]
-        step_key = task.step
-        if step_key not in phase_entry["steps"]:
+        sem_entry = year_entry["semesters"][sem_key]
+        step_key = (task.phase, task.section_kind, task.step)
+        if step_key not in sem_entry["steps"]:
             kind = task.section_kind
             section_slug = "stage" if kind == SECTION_KIND_STAGE else "step"
-            phase_entry["steps"][step_key] = {
-                "id": f"p{task.phase}-{section_slug}{task.step}",
+            sem_entry["steps"][step_key] = {
+                "id": f"y{task.year}-{task.semester}-{task.semester_year}-p{task.phase}-{section_slug}{task.step}",
                 "num": task.step,
                 "kind": kind,
                 "title": task.step_title,
                 "goal": task.goal,
+                "phase": task.phase,
                 "tasks": [],
             }
 
-        phase_entry["steps"][step_key]["tasks"].append(
-            {"id": task.task_id, "text": task.detail}
+        sem_entry["steps"][step_key]["tasks"].append(
+            {"id": task.task_id, "text": task.detail, "phase": task.phase}
         )
 
-    phases_list = []
-    for phase_num in sorted(phases_map):
-        phase_entry = phases_map[phase_num]
-        steps_list = [phase_entry["steps"][k] for k in sorted(phase_entry["steps"])]
-        phases_list.append(
+        if task.phase not in phases_map:
+            phases_map[task.phase] = {
+                "id": f"p{task.phase}",
+                "label": f"Phase {task.phase}",
+                "subtitle": PHASE_BY_NUMBER.get(task.phase, "").split(": ", 1)[-1],
+                "color": {1: "#6366f1", 2: "#8b5cf6", 3: "#06b6d4", 4: "#10b981"}.get(
+                    task.phase, "#6366f1"
+                ),
+                "taskCount": 0,
+                "taskIds": [],
+            }
+        phases_map[task.phase]["taskIds"].append(task.task_id)
+        phases_map[task.phase]["taskCount"] += 1
+
+    years_list = []
+    for year_num in sorted(years_map):
+        year_entry = years_map[year_num]
+        semesters_list = []
+        for sem_key in sorted(
+            year_entry["semesters"],
+            key=lambda k: (
+                year_entry["semesters"][k]["label"].split()[-1],
+                SEMESTER_ORDER.get(k.split("-")[0], 99),
+            ),
+        ):
+            sem_entry = year_entry["semesters"][sem_key]
+            steps_list = [
+                sem_entry["steps"][k]
+                for k in sorted(sem_entry["steps"], key=lambda x: (0 if x[0] == SECTION_KIND_STAGE else 1, x[1]))
+            ]
+            semesters_list.append(
+                {
+                    "id": sem_entry["id"],
+                    "label": sem_entry["label"],
+                    "title": sem_entry["title"],
+                    "phase": sem_entry["phase"],
+                    "phaseLabel": sem_entry["phaseLabel"],
+                    "color": sem_entry["color"],
+                    "steps": steps_list,
+                }
+            )
+        years_list.append(
             {
-                "id": phase_entry["id"],
-                "label": phase_entry["label"],
-                "subtitle": phase_entry["subtitle"],
-                "color": phase_entry["color"],
-                "steps": steps_list,
+                "id": year_entry["id"],
+                "label": year_entry["label"],
+                "subtitle": year_entry["subtitle"],
+                "color": year_entry["color"],
+                "semesters": semesters_list,
             }
         )
+
+    phases_list = [
+        {
+            "id": phases_map[p]["id"],
+            "label": phases_map[p]["label"],
+            "subtitle": phases_map[p]["subtitle"],
+            "color": phases_map[p]["color"],
+            "taskCount": phases_map[p]["taskCount"],
+        }
+        for p in sorted(phases_map)
+    ]
 
     return {
         "title": title,
         "coreObjective": core_objective,
+        "years": years_list,
         "phases": phases_list,
     }
 

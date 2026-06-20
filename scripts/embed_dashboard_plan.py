@@ -14,8 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from phd_parser import build_dashboard_plan, load_tasks, parse_plan_metadata
 
 
-BRANDING = "Two-Stage Multi-Omic Fusion NAS"
-STORAGE_KEY = "phd_plan_progress_v6"
+BRANDING = "PhD Roadmap 2026–2029"
+STORAGE_KEY = "phd_plan_progress_v7"
 
 
 def main() -> int:

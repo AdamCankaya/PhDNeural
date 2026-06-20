@@ -11,7 +11,7 @@ The sync script:
 1. Parses every checklist item in your 3-year master plan
 2. Creates one GitHub **issue** per task (with labels and context in the body)
 3. Adds each issue to your **repo-linked Project v2** board
-4. Sets custom fields: **Year**, **Semester**, **Section**, **Phase**, and **Status** (if present)
+4. Sets custom fields: **Year**, **Semester**, **Phase**, **Step**, and **Status** (if present)
 5. Skips tasks that already exist (idempotent via `<!-- phd-sync-id: ... -->` markers)
 
 ---
@@ -61,7 +61,7 @@ gh project link 2 --owner YOUR_USERNAME --repo PhDNeural
 
 After linking, the project appears under the repository's **Projects** tab.
 
-The script will automatically create **Year**, **Semester**, **Section**, and **Phase** custom fields if they do not exist. GitHub's built-in **Status** field is used when available.
+The script will automatically create **Year**, **Semester**, **Phase**, and **Step** custom fields if they do not exist. GitHub's built-in **Status** field is used when available.
 
 ---
 
@@ -143,7 +143,7 @@ cd C:\PhD
 python scripts/sync_phd_to_github.py --parse-only
 ```
 
-You should see ~38 checklist items grouped by year, semester, and section.
+You should see ~43 checklist items grouped by year, semester, and step/stage.
 
 ---
 
@@ -173,10 +173,10 @@ python scripts/sync_phd_to_github.py
 
 On first run, the script will:
 
-- Create labels: `phd-sync`, `phase-1`–`phase-4`, `step-*`, `stage-*`, plus category labels (`brca-anchor`, `abstraction`, `scaling`, `thesis-deliverable`)
-- Create one issue per checklist item
+- Create labels: `phd-sync`, `year-1`–`year-3`, `summer-2026`–`spring-2029`, `phase-1`–`phase-4`, `step-*`, `stage-*`, plus category labels
+- Create one issue per checklist item (titles like `[Y1 Summer 2026] Task title`)
 - Add each issue to your project board
-- Set **Step**, **Phase**, and **Status** (Todo) custom fields
+- Set **Year**, **Semester**, **Phase**, **Step**, and **Status** (Todo) custom fields
 - Save state to `.phd-github-sync.json`
 
 Re-running is safe: existing tasks (matched by sync ID in the issue body) are **skipped**.
@@ -187,14 +187,20 @@ To refresh issue titles/bodies and project fields after editing the master plan:
 python scripts/sync_phd_to_github.py --update-existing
 ```
 
-### Clean sync workflow (prune + reset)
+### Clean sync workflow (semester roadmap migration)
 
-When the master plan changes substantially, reset the project board to match the current plan only:
+When task IDs change (e.g. from `phase-1-step-1-...` to `year-1-summer-2026-step-1-...`), run a clean sync to prune stale board items and reset status:
 
 ```powershell
 # Full clean sync: prune stale board items, sync plan, reset all to Todo
 python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-status-todo
 ```
+
+This will:
+- Create ~43 new issues with year/semester titles
+- Close stale phase-based issues (not on current plan)
+- Remove duplicate/stale board items
+- Set all remaining items to **Todo**
 
 | Flag | Effect |
 |------|--------|
@@ -213,25 +219,24 @@ The default sync deduplicates project items: if the same issue appears twice on 
 
 ---
 
-## Step 8: Group by Year or Phase in the Project UI
+## Step 8: Group by Year or Semester in the Project UI
 
 The GitHub Projects API cannot set a default board view. Configure grouping manually:
 
 1. Open your project: **Repository → Projects → PhD Master Plan**
-   - URL: `https://github.com/AdamCankaya/PhDNeural/projects/N`
+   - URL: `https://github.com/AdamCankaya/PhDNeural/projects/2`
 2. Click the **⋯** menu on the board view (or **View options**)
-3. Choose **Group by** → **Phase** (recommended) or **Year**
+3. Choose **Group by** → **Year** (recommended) or **Semester**
 4. Optionally save this as your default view
 
-### Phase field values
+### Custom field values
 
-| Phase | Maps to | Description |
-|-------|---------|-------------|
-| `Phase 1: Data & ETL` | Year 1 | Data sourcing, ETL, and foundation work |
-| `Phase 2: NAS & MTL` | Year 2 | Neural architecture search and multi-task learning |
-| `Phase 3: Portal & Thesis` | Year 3 | Portal delivery and thesis milestones |
-
-The sync script sets **Phase** automatically from each task's year.
+| Field | Example values |
+|-------|----------------|
+| **Year** | Year 1, Year 2, Year 3 |
+| **Semester** | Summer 2026, Fall 2026, Spring 2027, … |
+| **Phase** | Phase 1: The Anchor (BRCA PoC), … |
+| **Step** | Step 1, Stage 2, etc. |
 
 ---
 
@@ -267,12 +272,12 @@ You can filter the board by **Year**, **Semester**, or **Phase** using the custo
 |-------|--------------|
 | `phd-sync` | All synced tasks (used for idempotency) |
 | `year-1`, `year-2`, `year-3` | Based on plan year |
-| `fall`, `spring`, `summer` | Based on semester |
-| `foundation` | Year 1 tasks |
-| `nas-execution` | Year 2 tasks |
-| `thesis-deliverable` | Year 3 tasks |
+| `summer-2026`, `fall-2026`, … | Based on semester |
+| `phase-1`–`phase-4` | Based on phase metadata |
+| `step-*`, `stage-*` | Based on step/stage number |
+| `brca-anchor`, `abstraction`, `scaling`, `thesis-deliverable` | Category labels |
 
-Filter issues with: `label:phd-sync label:year-1 label:fall`
+Filter issues with: `label:phd-sync label:year-1 label:summer-2026`
 
 ---
 
