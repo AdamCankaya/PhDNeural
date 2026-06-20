@@ -9,12 +9,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 
-YEAR_RE = re.compile(r"^## Year (\d+):\s*(.+?)\s*$")
-SEMESTER_HEADER_RE = re.compile(r"^### (.+?)\s*$")
+PHASE_RE = re.compile(r"^## Phase (\d+):\s*(.+?)\s*$")
+STEP_RE = re.compile(r"^### Step (\d+):\s*(.+?)\s*$")
 GOAL_RE = re.compile(r"^\*\*Goal:\*\*\s*(.+?)\s*$")
-SECTION_H4_RE = re.compile(r"^#### (\d+)\.\s*(.+?)\s*$")
-SECTION_STAR_RE = re.compile(r"^\* \*\*(\d+)\.\s*(.+?):\*\*(?:\s+(.*))?\s*$")
 CHECKLIST_RE = re.compile(r"^(\s*)[*-]\s+(.+?)\s*$")
+NUMBERED_RE = re.compile(r"^(\s*)(\d+)\.\s+(.+?)\s*$")
 CORE_OBJECTIVE_RE = re.compile(r"^## Core Objective\s*$")
 TITLE_RE = re.compile(r"^# (.+?)\s*$")
 
@@ -30,28 +29,21 @@ def slugify(text: str, max_length: int = 60) -> str:
     return text or "task"
 
 
-YEAR_CATEGORY_LABELS = {
-    1: "foundation",
-    2: "nas-execution",
-    3: "thesis-deliverable",
+PHASE_CATEGORY_LABELS = {
+    1: "brca-anchor",
+    2: "abstraction",
+    3: "scaling",
+    4: "thesis-deliverable",
 }
 
-PHASE_BY_YEAR = {
-    1: "Phase 1: Data & ETL",
-    2: "Phase 2: NAS & MTL",
-    3: "Phase 3: Portal & Thesis",
+PHASE_BY_NUMBER = {
+    1: "Phase 1: The Anchor (BRCA PoC)",
+    2: "Phase 2: Code Abstraction & Generalization",
+    3: "Phase 3: Scaling to the Comparative Matrix",
+    4: "Phase 4: Thesis Synthesis & Final Deliverables",
 }
 
-PHASE_OPTIONS = list(PHASE_BY_YEAR.values())
-
-SEMESTER_DISPLAY = {
-    "fall": "Fall",
-    "spring": "Spring",
-    "summer": "Summer",
-    "spring-summer": "Spring & Summer",
-}
-
-SEMESTER_ORDER = {"fall": 0, "spring": 1, "spring-summer": 2, "summer": 3}
+PHASE_OPTIONS = list(PHASE_BY_NUMBER.values())
 
 
 @dataclass(frozen=True)
@@ -59,36 +51,31 @@ class PhdTask:
     """A single trackable checklist item from the master plan."""
 
     task_id: str
-    year: int
-    year_title: str
-    semester: str
-    semester_title: str
-    section_number: int
-    section_title: str
+    phase: int
+    phase_title: str
+    step: int
+    step_title: str
     goal: str
     title: str
     detail: str
     labels: tuple[str, ...] = field(default_factory=tuple)
 
-    def phase(self) -> str:
-        return PHASE_BY_YEAR.get(self.year, f"Phase {self.year}")
+    def phase_label(self) -> str:
+        return PHASE_BY_NUMBER.get(self.phase, f"Phase {self.phase}")
 
     def issue_title(self) -> str:
-        sem = SEMESTER_DISPLAY.get(self.semester, self.semester.title())
-        prefix = f"[Y{self.year} {sem}]"
+        prefix = f"[P{self.phase} S{self.step}]"
         return f"{prefix} {self.title}"
 
     def issue_body(self) -> str:
         sync_marker = f"<!-- phd-sync-id: {self.task_id} -->"
-        sem = SEMESTER_DISPLAY.get(self.semester, self.semester.title())
         lines = [
             sync_marker,
             "",
             "## Context",
             "",
-            f"- **Year:** {self.year} — {self.year_title}",
-            f"- **Semester:** {sem} — {self.semester_title}",
-            f"- **Section:** {self.section_number}. {self.section_title}",
+            f"- **Phase:** {self.phase} — {self.phase_title}",
+            f"- **Step:** {self.step} — {self.step_title}",
             f"- **Goal:** {self.goal}",
             "",
             "## Task",
@@ -104,59 +91,31 @@ class PhdTask:
 @dataclass
 class _ParseState:
     plan_title: str = ""
-    year: int = 0
-    year_title: str = ""
-    semester: str = ""
-    semester_title: str = ""
+    phase: int = 0
+    phase_title: str = ""
+    step: int = 0
+    step_title: str = ""
     goal: str = ""
-    section_number: int = 0
-    section_title: str = ""
     core_objective_lines: list[str] = field(default_factory=list)
     in_core_objective: bool = False
 
 
-def _parse_semester_header(header: str) -> tuple[str, str] | None:
-    """Parse semester line after '### '. Returns (semester_key, title) or None."""
-    fall_spring_summer = re.match(
-        r"^(Fall|Spring|Summer) Semester:\s*(.+)$", header, re.IGNORECASE
-    )
-    if fall_spring_summer:
-        return fall_spring_summer.group(1).lower(), fall_spring_summer.group(2).strip()
-
-    combined = re.match(
-        r"^Spring & Summer Semesters:\s*(.+)$", header, re.IGNORECASE
-    )
-    if combined:
-        return "spring-summer", combined.group(1).strip()
-
-    return None
-
-
-def _build_labels(year: int, semester: str) -> tuple[str, ...]:
-    category = YEAR_CATEGORY_LABELS.get(year, "phd")
-    labels = ["phd-sync", f"year-{year}", category]
-    if semester in ("fall", "spring", "summer"):
-        labels.append(semester)
-    elif semester == "spring-summer":
-        labels.extend(["spring", "summer"])
-    return tuple(labels)
+def _build_labels(phase: int, step: int) -> tuple[str, ...]:
+    category = PHASE_CATEGORY_LABELS.get(phase, "phd")
+    return ("phd-sync", f"phase-{phase}", f"step-{step}", category)
 
 
 def _make_task_id(
-    year: int,
-    semester: str,
-    section_number: int,
-    section_title: str,
+    phase: int,
+    step: int,
     item_index: int,
     title_hint: str,
 ) -> str:
     parts = [
-        f"year-{year}",
-        semester.lower(),
-        f"sec-{section_number}",
-        slugify(section_title, 30),
+        f"phase-{phase}",
+        f"step-{step}",
         f"item-{item_index}",
-        slugify(title_hint, 30),
+        slugify(title_hint, 40),
     ]
     return "-".join(parts)
 
@@ -181,15 +140,28 @@ def _extract_item_title(detail: str) -> str:
     return detail[:100] + ("..." if len(detail) > 100 else "")
 
 
-def _parse_section(line: str) -> tuple[int, str, str | None] | None:
-    h4 = SECTION_H4_RE.match(line)
-    if h4:
-        return int(h4.group(1)), h4.group(2).strip(), None
-    star = SECTION_STAR_RE.match(line)
-    if star:
-        inline = (star.group(3) or "").strip() or None
-        return int(star.group(1)), star.group(2).strip(), inline
+def _is_checklist_item(line: str) -> bool:
+    return bool(CHECKLIST_RE.match(line) or NUMBERED_RE.match(line))
+
+
+def _checklist_detail(line: str) -> str | None:
+    bullet = CHECKLIST_RE.match(line)
+    if bullet:
+        return bullet.group(2).strip()
+    numbered = NUMBERED_RE.match(line)
+    if numbered:
+        return numbered.group(3).strip()
     return None
+
+
+def _checklist_indent(line: str) -> int:
+    bullet = CHECKLIST_RE.match(line)
+    if bullet:
+        return len(bullet.group(1))
+    numbered = NUMBERED_RE.match(line)
+    if numbered:
+        return len(numbered.group(1))
+    return 0
 
 
 def _append_task(
@@ -203,27 +175,18 @@ def _append_task(
 
     item_counter += 1
     title = _extract_item_title(detail)
-    task_id = _make_task_id(
-        state.year,
-        state.semester,
-        state.section_number,
-        state.section_title,
-        item_counter,
-        title,
-    )
+    task_id = _make_task_id(state.phase, state.step, item_counter, title)
     tasks.append(
         PhdTask(
             task_id=task_id,
-            year=state.year,
-            year_title=state.year_title,
-            semester=state.semester,
-            semester_title=state.semester_title,
-            section_number=state.section_number,
-            section_title=state.section_title,
+            phase=state.phase,
+            phase_title=state.phase_title,
+            step=state.step,
+            step_title=state.step_title,
             goal=state.goal,
             title=title,
             detail=detail,
-            labels=_build_labels(state.year, state.semester),
+            labels=_build_labels(state.phase, state.step),
         )
     )
     return item_counter
@@ -237,6 +200,7 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
     state = _ParseState()
     tasks: list[PhdTask] = []
     item_counter = 0
+    base_indent: int | None = None
 
     for line in lines:
         title_match = TITLE_RE.match(line)
@@ -258,45 +222,61 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
             elif line.startswith("---"):
                 continue
 
-        year_match = YEAR_RE.match(line)
-        if year_match:
-            state.year = int(year_match.group(1))
-            state.year_title = year_match.group(2).strip()
+        phase_match = PHASE_RE.match(line)
+        if phase_match:
+            state.phase = int(phase_match.group(1))
+            state.phase_title = phase_match.group(2).strip()
+            state.step = 0
+            state.step_title = ""
+            state.goal = ""
+            base_indent = None
             continue
 
-        semester_header = SEMESTER_HEADER_RE.match(line)
-        if semester_header:
-            parsed = _parse_semester_header(semester_header.group(1))
-            if parsed:
-                state.semester, state.semester_title = parsed
-                state.goal = ""
-                state.section_number = 0
-                state.section_title = ""
-                continue
+        step_match = STEP_RE.match(line)
+        if step_match:
+            state.step = int(step_match.group(1))
+            state.step_title = step_match.group(2).strip()
+            state.goal = ""
+            item_counter = 0
+            base_indent = None
+            continue
 
         goal_match = GOAL_RE.match(line)
         if goal_match:
             state.goal = goal_match.group(1).strip()
             continue
 
-        section = _parse_section(line)
-        if section:
-            state.section_number, state.section_title, inline_detail = section
-            item_counter = 0
-            if inline_detail:
-                item_counter = _append_task(tasks, state, inline_detail, item_counter)
+        if not _is_checklist_item(line):
             continue
 
-        checklist_match = CHECKLIST_RE.match(line)
-        if (
-            checklist_match
-            and state.year
-            and state.semester
-            and state.section_number
-            and not SECTION_STAR_RE.match(line)
-        ):
-            detail = checklist_match.group(2).strip()
+        if not state.phase or not state.step:
+            continue
+
+        indent = _checklist_indent(line)
+        detail = _checklist_detail(line)
+        if not detail:
+            continue
+
+        if base_indent is None:
+            base_indent = indent
+
+        if indent <= base_indent:
             item_counter = _append_task(tasks, state, detail, item_counter)
+        else:
+            if tasks:
+                last = tasks[-1]
+                updated_detail = f"{last.detail}\n{detail}"
+                tasks[-1] = PhdTask(
+                    task_id=last.task_id,
+                    phase=last.phase,
+                    phase_title=last.phase_title,
+                    step=last.step,
+                    step_title=last.step_title,
+                    goal=last.goal,
+                    title=last.title,
+                    detail=updated_detail,
+                    labels=last.labels,
+                )
 
     return tasks
 
@@ -332,79 +312,57 @@ def parse_plan_metadata(path: Path) -> tuple[str, str]:
 
 def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) -> dict:
     """Build the PLAN object structure used by phd_timeline_dashboard.html."""
-    year_colors = {1: "#6366f1", 2: "#8b5cf6", 3: "#06b6d4"}
-    years_map: dict[int, dict] = {}
+    phase_colors = {
+        1: "#6366f1",
+        2: "#8b5cf6",
+        3: "#06b6d4",
+        4: "#10b981",
+    }
+    phases_map: dict[int, dict] = {}
 
     for task in tasks:
-        if task.year not in years_map:
-            years_map[task.year] = {
-                "id": f"y{task.year}",
-                "label": f"Year {task.year}",
-                "subtitle": task.year_title,
-                "color": year_colors.get(task.year, "#6366f1"),
-                "semesters": {},
-            }
-
-        year_entry = years_map[task.year]
-        sem_key = task.semester
-        if sem_key not in year_entry["semesters"]:
-            season = SEMESTER_DISPLAY.get(sem_key, sem_key.title())
-            year_entry["semesters"][sem_key] = {
-                "id": f"y{task.year}-{sem_key.replace('-', '')}",
-                "season": season,
-                "title": task.semester_title,
-                "goal": task.goal,
+        if task.phase not in phases_map:
+            phases_map[task.phase] = {
+                "id": f"p{task.phase}",
+                "label": f"Phase {task.phase}",
+                "subtitle": task.phase_title,
+                "color": phase_colors.get(task.phase, "#6366f1"),
                 "steps": {},
             }
 
-        sem_entry = year_entry["semesters"][sem_key]
-        step_key = task.section_number
-        if step_key not in sem_entry["steps"]:
-            sem_entry["steps"][step_key] = {
-                "num": task.section_number,
-                "title": task.section_title,
+        phase_entry = phases_map[task.phase]
+        step_key = task.step
+        if step_key not in phase_entry["steps"]:
+            phase_entry["steps"][step_key] = {
+                "id": f"p{task.phase}-step{task.step}",
+                "num": task.step,
+                "title": task.step_title,
+                "goal": task.goal,
                 "tasks": [],
             }
 
-        sem_entry["steps"][step_key]["tasks"].append(
+        phase_entry["steps"][step_key]["tasks"].append(
             {"id": task.task_id, "text": task.detail}
         )
 
-    years_list = []
-    for year_num in sorted(years_map):
-        year_entry = years_map[year_num]
-        semesters_list = []
-        for sem_key in sorted(
-            year_entry["semesters"], key=lambda k: SEMESTER_ORDER.get(k, 99)
-        ):
-            sem_entry = year_entry["semesters"][sem_key]
-            steps_list = [
-                sem_entry["steps"][k]
-                for k in sorted(sem_entry["steps"])
-            ]
-            semesters_list.append(
-                {
-                    "id": sem_entry["id"],
-                    "season": sem_entry["season"],
-                    "title": sem_entry["title"],
-                    "goal": sem_entry["goal"],
-                    "steps": steps_list,
-                }
-            )
-        years_list.append(
+    phases_list = []
+    for phase_num in sorted(phases_map):
+        phase_entry = phases_map[phase_num]
+        steps_list = [phase_entry["steps"][k] for k in sorted(phase_entry["steps"])]
+        phases_list.append(
             {
-                "id": year_entry["id"],
-                "label": year_entry["label"],
-                "subtitle": year_entry["subtitle"],
-                "color": year_entry["color"],
-                "semesters": semesters_list,
+                "id": phase_entry["id"],
+                "label": phase_entry["label"],
+                "subtitle": phase_entry["subtitle"],
+                "color": phase_entry["color"],
+                "steps": steps_list,
             }
         )
 
     return {
         "title": title,
         "coreObjective": core_objective,
-        "years": years_list,
+        "phases": phases_list,
     }
 
 

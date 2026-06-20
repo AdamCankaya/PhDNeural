@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PhD Roadmap Dashboard — Comparative NAS for Multi-Task, Multi-Omic Disease Prediction</title>
+  <title>PhD Roadmap Dashboard — Vertical Slice Multi-Task NAS</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
@@ -34,8 +34,8 @@
       transform: translateY(-3px);
     }
 
-    .semester-card { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
-    .semester-card.highlight {
+    .step-card { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+    .step-card.highlight {
       box-shadow: 0 0 0 2px #6366f1, 0 8px 30px rgba(99, 102, 241, 0.15);
     }
 
@@ -73,7 +73,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
       <div>
         <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">PhD Roadmap Dashboard</h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Comparative NAS for Multi-Task, Multi-Omic Disease Prediction</p>
+        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Vertical Slice Multi-Task NAS</p>
       </div>
       <div class="flex items-center gap-3">
         <div class="text-right hidden sm:block">
@@ -129,7 +129,7 @@
         </div>
       </div>
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-        <h3 class="text-sm font-semibold text-slate-300 mb-4">Progress by Year</h3>
+        <h3 class="text-sm font-semibold text-slate-300 mb-4">Progress by Phase</h3>
         <div class="relative h-52">
           <canvas id="bar-chart"></canvas>
         </div>
@@ -139,17 +139,17 @@
     <!-- Interactive Timeline -->
     <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6">
       <h3 class="text-sm font-semibold text-slate-300 mb-6 flex items-center gap-2">
-        <span>📅</span> 3-Year Timeline
-        <span class="text-xs font-normal text-slate-500 ml-auto">Click a semester to jump</span>
+        <span>📅</span> 4-Phase Timeline
+        <span class="text-xs font-normal text-slate-500 ml-auto">Click a step to jump</span>
       </h3>
       <div id="timeline" class="overflow-x-auto pb-2"></div>
     </section>
 
-    <!-- Year Progress Bars -->
-    <section id="year-bars" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></section>
+    <!-- Phase Progress Bars -->
+    <section id="phase-bars" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></section>
 
-    <!-- Semester Detail Cards -->
-    <section id="semesters" class="space-y-6"></section>
+    <!-- Step Detail Cards -->
+    <section id="steps" class="space-y-6"></section>
 
   </main>
 
@@ -160,356 +160,12 @@
   <script>
     // ─── Embedded Plan Data (from phd_master_plan.md) ───────────────────────
     const PLAN = {
-  "title": "PhD Master Roadmap: Comparative Neural Architecture Search for Multi-Task, Multi-Omic Disease Prediction",
-  "coreObjective": "Develop a high-performance, distributed Neural Architecture Search (NAS) framework utilizing Optuna to discover the optimal computational networks across 5 fundamental disease categories. The system will ingest multi-omic data (Methylation, Transcriptomics, Genomics, CNVs) and patient demographics via 5 independent ETL pipelines. Final architectures will use Multi-Task Learning (MTL) to simultaneously predict disease presence, staging, and prognostic survival timelines.",
-  "years": [
-    {
-      "id": "y1",
-      "label": "Year 1",
-      "subtitle": "The 5-Category Sourcing & Multi-Omic ETL",
-      "color": "#6366f1",
-      "semesters": [
-        {
-          "id": "y1-fall",
-          "season": "Fall",
-          "title": "5-Category Disease Selection & Sourcing",
-          "goal": "Secure high-quality datasets representing the 5 major disease topologies to prove how biological etiology dictates neural network structure.",
-          "steps": [
-            {
-              "num": 1,
-              "title": "The 5 Disease Targets",
-              "tasks": [
-                {
-                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-1-oncological-breast-invasive-ca",
-                  "text": "**Oncological:** Breast Invasive Carcinoma (BRCA) via TCGA. (Localized, high mutational burden)."
-                },
-                {
-                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-2-neurological-alzheimer-s-disea",
-                  "text": "**Neurological:** Alzheimer's Disease via NCBI GEO. (Systemic, progressive structural degradation)."
-                },
-                {
-                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-3-autoimmune-rheumatoid-arthriti",
-                  "text": "**Autoimmune:** Rheumatoid Arthritis via NCBI GEO. (Systemic, immune-driven inflammation)."
-                },
-                {
-                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-4-metabolic-type-2-diabetes-via",
-                  "text": "**Metabolic:** Type 2 Diabetes via GEO or `recountmethylation`. (Lifestyle, lipid/insulin driven)."
-                },
-                {
-                  "id": "year-1-fall-sec-1-the-5-disease-targets-item-5-genetic-developmental-down-syn",
-                  "text": "**Genetic/Developmental:** Down Syndrome via GEO. (Innate chromosomal variation)."
-                }
-              ]
-            },
-            {
-              "num": 2,
-              "title": "The Multi-Omic Data Modalities",
-              "tasks": [
-                {
-                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-1-epigenomic-the-anchor-dna-meth",
-                  "text": "**Epigenomic (The Anchor):** DNA Methylation arrays (Beta-values ranging from 0.0 to 1.0 at CpG sites)."
-                },
-                {
-                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-2-transcriptomic-rna-seq-gene-ex",
-                  "text": "**Transcriptomic:** RNA-Seq Gene Expression (Continuous FPKM or TPM values)."
-                },
-                {
-                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-3-genomic-somatic-mutations-and",
-                  "text": "**Genomic:** Somatic Mutations and SNPs (Sparse binary matrices from VCF files)."
-                },
-                {
-                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-4-structural-copy-number-variati",
-                  "text": "**Structural:** Copy Number Variations (Continuous Log2 copy ratios)."
-                },
-                {
-                  "id": "year-1-fall-sec-2-the-multi-omic-data-modalities-item-5-demographic-clinical-age-sex-e",
-                  "text": "**Demographic/Clinical:** Age, Sex, Ethnicity, plus disease-specific targets (e.g., Tumor Stage for BRCA, Cognitive Score for Alzheimer's, Days to Live)."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "y1-spring",
-          "season": "Spring",
-          "title": "5 Independent Pipelines & Normalization",
-          "goal": "Construct the ETL pipelines without flattening the data. Because each disease has unique clinical variables and available omics, you must build 5 distinct pipelines.",
-          "steps": [
-            {
-              "num": 1,
-              "title": "The Universal Split (Train vs. Test)",
-              "tasks": [
-                {
-                  "id": "year-1-spring-sec-1-the-universal-split-train-vs-t-item-1-extract-a-strict-20-holdout-te",
-                  "text": "Extract a strict **20% Holdout Test Set** for each of the 5 diseases before any preprocessing occurs."
-                }
-              ]
-            },
-            {
-              "num": 2,
-              "title": "The 5 Independent PyTorch `Dataset` Classes",
-              "tasks": [
-                {
-                  "id": "year-1-spring-sec-2-the-5-independent-pytorch-data-item-1-write-5-separate-data-ingestio",
-                  "text": "Write 5 separate data ingestion scripts (e.g., `BRCADataset`, `AlzheimersDataset`)."
-                },
-                {
-                  "id": "year-1-spring-sec-2-the-5-independent-pytorch-data-item-2-this-ensures-disease-specific",
-                  "text": "This ensures disease-specific clinical variables are perfectly preserved. If a dataset lacks a specific omic layer (e.g., no RNA-Seq for Rheumatoid Arthritis), that specific pipeline simply omits the RNA-Seq tensor without breaking the universal code."
-                }
-              ]
-            },
-            {
-              "num": 3,
-              "title": "Dynamic Normalization (Applied to the 80% Training Set)",
-              "tasks": [
-                {
-                  "id": "year-1-spring-sec-3-dynamic-normalization-applied-item-1-demographics-z-score-standardi",
-                  "text": "*Demographics:* Z-score standardization for continuous arrays; One-Hot Encoding for categorical."
-                },
-                {
-                  "id": "year-1-spring-sec-3-dynamic-normalization-applied-item-2-methylation-transcriptomics-va",
-                  "text": "*Methylation/Transcriptomics:* Variance-based dimensionality reduction to isolate the top 10,000 highly variable features, preventing GPU memory exhaustion."
-                }
-              ]
-            },
-            {
-              "num": 4,
-              "title": "Unified Storage",
-              "tasks": [
-                {
-                  "id": "year-1-spring-sec-4-unified-storage-item-1-serialize-the-processed-multi",
-                  "text": "Serialize the processed, multi-modal tensors into 5 distinct, partitioned `HDF5` databases."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "y1-summer",
-          "season": "Summer",
-          "title": "Software Stack & Hub Setup",
-          "goal": "Provision the remote execution servers and establish the Python ecosystem.",
-          "steps": [
-            {
-              "num": 1,
-              "title": "The Core Stack",
-              "tasks": [
-                {
-                  "id": "year-1-summer-sec-1-the-core-stack-item-1-torch-optuna-scikit-learn-xgbo",
-                  "text": "`torch`, `optuna`, `scikit-learn`, `xgboost`, `h5py`, `pandas`, `numpy`."
-                }
-              ]
-            },
-            {
-              "num": 2,
-              "title": "The Central Database Hub",
-              "tasks": [
-                {
-                  "id": "year-1-summer-sec-2-the-central-database-hub-item-1-deploy-a-dockerized-postgresql",
-                  "text": "Deploy a Dockerized PostgreSQL database (`psycopg2-binary`) on a dedicated Linux server to track the distributed Optuna trials for all 5 independent disease pipelines concurrently."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "y2",
-      "label": "Year 2",
-      "subtitle": "Distributed NAS & Multi-Task Execution",
-      "color": "#8b5cf6",
-      "semesters": [
-        {
-          "id": "y2-fall",
-          "season": "Fall",
-          "title": "Defining the Multi-Omic Architecture Toolkit",
-          "goal": "Code the PyTorch algorithmic blueprints that Optuna will dynamically assemble.",
-          "steps": [
-            {
-              "num": 1,
-              "title": "The Multi-Branched Network Body",
-              "tasks": [
-                {
-                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-1-tabular-branch-demographics-ml",
-                  "text": "*Tabular Branch (Demographics):* MLPs or TabNet."
-                },
-                {
-                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-2-epigenomic-transcriptomic-bran",
-                  "text": "*Epigenomic/Transcriptomic Branch:* 1D-CNNs or Transformer Encoders for dense continuous sequences."
-                },
-                {
-                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-3-genomic-cnv-branch-sparse-line",
-                  "text": "*Genomic/CNV Branch:* Sparse linear layers."
-                },
-                {
-                  "id": "year-2-fall-sec-1-the-multi-branched-network-bod-item-4-fusion-layers-code-early-conca",
-                  "text": "*Fusion Layers:* Code Early (Concatenation) and Intermediate (Cross-Attention) fusion modules. Optuna will dynamically skip omic branches if a specific pipeline (like Alzheimer's) does not provide that data."
-                }
-              ]
-            },
-            {
-              "num": 2,
-              "title": "The Multi-Task Learning (MTL) Heads",
-              "tasks": [
-                {
-                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-1-design-the-network-to-split-in",
-                  "text": "Design the network to split into three output heads:"
-                },
-                {
-                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-2-diagnostic-head-binary-multi-c",
-                  "text": "**Diagnostic Head:** Binary/Multi-class Softmax layer predicting disease presence."
-                },
-                {
-                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-3-staging-head-ordinal-classific",
-                  "text": "**Staging Head:** Ordinal classification layer predicting severity/progression."
-                },
-                {
-                  "id": "year-2-fall-sec-2-the-multi-task-learning-mtl-he-item-4-prognostic-head-linear-regress",
-                  "text": "**Prognostic Head:** Linear regression layer predicting timelines (Days to Live)."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "y2-spring",
-          "season": "Spring",
-          "title": "Execution & K-Fold Cross-Validation",
-          "goal": "Execute the NAS engines across university compute clusters.",
-          "steps": [
-            {
-              "num": 1,
-              "title": "Optuna Objective Function",
-              "tasks": [
-                {
-                  "id": "year-2-spring-sec-1-optuna-objective-function-item-1-train-architectures-using-5-fo",
-                  "text": "Train architectures using **5-Fold Cross-Validation** exclusively on the 80% Training Set."
-                },
-                {
-                  "id": "year-2-spring-sec-1-optuna-objective-function-item-2-program-optuna-to-automaticall",
-                  "text": "Program Optuna to automatically tune the weights of the combined MTL loss function."
-                }
-              ]
-            },
-            {
-              "num": 2,
-              "title": "Parallel Execution",
-              "tasks": [
-                {
-                  "id": "year-2-spring-sec-2-parallel-execution-item-1-deploy-execution-scripts-to-sl",
-                  "text": "Deploy execution scripts to Slurm clusters, pointed at the PostgreSQL database (`load_if_exists=True`). Use `HyperbandPruner` to terminate unpromising architectures."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "y2-summer",
-          "season": "Summer",
-          "title": "Holdout Evaluation & Benchmarking",
-          "goal": "Evaluate the discovered architectures against classical models.",
-          "steps": [
-            {
-              "num": 1,
-              "title": "The 20% Holdout Evaluation",
-              "tasks": [
-                {
-                  "id": "year-2-summer-sec-1-the-20-holdout-evaluation-item-1-extract-the-single-optimal-mul",
-                  "text": "Extract the single optimal multi-task architecture for each of the 5 diseases."
-                },
-                {
-                  "id": "year-2-summer-sec-1-the-20-holdout-evaluation-item-2-train-from-scratch-on-the-full",
-                  "text": "Train from scratch on the full 80% dataset, then evaluate against the untouched 20% Test Set to generate final ROC-AUC and Mean Squared Error metrics."
-                }
-              ]
-            },
-            {
-              "num": 2,
-              "title": "Classical Benchmarking",
-              "tasks": [
-                {
-                  "id": "year-2-summer-sec-2-classical-benchmarking-item-1-train-baseline-xgboost-and-ela",
-                  "text": "Train baseline XGBoost and ElasticNet models on the tabular/methylation data to prove whether the deep multi-omic neural networks statistically outperformed standard tree-based methods."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "y3",
-      "label": "Year 3",
-      "subtitle": "Synthesis & Final Deliverables",
-      "color": "#06b6d4",
-      "semesters": [
-        {
-          "id": "y3-fall",
-          "season": "Fall",
-          "title": "Interpretability & The Patient Portal",
-          "goal": "Build the end-to-end inference software.",
-          "steps": [
-            {
-              "num": 1,
-              "title": "Interpretability (SHAP)",
-              "tasks": [
-                {
-                  "id": "year-3-fall-sec-1-interpretability-shap-item-1-map-feature-importance-determi",
-                  "text": "Map feature importance. Determine which specific omic layer or demographic variable drove the predictions for each distinct disease category."
-                }
-              ]
-            },
-            {
-              "num": 2,
-              "title": "The Universal Inference Application",
-              "tasks": [
-                {
-                  "id": "year-3-fall-sec-2-the-universal-inference-applic-item-1-build-a-streamlit-web-interfac",
-                  "text": "Build a `streamlit` web interface."
-                },
-                {
-                  "id": "year-3-fall-sec-2-the-universal-inference-applic-item-2-a-user-selects-the-disease-cat",
-                  "text": "A user selects the disease category, uploads the available patient demographics and raw omic `.CSV` files."
-                },
-                {
-                  "id": "year-3-fall-sec-2-the-universal-inference-applic-item-3-the-software-passes-the-data-t",
-                  "text": "The software passes the data through the specific optimized PyTorch model and outputs the Disease Probability, Predicted Stage, and Prognostic Timeline."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "y3-springsummer",
-          "season": "Spring & Summer",
-          "title": "Thesis Defense & Publication",
-          "goal": "Synthesize the meta-methodology.",
-          "steps": [
-            {
-              "num": 2,
-              "title": "The Universal Inference Application",
-              "tasks": [
-                {
-                  "id": "year-3-spring-summer-sec-2-the-universal-inference-applic-item-4-1-the-cs-focus-document-the-st",
-                  "text": "**1. The CS Focus:** Document the structural taxonomy. Did systemic diseases inherently favor self-attention (Transformers) while localized cancers favored spatial architectures (CNNs)?"
-                },
-                {
-                  "id": "year-3-spring-summer-sec-2-the-universal-inference-applic-item-5-2-publication-open-source-the",
-                  "text": "**2. Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit findings to computational biology conferences (e.g., ISMB, NeurIPS)."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "title": "PhD Master Roadmap: \"Vertical Slice\" Multi-Task Neural Architecture Search",
+  "coreObjective": "Develop a generalized, multi-task Neural Architecture Search (NAS) framework. The project will be built using a \"Vertical Slice\" methodology: engineering the complete, end-to-end multi-omic pipeline exclusively for Breast Invasive Carcinoma (BRCA) first. Once validated, this baseline architecture will be abstracted and deployed across 4 additional disease categories (Neurological, Autoimmune, Metabolic, Genetic) to conduct a comparative computational analysis.",
+  "phases": []
 };
 
-    const STORAGE_KEY = 'phd_plan_progress_v2';
-    const SEASON_COLORS = { Fall: '#f59e0b', Spring: '#10b981', 'Spring & Summer': '#14b8a6', Summer: '#3b82f6' };
+    const STORAGE_KEY = 'phd_plan_progress_v3';
 
     // ─── State ────────────────────────────────────────────────────────────────
     let progress = loadProgress();
@@ -529,7 +185,7 @@
 
     function allTaskIds() {
       const ids = [];
-      PLAN.years.forEach(y => y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => ids.push(t.id)))));
+      PLAN.phases.forEach(p => p.steps.forEach(st => st.tasks.forEach(t => ids.push(t.id))));
       return ids;
     }
 
@@ -539,30 +195,29 @@
       const total = ids.length;
       const pct = total ? Math.round((done / total) * 100) : 0;
 
-      const yearStats = PLAN.years.map(y => {
-        const yIds = [];
-        y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => yIds.push(t.id))));
-        const yDone = yIds.filter(id => progress[id]).length;
-        return { id: y.id, label: y.label, done: yDone, total: yIds.length, pct: yIds.length ? Math.round((yDone / yIds.length) * 100) : 0, color: y.color };
+      const phaseStats = PLAN.phases.map(p => {
+        const pIds = [];
+        p.steps.forEach(st => st.tasks.forEach(t => pIds.push(t.id)));
+        const pDone = pIds.filter(id => progress[id]).length;
+        return { id: p.id, label: p.label, done: pDone, total: pIds.length, pct: pIds.length ? Math.round((pDone / pIds.length) * 100) : 0, color: p.color };
       });
 
-      const semesterStats = {};
-      PLAN.years.forEach(y => y.semesters.forEach(s => {
-        const sIds = [];
-        s.steps.forEach(st => st.tasks.forEach(t => sIds.push(t.id)));
-        const sDone = sIds.filter(id => progress[id]).length;
-        semesterStats[s.id] = { done: sDone, total: sIds.length, pct: sIds.length ? Math.round((sDone / sIds.length) * 100) : 0 };
+      const stepStats = {};
+      PLAN.phases.forEach(p => p.steps.forEach(st => {
+        const stIds = st.tasks.map(t => t.id);
+        const stDone = stIds.filter(id => progress[id]).length;
+        stepStats[st.id] = { done: stDone, total: stIds.length, pct: stIds.length ? Math.round((stDone / stIds.length) * 100) : 0 };
       }));
 
-      return { ids, done, total, pct, yearStats, semesterStats };
+      return { ids, done, total, pct, phaseStats, stepStats };
     }
 
     // ─── Render ───────────────────────────────────────────────────────────────
     function render() {
       document.getElementById('core-objective').textContent = PLAN.coreObjective;
       renderTimeline();
-      renderYearBars();
-      renderSemesters();
+      renderPhaseBars();
+      renderSteps();
       updateStats();
       updateCharts();
     }
@@ -571,21 +226,20 @@
       const el = document.getElementById('timeline');
       let html = '<div class="flex gap-0 min-w-[700px]">';
 
-      PLAN.years.forEach((year, yi) => {
-        html += `<div class="flex-1 ${yi > 0 ? 'border-l border-slate-700/50 pl-2' : ''}">`;
-        html += `<p class="text-xs font-bold uppercase tracking-wider mb-3 text-center" style="color:${year.color}">${year.label}</p>`;
-        html += '<div class="flex gap-2 justify-center">';
-        year.semesters.forEach(sem => {
-          const stats = getCompletionStats().semesterStats[sem.id];
-          const sc = SEASON_COLORS[sem.season];
+      PLAN.phases.forEach((phase, pi) => {
+        html += `<div class="flex-1 ${pi > 0 ? 'border-l border-slate-700/50 pl-2' : ''}">`;
+        html += `<p class="text-xs font-bold uppercase tracking-wider mb-3 text-center" style="color:${phase.color}">${phase.label}</p>`;
+        html += '<div class="flex gap-2 justify-center flex-wrap">';
+        phase.steps.forEach(step => {
+          const stats = getCompletionStats().stepStats[step.id];
           html += `
-            <button data-semester="${sem.id}"
-              class="timeline-node flex-1 max-w-[120px] rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-center cursor-pointer hover:bg-slate-800 hover:border-slate-600"
-              style="border-top: 3px solid ${sc}">
-              <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${sc}">${sem.season}</p>
-              <p class="text-[11px] text-slate-300 mt-1 leading-tight line-clamp-2">${sem.title.split(' ').slice(0, 3).join(' ')}…</p>
+            <button data-step="${step.id}"
+              class="timeline-node flex-1 min-w-[100px] max-w-[140px] rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-center cursor-pointer hover:bg-slate-800 hover:border-slate-600"
+              style="border-top: 3px solid ${phase.color}">
+              <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${phase.color}">Step ${step.num}</p>
+              <p class="text-[11px] text-slate-300 mt-1 leading-tight line-clamp-2">${step.title.split(' ').slice(0, 3).join(' ')}…</p>
               <div class="mt-2 h-1 bg-slate-700 rounded-full overflow-hidden">
-                <div class="h-full rounded-full progress-bar-fill" style="width:${stats.pct}%;background:${sc}"></div>
+                <div class="h-full rounded-full progress-bar-fill" style="width:${stats.pct}%;background:${phase.color}"></div>
               </div>
               <p class="text-[10px] text-slate-500 mt-1">${stats.pct}%</p>
             </button>`;
@@ -598,7 +252,7 @@
 
       el.querySelectorAll('.timeline-node').forEach(btn => {
         btn.addEventListener('click', () => {
-          const id = btn.dataset.semester;
+          const id = btn.dataset.step;
           const card = document.getElementById(`card-${id}`);
           if (card) {
             card.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -612,107 +266,84 @@
     }
 
     function highlightCard(id) {
-      document.querySelectorAll('.semester-card').forEach(c => c.classList.remove('highlight'));
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('highlight'));
       document.querySelectorAll('.timeline-node').forEach(n => n.classList.remove('active'));
       const card = document.getElementById(`card-${id}`);
-      const node = document.querySelector(`[data-semester="${id}"]`);
+      const node = document.querySelector(`[data-step="${id}"]`);
       if (card) { card.classList.add('highlight'); setTimeout(() => card.classList.remove('highlight'), 2500); }
       if (node) node.classList.add('active');
     }
 
-    function renderYearBars() {
+    function renderPhaseBars() {
       const stats = getCompletionStats();
-      const el = document.getElementById('year-bars');
-      el.innerHTML = stats.yearStats.map(y => `
+      const el = document.getElementById('phase-bars');
+      el.innerHTML = stats.phaseStats.map(p => `
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <div class="flex justify-between items-center mb-2">
-            <span class="text-sm font-semibold" style="color:${y.color}">${y.label}</span>
-            <span class="text-sm font-bold text-white">${y.pct}%</span>
+            <span class="text-sm font-semibold" style="color:${p.color}">${p.label}</span>
+            <span class="text-sm font-bold text-white">${p.pct}%</span>
           </div>
           <div class="h-2.5 bg-slate-800 rounded-full overflow-hidden">
-            <div class="h-full rounded-full progress-bar-fill" style="width:${y.pct}%;background:${y.color}"></div>
+            <div class="h-full rounded-full progress-bar-fill" style="width:${p.pct}%;background:${p.color}"></div>
           </div>
-          <p class="text-xs text-slate-500 mt-2">${y.done} / ${y.total} tasks complete</p>
+          <p class="text-xs text-slate-500 mt-2">${p.done} / ${p.total} tasks complete</p>
         </div>
       `).join('');
     }
 
-    function renderSemesters() {
-      const el = document.getElementById('semesters');
+    function renderSteps() {
+      const el = document.getElementById('steps');
       let html = '';
 
-      PLAN.years.forEach(year => {
+      PLAN.phases.forEach(phase => {
         html += `
           <div class="mt-2">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-1 h-8 rounded-full" style="background:${year.color}"></div>
+              <div class="w-1 h-8 rounded-full" style="background:${phase.color}"></div>
               <div>
-                <h2 class="text-lg font-bold text-white">${year.label}: ${year.subtitle}</h2>
+                <h2 class="text-lg font-bold text-white">${phase.label}: ${phase.subtitle}</h2>
               </div>
             </div>
             <div class="space-y-4">`;
 
-        year.semesters.forEach(sem => {
-          const sc = SEASON_COLORS[sem.season];
-          const semStats = getCompletionStats().semesterStats[sem.id];
-          const stepCount = sem.steps.length;
-          const taskCount = sem.steps.reduce((a, st) => a + st.tasks.length, 0);
+        phase.steps.forEach(step => {
+          const stepStats = getCompletionStats().stepStats[step.id];
+          const taskCount = step.tasks.length;
 
           html += `
-            <article id="card-${sem.id}" class="semester-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <article id="card-${step.id}" class="step-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
               <button class="collapse-toggle w-full text-left px-5 sm:px-6 py-4 flex items-center gap-4 hover:bg-slate-800/50 transition">
-                <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border" style="border-color:${sc}33;background:${sc}15">
-                  <span class="text-[10px] font-bold uppercase" style="color:${sc}">${sem.season}</span>
-                  <span class="text-lg font-bold text-white">${semStats.pct}%</span>
+                <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border" style="border-color:${phase.color}33;background:${phase.color}15">
+                  <span class="text-[10px] font-bold uppercase" style="color:${phase.color}">Step ${step.num}</span>
+                  <span class="text-lg font-bold text-white">${stepStats.pct}%</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <h3 class="text-base sm:text-lg font-semibold text-white truncate">${sem.title}</h3>
-                  <p class="text-sm text-slate-400 mt-0.5 line-clamp-1"><span class="text-indigo-400 font-medium">Goal:</span> ${sem.goal}</p>
-                  <p class="text-xs text-slate-600 mt-1">${stepCount} steps · ${taskCount} tasks</p>
+                  <h3 class="text-base sm:text-lg font-semibold text-white truncate">${step.title}</h3>
+                  <p class="text-sm text-slate-400 mt-0.5 line-clamp-1"><span class="text-indigo-400 font-medium">Goal:</span> ${step.goal}</p>
+                  <p class="text-xs text-slate-600 mt-1">${taskCount} tasks</p>
                 </div>
                 <svg class="chevron w-5 h-5 text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
               <div class="collapse-content border-t border-slate-800">
                 <div class="px-5 sm:px-6 py-5 space-y-5">
                   <div class="bg-indigo-950/30 border border-indigo-800/30 rounded-lg px-4 py-3">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-1">Semester Goal</p>
-                    <p class="text-sm text-slate-300">${sem.goal}</p>
-                  </div>`;
+                    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-1">Step Goal</p>
+                    <p class="text-sm text-slate-300">${step.goal}</p>
+                  </div>
+                  <ul class="space-y-2 ml-1">`;
 
-          sem.steps.forEach(step => {
-            const stepTasks = step.tasks;
-            const stepDone = stepTasks.filter(t => progress[t.id]).length;
-            const stepPct = stepTasks.length ? Math.round((stepDone / stepTasks.length) * 100) : 0;
-
+          step.tasks.forEach(task => {
+            const checked = progress[task.id] ? 'checked' : '';
             html += `
-                  <div class="step-header pl-4">
-                    <div class="flex items-center justify-between mb-3">
-                      <h4 class="text-sm font-bold text-white">
-                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600/30 text-indigo-300 text-xs font-bold mr-2">${step.num}</span>
-                        ${step.title}
-                      </h4>
-                      <span class="text-xs text-slate-500">${stepDone}/${stepTasks.length}</span>
-                    </div>
-                    <div class="h-1 bg-slate-800 rounded-full mb-3 overflow-hidden max-w-xs">
-                      <div class="h-full bg-indigo-500 rounded-full progress-bar-fill" style="width:${stepPct}%"></div>
-                    </div>
-                    <ul class="space-y-2 ml-1">`;
-
-            step.tasks.forEach(task => {
-              const checked = progress[task.id] ? 'checked' : '';
-              html += `
-                      <li class="flex items-start gap-3 group">
-                        <input type="checkbox" id="${task.id}" data-task="${task.id}"
-                          class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 cursor-pointer flex-shrink-0"
-                          ${checked} />
-                        <label for="${task.id}" class="task-label text-sm text-slate-300 leading-relaxed cursor-pointer group-hover:text-slate-100 transition">${task.text}</label>
-                      </li>`;
-            });
-
-            html += `</ul></div>`;
+                    <li class="flex items-start gap-3 group">
+                      <input type="checkbox" id="${task.id}" data-task="${task.id}"
+                        class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 cursor-pointer flex-shrink-0"
+                        ${checked} />
+                      <label for="${task.id}" class="task-label text-sm text-slate-300 leading-relaxed cursor-pointer group-hover:text-slate-100 transition">${task.text}</label>
+                    </li>`;
           });
 
-          html += `</div></div></article>`;
+          html += `</ul></div></div></article>`;
         });
 
         html += '</div></div>';
@@ -736,27 +367,26 @@
           saveProgress();
           updateStats();
           updateCharts();
-          renderYearBars();
+          renderPhaseBars();
           renderTimeline();
-          updateSemesterBadges();
+          updateStepBadges();
         });
       });
 
-      // Open first semester by default
       const firstToggle = el.querySelector('.collapse-toggle');
       if (firstToggle) firstToggle.click();
     }
 
-    function updateSemesterBadges() {
-      PLAN.years.forEach(y => y.semesters.forEach(s => {
-        const stats = getCompletionStats().semesterStats[s.id];
-        const card = document.getElementById(`card-${s.id}`);
+    function updateStepBadges() {
+      PLAN.phases.forEach(p => p.steps.forEach(st => {
+        const stats = getCompletionStats().stepStats[st.id];
+        const card = document.getElementById(`card-${st.id}`);
         if (!card) return;
         const badge = card.querySelector('.collapse-toggle .text-lg');
         if (badge) badge.textContent = stats.pct + '%';
-        const node = document.querySelector(`[data-semester="${s.id}"] .progress-bar-fill`);
+        const node = document.querySelector(`[data-step="${st.id}"] .progress-bar-fill`);
         if (node) node.style.width = stats.pct + '%';
-        const nodePct = document.querySelector(`[data-semester="${s.id}"] p:last-child`);
+        const nodePct = document.querySelector(`[data-step="${st.id}"] p:last-child`);
         if (nodePct) nodePct.textContent = stats.pct + '%';
       }));
     }
@@ -817,12 +447,12 @@
       barChart = new Chart(document.getElementById('bar-chart'), {
         type: 'bar',
         data: {
-          labels: s.yearStats.map(y => y.label),
+          labels: s.phaseStats.map(p => p.label),
           datasets: [{
             label: 'Completion %',
-            data: s.yearStats.map(y => y.pct),
-            backgroundColor: s.yearStats.map(y => y.color + '99'),
-            borderColor: s.yearStats.map(y => y.color),
+            data: s.phaseStats.map(p => p.pct),
+            backgroundColor: s.phaseStats.map(p => p.color + '99'),
+            borderColor: s.phaseStats.map(p => p.color),
             borderWidth: 2,
             borderRadius: 8,
             borderSkipped: false,
@@ -841,7 +471,7 @@
           },
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` ${ctx.raw}% (${s.yearStats[ctx.dataIndex].done}/${s.yearStats[ctx.dataIndex].total})` } },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.raw}% (${s.phaseStats[ctx.dataIndex].done}/${s.phaseStats[ctx.dataIndex].total})` } },
           },
         },
       });
@@ -852,7 +482,7 @@
       if (confirm('Reset all progress? This cannot be undone.')) {
         progress = {};
         saveProgress();
-        document.getElementById('semesters').innerHTML = '';
+        document.getElementById('steps').innerHTML = '';
         render();
       }
     });

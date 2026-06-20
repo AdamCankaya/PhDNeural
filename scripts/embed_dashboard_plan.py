@@ -14,6 +14,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from phd_parser import build_dashboard_plan, load_tasks, parse_plan_metadata
 
 
+BRANDING = "Vertical Slice Multi-Task NAS"
+STORAGE_KEY = "phd_plan_progress_v3"
+
+
 def main() -> int:
     plan_path = ROOT / "phd_master_plan.md"
     dashboard_path = ROOT / "phd_timeline_dashboard.html"
@@ -32,32 +36,22 @@ def main() -> int:
         count=1,
     )
 
-    branding = "Comparative NAS for Multi-Task, Multi-Omic Disease Prediction"
     html = re.sub(
         r"<title>PhD Roadmap Dashboard — .*?</title>",
-        f"<title>PhD Roadmap Dashboard — {branding}</title>",
+        f"<title>PhD Roadmap Dashboard — {BRANDING}</title>",
         html,
     )
     html = re.sub(
         r'(<p class="text-xs sm:text-sm text-slate-400 mt-0\.5">).*?(</p>\s*</div>\s*<div class="flex items-center gap-3">)',
-        rf"\1{branding}\2",
+        rf"\1{BRANDING}\2",
         html,
         count=1,
     )
-    html = html.replace(
-        "const STORAGE_KEY = 'phd_plan_progress';",
-        "const STORAGE_KEY = 'phd_plan_progress_v2';",
+    html = re.sub(
+        r"const STORAGE_KEY = 'phd_plan_progress[^']*';",
+        f"const STORAGE_KEY = '{STORAGE_KEY}';",
+        html,
     )
-
-    season_colors = {
-        "Fall: '#f59e0b', Spring: '#10b981', Summer: '#3b82f6'",
-        "Fall: '#f59e0b', Spring: '#10b981', 'Spring & Summer': '#14b8a6', Summer: '#3b82f6'",
-    }
-    if "'Spring & Summer'" not in html:
-        html = html.replace(
-            "const SEASON_COLORS = { Fall: '#f59e0b', Spring: '#10b981', Summer: '#3b82f6' };",
-            "const SEASON_COLORS = { Fall: '#f59e0b', Spring: '#10b981', 'Spring & Summer': '#14b8a6', Summer: '#3b82f6' };",
-        )
 
     dashboard_path.write_text(html, encoding="utf-8")
     print(f"Updated {dashboard_path.name} with {len(tasks)} tasks.")

@@ -1,8 +1,8 @@
 # PhDNeural
 
-**Comparative Neural Architecture Search for Multi-Task, Multi-Omic Disease Prediction**
+**Vertical Slice Multi-Task Neural Architecture Search**
 
-A three-year PhD research program to discover whether biological etiology dictates optimal neural architecture across five disease categories. The framework uses [Optuna](https://optuna.org/) for distributed NAS, ingests multi-omic patient data through five independent ETL pipelines, and delivers Multi-Task Learning (MTL) models with an end-to-end [Streamlit](https://streamlit.io/) inference portal.
+A PhD research program that builds a generalized, multi-task Neural Architecture Search (NAS) framework using a **vertical slice** methodology: engineer the complete end-to-end multi-omic pipeline for Breast Invasive Carcinoma (BRCA) first, then abstract and deploy across four additional disease categories for comparative analysis. The framework uses [Optuna](https://optuna.org/) for distributed NAS, ingests multi-omic patient data through a unified (then generalized) pipeline, and delivers Multi-Task Learning (MTL) models with an end-to-end [Streamlit](https://streamlit.io/) inference portal.
 
 | Resource | Link |
 |----------|------|
@@ -19,36 +19,43 @@ A three-year PhD research program to discover whether biological etiology dictat
 
 **Does biological etiology dictate optimal neural architecture?**
 
-The central hypothesis is that disease topology—localized oncological mutation burden, systemic neurological degradation, immune-driven inflammation, metabolic dysregulation, and chromosomal developmental variation—should favor structurally different computational graphs. Comparative NAS across five independent pipelines will test whether optimal architectures cluster by etiology (e.g., self-attention for systemic diseases vs. spatial convolutions for localized cancers).
+The central hypothesis is that disease topology—localized oncological mutation burden (BRCA), systemic neurological degradation, immune-driven inflammation, metabolic dysregulation, and chromosomal developmental variation—should favor structurally different computational graphs. A BRCA-first vertical slice validates the full pipeline before scaling to four additional categories to test whether optimal architectures cluster by etiology (e.g., self-attention for systemic diseases vs. spatial convolutions for localized cancers).
+
+### Vertical slice strategy
+
+| Stage | Approach |
+|-------|----------|
+| **Phase 1 — BRCA anchor** | Build and validate the complete multi-omic, multi-task pipeline on TCGA BRCA data only |
+| **Phase 2 — Abstraction** | Refactor hardcoded BRCA code into a universal disease pipeline with dynamic omic branches and MTL heads |
+| **Phase 3 — Scaling** | Deploy generalized pipeline to Alzheimer's, rheumatoid arthritis, type 2 diabetes, and Down syndrome |
+| **Phase 4 — Thesis** | Comparative structural taxonomy, SHAP interpretability, and Streamlit patient portal |
 
 ### Objectives
 
 | Objective | Description |
 |-----------|-------------|
-| **Comparative NAS** | Run Optuna define-by-run NAS independently across five disease categories to discover category-specific optimal architectures |
-| **Multi-omic ingestion** | Ingest methylation, transcriptomics, genomics (SNPs/mutations), CNVs, and demographics via five disease-specific ETL pipelines that preserve modality availability per cohort |
-| **Multi-Task Learning** | Train unified models with three heads: disease presence (diagnostic), staging (ordinal severity), and prognostic survival (timeline regression) |
-| **Distributed execution** | Coordinate parallel NAS trials across university Slurm clusters through a central PostgreSQL study store (`load_if_exists=True`) |
-| **Inference portal** | Deliver a Streamlit web application as the final software artifact for disease-category selection, patient data upload, and MTL prediction output |
+| **BRCA proof of concept** | End-to-end pipeline on TCGA BRCA with 80/20 train/holdout split, 5-fold CV NAS, and classical baselines |
+| **Comparative NAS** | Run Optuna define-by-run NAS across five disease categories after abstraction to discover category-specific optimal architectures |
+| **Multi-omic ingestion** | Ingest methylation, transcriptomics, genomics (SNPs/mutations), CNVs, and demographics; omit unavailable omic layers per cohort without breaking the network |
+| **Multi-Task Learning** | Three heads: diagnostic (tumor vs. normal), staging (ordinal severity), and prognostic survival (Cox-PH loss for censored data) |
+| **Distributed execution** | Central PostgreSQL study store on Hetzner; Slurm workers via GitHub Actions CI/CD |
+| **Inference portal** | Streamlit web application for disease-track selection, patient data upload, and MTL prediction output |
 
 ---
 
 ## 2. Expected Input and Output
 
-### Inputs (per disease pipeline)
-
-Each of the five pipelines accepts disease-specific raw and clinical inputs. Pipelines omit omic layers that are unavailable for a given cohort without breaking shared framework code.
+### Inputs (BRCA anchor, then generalized)
 
 | Input type | Formats | Examples |
 |------------|---------|----------|
 | Raw omic files | `.CSV`, `.TXT`, VCF | Methylation beta-value matrices, RNA-Seq FPKM/TPM tables, somatic mutation VCFs, CNV log2 ratio files |
-| Processed tensors | HDF5 (post-ETL) | Partitioned multi-modal tensors serialized after normalization and feature selection |
-| Clinical / demographic tabular data | `.CSV`, tabular joins | Age, sex, ethnicity, and disease-specific covariates |
-| Labels & targets | Per-pipeline schema | Tumor stage (BRCA), cognitive score (Alzheimer's), survival days, disease presence, severity ordinals |
+| Clinical / demographic tabular data | `.CSV`, tabular joins | Age, sex, ethnicity, tumor stage, survival days |
+| Labels & targets | Per-disease schema | Tumor vs. normal (diagnostic), stage I–IV (ordinal), days to live with censoring (prognostic) |
 
 **Preprocessing constraints (training set only):**
 
-- Strict **20% holdout test set** extracted before any preprocessing
+- Strict **20% holdout test set** extracted before any preprocessing (BRCA first; same rule per disease in Phase 3)
 - Demographics: Z-score standardization (continuous); one-hot encoding (categorical)
 - Methylation / transcriptomics: variance-based reduction to top 10,000 highly variable features
 
@@ -57,55 +64,63 @@ Each of the five pipelines accepts disease-specific raw and clinical inputs. Pip
 | Output | Description |
 |--------|-------------|
 | **NAS-discovered architectures** | Optimal multi-branched PyTorch models per disease category, stored with trial metadata in PostgreSQL |
-| **MTL predictions** | Disease probability (diagnostic head), predicted stage (ordinal head), prognostic timeline (regression head) |
-| **Benchmark metrics** | ROC-AUC (classification tasks), MSE (prognostic regression) vs. XGBoost and ElasticNet baselines on tabular/methylation features |
+| **MTL predictions** | Disease probability (diagnostic head), predicted stage (ordinal head), prognostic timeline (Cox-PH head) |
+| **Benchmark metrics** | ROC-AUC (classification tasks), concordance index / survival metrics (prognostic) vs. XGBoost, LightGBM, and ElasticNet baselines on tabular/methylation features |
 | **SHAP interpretability** | Feature importance maps per omic layer and demographic variable, stratified by disease category |
-| **Streamlit inference** | Interactive predictions with confidence scores from uploaded patient demographics and available raw omic files |
+| **Streamlit inference** | Interactive predictions from uploaded patient demographics and available raw omic files |
 
 ---
 
 ## 3. Planned Phases
 
-The roadmap spans three years grouped into three phases. Semester breakdowns follow [phd_master_plan.md](phd_master_plan.md).
+The roadmap follows four phases in [phd_master_plan.md](phd_master_plan.md).
 
-### Phase 1 — Year 1: Data Sourcing & Multi-Omic ETL
+### Phase 1 — The Anchor (BRCA Proof of Concept)
 
-**Theme:** Secure cohorts, build five independent pipelines, and provision the distributed NAS infrastructure.
+**Theme:** Build and validate the complete vertical slice on TCGA BRCA before generalizing.
 
-| Semester | Focus | Key deliverables |
-|----------|-------|------------------|
-| **Fall** | 5-category disease selection & sourcing | Curate BRCA (TCGA), Alzheimer's, rheumatoid arthritis, type 2 diabetes, and Down syndrome cohorts; document available omic modalities per disease |
-| **Spring** | 5 independent pipelines & normalization | 20% holdout split; five PyTorch `Dataset` classes; dynamic normalization on 80% training data; HDF5 partitioned storage |
-| **Summer** | Software stack & PostgreSQL hub | Core Python stack (`torch`, `optuna`, `scikit-learn`, `xgboost`, `h5py`, `pandas`, `numpy`); Dockerized PostgreSQL + `psycopg2-binary` for distributed trial tracking |
+| Step | Focus | Key deliverables |
+|------|-------|------------------|
+| **1** | BRCA multi-omic sourcing & split | TCGA Level 3 data (methylation, RNA-Seq, mutations, CNVs, demographics); 80/20 train/holdout split before preprocessing |
+| **2** | Infrastructure & database orchestration | Dockerized PostgreSQL on Hetzner; GitHub Actions → Slurm worker deployment |
+| **3** | Multi-task architecture engineering | Input branches (1D-CNN/Transformer for dense omics, linear for sparse genomics); three MTL heads with cross-entropy, ordinal, and Cox-PH losses |
+| **4** | Optuna NAS & baseline benchmarking | Tune 5 topologies (MLP, 1D-CNN, Transformer, TabNet, Cross-Attention Fusion); XGBoost, LightGBM, ElasticNet baselines; holdout PoC validation |
 
-### Phase 2 — Year 2: Distributed NAS & Multi-Task Execution
+### Phase 2 — Code Abstraction & Generalization
 
-**Theme:** Define the searchable architecture toolkit, execute distributed Optuna NAS, and benchmark against classical models.
+**Theme:** Transition BRCA-specific code into a universal disease pipeline.
 
-| Semester | Focus | Key deliverables |
-|----------|-------|------------------|
-| **Fall** | Multi-omic architecture toolkit | Multi-branched network body (tabular, epigenomic/transcriptomic, genomic/CNV); early and intermediate fusion modules; three MTL output heads |
-| **Spring** | Execution & K-fold cross-validation | Optuna objective with 5-fold CV on 80% training set; MTL loss weight tuning; Slurm deployment with `HyperbandPruner` |
-| **Summer** | Holdout evaluation & benchmarking | Retrain optimal architecture per disease on full 80%; evaluate on untouched 20% holdout; XGBoost and ElasticNet baselines |
+| Step | Focus | Key deliverables |
+|------|-------|------------------|
+| **1** | Refactoring base classes | Dynamic omic-layer detection in `Dataset`; adaptive MTL heads for disease-specific clinical targets |
 
-### Phase 3 — Year 3: Synthesis & Final Deliverables
+### Phase 3 — Scaling to the Comparative Matrix
 
-**Theme:** Interpretability, clinical-facing software, and thesis synthesis.
+**Theme:** Run four parallel Optuna studies on the generalized pipeline.
 
-| Semester | Focus | Key deliverables |
-|----------|-------|------------------|
-| **Fall** | Interpretability & patient portal | SHAP feature importance per omic layer; Streamlit inference app (disease selection, file upload, MTL output) |
-| **Spring & Summer** | Thesis defense & publication | Structural taxonomy analysis (e.g., Transformers vs. CNNs by etiology); open-source NAS framework release; submission to computational biology venues (e.g., ISMB, NeurIPS) |
+| Step | Focus | Key deliverables |
+|------|-------|------------------|
+| **1** | Sourcing 4 pathologies | Alzheimer's (GEO), rheumatoid arthritis (GEO), type 2 diabetes (GEO/recountmethylation), Down syndrome (GEO) |
+| **2** | High-throughput distributed execution | 4 parallel Optuna studies against Hetzner PostgreSQL; monitoring only (infrastructure proven in Phase 1) |
+
+### Phase 4 — Thesis Synthesis & Final Deliverables
+
+**Theme:** Comparative analysis, interpretability, and patient-facing software.
+
+| Step | Focus | Key deliverables |
+|------|-------|------------------|
+| **1** | Comparative analysis (core thesis) | Structural taxonomy (CNNs vs. Transformers vs. classical by etiology); SHAP omic-layer importance |
+| **2** | Patient-facing software app | Streamlit dashboard: disease track selection, multi-omic CSV upload, phenotype/stage/prognosis output |
 
 ---
 
 ## 4. Technical Specifications
 
-### Disease categories (5)
+### Disease categories (5 — BRCA first, then 4)
 
 | Category | Disease | Primary source | Etiology profile |
 |----------|---------|----------------|------------------|
-| **Oncological** | Breast Invasive Carcinoma (BRCA) | [TCGA / GDC Portal](https://portal.gdc.cancer.gov/) | Localized, high mutational burden |
+| **Oncological (anchor)** | Breast Invasive Carcinoma (BRCA) | [TCGA / GDC Portal](https://portal.gdc.cancer.gov/) | Localized, high mutational burden |
 | **Neurological** | Alzheimer's Disease | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) | Systemic, progressive structural degradation |
 | **Autoimmune** | Rheumatoid Arthritis | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) | Systemic, immune-driven inflammation |
 | **Metabolic** | Type 2 Diabetes | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) / [recountmethylation](https://bioconductor.org/packages/recountmethylation/) | Lifestyle, lipid/insulin driven |
@@ -115,72 +130,49 @@ The roadmap spans three years grouped into three phases. Semester breakdowns fol
 
 | Modality | Representation | Typical source | Notes |
 |----------|----------------|----------------|-------|
-| **Demographics** | Age, sex, ethnicity (tabular) | Clinical records | Z-score / one-hot encoding; present in all pipelines |
+| **Demographics** | Age, sex, ethnicity (tabular) | Clinical records | Z-score / one-hot encoding |
 | **Clinical targets** | Disease-specific labels | Cohort metadata | Stage, cognitive score, survival days, etc. |
-| **Epigenomic** | Methylation beta-values (0.0–1.0 at CpG sites) | Illumina arrays, recountmethylation | Anchor modality; top 10k variable CpGs after ETL |
-| **Transcriptomic** | RNA-Seq FPKM or TPM (continuous) | GEO, TCGA | Top 10k variable genes; **may be omitted** per pipeline |
-| **Genomic** | SNPs / somatic mutations (sparse binary) | VCF files | Sparse linear branch input; availability varies by cohort |
-| **Structural (CNV)** | Copy number log2 ratios (continuous) | Array or sequencing CNV calls | **May be omitted** per pipeline |
+| **Epigenomic** | Methylation beta-values (0.0–1.0 at CpG sites) | TCGA, Illumina arrays | Top 10k variable CpGs after ETL |
+| **Transcriptomic** | RNA-Seq FPKM or TPM (continuous) | TCGA, GEO | Top 10k variable genes; **may be omitted** per cohort |
+| **Genomic** | SNPs / somatic mutations (sparse binary) | VCF files | Sparse linear branch input |
+| **Structural (CNV)** | Copy number log2 ratios (continuous) | Array or sequencing CNV calls | **May be omitted** per cohort |
 
-**Per-pipeline omic availability:** Each disease pipeline is independent. If a cohort lacks an omic layer (e.g., no RNA-Seq for rheumatoid arthritis), that branch is omitted at the dataset and NAS levels—Optuna conditionally skips unavailable branches via define-by-run logic.
+### Neural search topologies (5)
 
-### Structural models & branches (Optuna-assembled)
+| Topology | Role |
+|----------|------|
+| **MLP** | Tabular demographics and fused representations |
+| **1D-CNN** | Dense continuous omic sequences (methylation, RNA-Seq) |
+| **Transformer** | Self-attention over omic feature sequences |
+| **TabNet** | Attentive tabular encoding for demographics/clinical covariates |
+| **Cross-Attention Fusion** | Intermediate multi-branch integration |
 
-| Component | Candidate architectures | Role |
-|-----------|------------------------|------|
-| **Tabular branch** | MLP, TabNet | Demographics and clinical covariates |
-| **Epigenomic / transcriptomic branch** | 1D-CNN, Transformer Encoder | Dense continuous omic sequences |
-| **Genomic / CNV branch** | Sparse linear layers | High-dimensional sparse mutation matrices; continuous CNV ratios |
-| **Fusion** | Early (concatenation), Intermediate (cross-attention) | Combine active branch representations |
-| **MTL heads** | Diagnostic (softmax), Staging (ordinal classification), Prognostic (linear regression) | Simultaneous multi-task output |
+### MTL heads & losses
+
+| Head | Loss | Target |
+|------|------|--------|
+| **Diagnostic** | Cross-entropy | Tumor vs. normal matched tissue |
+| **Staging** | Ordinal loss | Stage I, II, III, or IV |
+| **Prognostic** | Cox proportional hazards (Cox-PH) | Survival timeline (days to live) with censored data |
+
+### Classical baselines
+
+| Model | Data | Purpose |
+|-------|------|---------|
+| **XGBoost** | Tabular + methylation | Performance floor |
+| **LightGBM** | Tabular + methylation | Performance floor |
+| **ElasticNet** | Tabular + methylation | Linear performance floor |
 
 ### Optuna search space (define-by-run)
 
-Optuna dynamically constructs architectures per trial. The search space is conditional on which omic layers exist for each disease pipeline.
-
-#### Architecture topology
-
-| Hyperparameter | Search range / choices | Notes |
-|----------------|------------------------|-------|
-| Branch inclusion | Include / skip per omic layer | Conditional on pipeline availability |
-| Tabular encoder | `MLP` \| `TabNet` | Demographics branch |
-| Sequence encoder | `1D-CNN` \| `Transformer` | Methylation and/or transcriptomic branch |
-| Genomic encoder | Sparse linear (width tuned) | Applied when mutation data present |
-| Fusion strategy | `early_concat` \| `cross_attention` | Governs multi-branch integration |
-| Hidden layers (per branch) | 1–4 layers | Depth per active branch |
-| Layer width | e.g., 64, 128, 256, 512, 1024 | Per-layer; branch-specific |
-| Activation function | `ReLU`, `GELU`, `LeakyReLU`, `SiLU` | Per-branch or shared |
-| Dropout rate | 0.0–0.5 | Per-branch regularization |
-
-#### Sequence-model specifics
-
-| Hyperparameter | Search range / choices | Applies to |
-|----------------|------------------------|------------|
-| CNN kernel sizes | 3, 5, 7, 11 | 1D-CNN branch |
-| CNN filter counts | 32–256 (per layer) | 1D-CNN branch |
-| Transformer layers | 1–6 | Transformer branch |
-| Attention heads | 2, 4, 8 | Transformer branch |
-| Embedding dimension | 64–512 | Transformer branch |
-
-#### Training & MTL
-
-| Hyperparameter | Search range / choices | Notes |
-|----------------|------------------------|-------|
-| Learning rate | log-uniform ~1e-5–1e-2 | Adam / AdamW optimizer |
-| Batch size | 16, 32, 64, 128 | Subject to GPU memory |
-| Weight decay | 1e-6–1e-3 | L2 regularization |
-| MTL loss weights | Tuned per head (diagnostic, staging, prognostic) | Combined weighted loss; Optuna objective |
-| Epochs / budget | Capped per trial | Early-stopped by pruner |
-
-#### NAS orchestration
-
 | Setting | Value / method |
 |---------|----------------|
-| Cross-validation | 5-fold on 80% training set |
+| Cross-validation | 5-fold on 80% training set (BRCA in Phase 1) |
+| MTL loss weights | Tuned per head by Optuna objective |
 | Pruner | `HyperbandPruner` — terminate unpromising trials early |
-| Study backend | PostgreSQL (distributed, `load_if_exists=True`) |
-| Execution | Slurm cluster job arrays pointed at central study DB |
-| Final selection | Best trial per disease → retrain on full 80% → evaluate on 20% holdout |
+| Study backend | PostgreSQL on Hetzner (`load_if_exists=True`) |
+| Execution | Slurm cluster job arrays via GitHub Actions CI/CD |
+| Final selection | Best trial → retrain on full 80% → evaluate on 20% holdout |
 
 ---
 
@@ -190,10 +182,9 @@ Optuna dynamically constructs architectures per trial. The search space is condi
 
 | Resource | URL | Use in PhDNeural |
 |----------|-----|------------------|
-| **TCGA / GDC Portal** | [portal.gdc.cancer.gov](https://portal.gdc.cancer.gov/) | BRCA multi-omic and clinical data |
-| **NCBI GEO** | [ncbi.nlm.nih.gov/geo](https://www.ncbi.nlm.nih.gov/geo/) | Alzheimer's, rheumatoid arthritis, type 2 diabetes, Down syndrome cohorts |
-| **recountmethylation** | [bioconductor.org/packages/recountmethylation](https://bioconductor.org/packages/recountmethylation/) | Compiled public methylation array data (GEO-derived); database at [methylation.recount.bio](https://methylation.recount.bio/) |
-| **Illumina Infinium Methylation Arrays** | [illumina.com — Infinium Methylation Arrays](https://www.illumina.com/products/by-type/microarray-kits/infinium-methylation-arrays.html) | Platform reference for beta-value methylation arrays (HM450K, EPIC/HM850K) |
+| **TCGA / GDC Portal** | [portal.gdc.cancer.gov](https://portal.gdc.cancer.gov/) | BRCA anchor multi-omic and clinical data |
+| **NCBI GEO** | [ncbi.nlm.nih.gov/geo](https://www.ncbi.nlm.nih.gov/geo/) | Phase 3 disease cohorts |
+| **recountmethylation** | [bioconductor.org/packages/recountmethylation](https://bioconductor.org/packages/recountmethylation/) | Type 2 diabetes methylation data |
 
 ### Software stack
 
@@ -203,21 +194,18 @@ Optuna dynamically constructs architectures per trial. The search space is condi
 | **Optuna** | [optuna.org](https://optuna.org/) | Define-by-run NAS, pruning, distributed study management |
 | **scikit-learn** | [scikit-learn.org](https://scikit-learn.org/) | Preprocessing, baselines, evaluation utilities |
 | **XGBoost** | [xgboost.readthedocs.io](https://xgboost.readthedocs.io/) | Classical tree-based benchmark |
-| **pandas** | [pandas.pydata.org](https://pandas.pydata.org/) | Tabular data handling |
-| **numpy** | [numpy.org](https://numpy.org/) | Numerical operations |
-| **h5py** | [h5py.org](https://www.h5py.org/) | HDF5 serialized tensor I/O |
-| **PostgreSQL** | [postgresql.org](https://www.postgresql.org/) | Central Optuna study database |
-| **psycopg2-binary** | [pypi.org/project/psycopg2-binary](https://pypi.org/project/psycopg2-binary/) | PostgreSQL Python driver |
-| **Docker** | [docker.com](https://www.docker.com/) | Containerized PostgreSQL hub deployment |
+| **LightGBM** | [lightgbm.readthedocs.io](https://lightgbm.readthedocs.io/) | Classical tree-based benchmark |
+| **PostgreSQL** | [postgresql.org](https://www.postgresql.org/) | Central Optuna study database (Hetzner) |
+| **Docker** | [docker.com](https://www.docker.com/) | Containerized PostgreSQL hub |
 | **Streamlit** | [streamlit.io](https://streamlit.io/) | Patient inference web portal |
-| **SHAP** | [github.com/shap/shap](https://github.com/shap/shap) | Model interpretability and feature attribution |
+| **SHAP** | [github.com/shap/shap](https://github.com/shap/shap) | Model interpretability |
 
 ### Repository tooling
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| Master plan | [phd_master_plan.md](phd_master_plan.md) | Authoritative 3-year roadmap and task checklist |
-| Timeline dashboard | [phd_timeline_dashboard.html](phd_timeline_dashboard.html) | Interactive progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html)) |
+| Master plan | [phd_master_plan.md](phd_master_plan.md) | Authoritative vertical-slice roadmap and task checklist |
+| Timeline dashboard | [phd_timeline_dashboard.html](phd_timeline_dashboard.html) | Interactive 4-phase progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html)) |
 | GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2) |
 | Setup guide | [GITHUB_PROJECTS_SETUP.md](GITHUB_PROJECTS_SETUP.md) | GitHub Projects v2 configuration and sync workflow |
 | CI sync workflow | `.github/workflows/sync-phd-plan.yml` | Manual GitHub Actions re-sync trigger |
@@ -226,4 +214,4 @@ Optuna dynamically constructs architectures per trial. The search space is condi
 
 ## License & citation
 
-This repository documents an active PhD research program. Citation and licensing details will be added upon framework release (Year 3, Spring/Summer).
+This repository documents an active PhD research program. Citation and licensing details will be added upon framework release (Phase 4).

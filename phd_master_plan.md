@@ -1,102 +1,72 @@
-# PhD Master Roadmap: Comparative Neural Architecture Search for Multi-Task, Multi-Omic Disease Prediction
+# PhD Master Roadmap: "Vertical Slice" Multi-Task Neural Architecture Search
 
 ## Core Objective
-Develop a high-performance, distributed Neural Architecture Search (NAS) framework utilizing Optuna to discover the optimal computational networks across 5 fundamental disease categories. The system will ingest multi-omic data (Methylation, Transcriptomics, Genomics, CNVs) and patient demographics via 5 independent ETL pipelines. Final architectures will use Multi-Task Learning (MTL) to simultaneously predict disease presence, staging, and prognostic survival timelines.
+Develop a generalized, multi-task Neural Architecture Search (NAS) framework. The project will be built using a "Vertical Slice" methodology: engineering the complete, end-to-end multi-omic pipeline exclusively for Breast Invasive Carcinoma (BRCA) first. Once validated, this baseline architecture will be abstracted and deployed across 4 additional disease categories (Neurological, Autoimmune, Metabolic, Genetic) to conduct a comparative computational analysis.
 
 ---
 
-## Year 1: The 5-Category Sourcing & Multi-Omic ETL
+## Phase 1: The Anchor (BRCA Proof of Concept)
 
-### Fall Semester: 5-Category Disease Selection & Sourcing
-**Goal:** Secure high-quality datasets representing the 5 major disease topologies to prove how biological etiology dictates neural network structure.
+### Step 1: BRCA Multi-Omic Sourcing & Split
+**Goal:** Acquire the most feature-dense dataset to stress-test every branch of the neural network.
+* **Source:** TCGA (Level 3 Open Access).
+* **Target Modalities:** Methylation (Beta-values), Transcriptomics (RNA-Seq), Genomics (Somatic Mutations), CNVs, and Clinical Demographics.
+* **The Strict Boundary:** Immediately split the BRCA dataset into an **80% Training/Validation Set** and a locked **20% Holdout Test Set** before any preprocessing.
 
-* **1. The 5 Disease Targets:**
-    * **Oncological:** Breast Invasive Carcinoma (BRCA) via TCGA. (Localized, high mutational burden).
-    * **Neurological:** Alzheimer's Disease via NCBI GEO. (Systemic, progressive structural degradation).
-    * **Autoimmune:** Rheumatoid Arthritis via NCBI GEO. (Systemic, immune-driven inflammation).
-    * **Metabolic:** Type 2 Diabetes via GEO or `recountmethylation`. (Lifestyle, lipid/insulin driven).
-    * **Genetic/Developmental:** Down Syndrome via GEO. (Innate chromosomal variation).
-* **2. The Multi-Omic Data Modalities:**
-    * **Epigenomic (The Anchor):** DNA Methylation arrays (Beta-values ranging from 0.0 to 1.0 at CpG sites).
-    * **Transcriptomic:** RNA-Seq Gene Expression (Continuous FPKM or TPM values).
-    * **Genomic:** Somatic Mutations and SNPs (Sparse binary matrices from VCF files).
-    * **Structural:** Copy Number Variations (Continuous Log2 copy ratios).
-    * **Demographic/Clinical:** Age, Sex, Ethnicity, plus disease-specific targets (e.g., Tumor Stage for BRCA, Cognitive Score for Alzheimer's, Days to Live).
+### Step 2: Infrastructure & Database Orchestration
+**Goal:** Establish the remote environments required for distributed Optuna execution.
+* **Central Hub:** Deploy a Dockerized PostgreSQL instance on your Hetzner Linux server to act as the permanent, centralized Optuna study hub.
+* **CI/CD Pipeline:** Configure a GitHub Actions runner to orchestrate and deploy your PyTorch worker scripts natively from your repository to your university's Slurm compute clusters.
 
-### Spring Semester: 5 Independent Pipelines & Normalization
-**Goal:** Construct the ETL pipelines without flattening the data. Because each disease has unique clinical variables and available omics, you must build 5 distinct pipelines.
+### Step 3: Engineering the Multi-Task Architecture
+**Goal:** Write the PyTorch modules that handle multi-modal fusion and multi-task learning.
+* **Input Branches:** Construct flexible ingestion layers for dense continuous data (1D-CNNs/Transformers for Methylation/RNA) and sparse data (Linear layers for Genomics).
+* **MTL Output Heads:** Program the network to branch into three specific loss targets:
+    * *Diagnostic (Cross-Entropy Loss):* Tumor vs. Normal matched tissue.
+    * *Staging (Ordinal Loss):* Stage I, II, III, or IV.
+    * *Prognostic (Cox-PH Loss):* Survival timeline (Days to Live) accounting for censored data.
 
-* **1. The Universal Split (Train vs. Test):**
-    * Extract a strict **20% Holdout Test Set** for each of the 5 diseases before any preprocessing occurs.
-* **2. The 5 Independent PyTorch `Dataset` Classes:**
-    * Write 5 separate data ingestion scripts (e.g., `BRCADataset`, `AlzheimersDataset`). 
-    * This ensures disease-specific clinical variables are perfectly preserved. If a dataset lacks a specific omic layer (e.g., no RNA-Seq for Rheumatoid Arthritis), that specific pipeline simply omits the RNA-Seq tensor without breaking the universal code.
-* **3. Dynamic Normalization (Applied to the 80% Training Set):**
-    * *Demographics:* Z-score standardization for continuous arrays; One-Hot Encoding for categorical.
-    * *Methylation/Transcriptomics:* Variance-based dimensionality reduction to isolate the top 10,000 highly variable features, preventing GPU memory exhaustion.
-* **4. Unified Storage:**
-    * Serialize the processed, multi-modal tensors into 5 distinct, partitioned `HDF5` databases.
-
-### Summer Semester: Software Stack & Hub Setup
-**Goal:** Provision the remote execution servers and establish the Python ecosystem.
-
-* **1. The Core Stack:**
-    * `torch`, `optuna`, `scikit-learn`, `xgboost`, `h5py`, `pandas`, `numpy`.
-* **2. The Central Database Hub:**
-    * Deploy a Dockerized PostgreSQL database (`psycopg2-binary`) on a dedicated Linux server to track the distributed Optuna trials for all 5 independent disease pipelines concurrently.
+### Step 4: Optuna NAS & Baseline Benchmarking
+**Goal:** Execute the search space specifically for BRCA on the 80% Training Set using 5-Fold Cross Validation.
+* **Neural Search (Optuna):** Tune the 5 deep learning topologies (MLP, 1D-CNN, Transformer, TabNet, Cross-Attention Fusion) to find the optimal BRCA network. Have Optuna dynamically weigh the multi-task loss functions.
+* **Classical Baselines:** Train XGBoost, LightGBM, and ElasticNet strictly on the tabular/methylation data to establish a performance floor.
+* **The PoC Validation:** Evaluate the single best Optuna-discovered model against the classical baselines using the locked 20% Holdout Test Set.
 
 ---
 
-## Year 2: Distributed NAS & Multi-Task Execution
+## Phase 2: Code Abstraction & Generalization
 
-### Fall Semester: Defining the Multi-Omic Architecture Toolkit
-**Goal:** Code the PyTorch algorithmic blueprints that Optuna will dynamically assemble.
-
-* **1. The Multi-Branched Network Body:**
-    * *Tabular Branch (Demographics):* MLPs or TabNet.
-    * *Epigenomic/Transcriptomic Branch:* 1D-CNNs or Transformer Encoders for dense continuous sequences.
-    * *Genomic/CNV Branch:* Sparse linear layers.
-    * *Fusion Layers:* Code Early (Concatenation) and Intermediate (Cross-Attention) fusion modules. Optuna will dynamically skip omic branches if a specific pipeline (like Alzheimer's) does not provide that data.
-* **2. The Multi-Task Learning (MTL) Heads:**
-    * Design the network to split into three output heads:
-        * **Diagnostic Head:** Binary/Multi-class Softmax layer predicting disease presence.
-        * **Staging Head:** Ordinal classification layer predicting severity/progression.
-        * **Prognostic Head:** Linear regression layer predicting timelines (Days to Live).
-
-### Spring Semester: Execution & K-Fold Cross-Validation
-**Goal:** Execute the NAS engines across university compute clusters.
-
-* **1. Optuna Objective Function:**
-    * Train architectures using **5-Fold Cross-Validation** exclusively on the 80% Training Set.
-    * Program Optuna to automatically tune the weights of the combined MTL loss function.
-* **2. Parallel Execution:**
-    * Deploy execution scripts to Slurm clusters, pointed at the PostgreSQL database (`load_if_exists=True`). Use `HyperbandPruner` to terminate unpromising architectures.
-
-### Summer Semester: Holdout Evaluation & Benchmarking
-**Goal:** Evaluate the discovered architectures against classical models.
-
-* **1. The 20% Holdout Evaluation:**
-    * Extract the single optimal multi-task architecture for each of the 5 diseases.
-    * Train from scratch on the full 80% dataset, then evaluate against the untouched 20% Test Set to generate final ROC-AUC and Mean Squared Error metrics.
-* **2. Classical Benchmarking:**
-    * Train baseline XGBoost and ElasticNet models on the tabular/methylation data to prove whether the deep multi-omic neural networks statistically outperformed standard tree-based methods.
+### Step 1: Refactoring the Base Classes
+**Goal:** Transition the hardcoded BRCA script into a universal disease pipeline.
+* **Abstract Data Loaders:** Refactor the PyTorch `Dataset` class so it dynamically counts the number of available omic layers. If a dataset is missing RNA-Seq, the loader simply drops that tensor branch without crashing the network.
+* **Dynamic Output Heads:** Ensure the MTL heads adapt to the clinical data available (e.g., swapping "Tumor Stage" for "Cognitive Score").
 
 ---
 
-## Year 3: Synthesis & Final Deliverables
+## Phase 3: Scaling to the Comparative Matrix
 
-### Fall Semester: Interpretability & The Patient Portal
-**Goal:** Build the end-to-end inference software.
+### Step 1: Sourcing the 4 Distinct Pathologies
+**Goal:** Gather the datasets that represent the remaining functional disease categories.
+* **Neurological:** Alzheimer's Disease (GEO) - Focus on progressive structural shifts.
+* **Autoimmune:** Rheumatoid Arthritis (GEO) - Focus on systemic inflammation.
+* **Metabolic:** Type 2 Diabetes (GEO / `recountmethylation`) - Focus on lifestyle-driven epigenetic markers.
+* **Genetic:** Down Syndrome (GEO) - Focus on innate chromosomal baseline differences.
 
-* **1. Interpretability (SHAP):**
-    * Map feature importance. Determine which specific omic layer or demographic variable drove the predictions for each distinct disease category.
-* **2. The Universal Inference Application:**
-    * Build a `streamlit` web interface.
-    * A user selects the disease category, uploads the available patient demographics and raw omic `.CSV` files.
-    * The software passes the data through the specific optimized PyTorch model and outputs the Disease Probability, Predicted Stage, and Prognostic Timeline.
+### Step 2: High-Throughput Distributed Execution
+**Goal:** Push the generalized pipeline to the university cluster.
+* Run 4 parallel Optuna studies pointing to the Hetzner PostgreSQL database.
+* Because the infrastructure and code were proven in Phase 1, this phase is strictly computational execution and monitoring.
 
-### Spring & Summer Semesters: Thesis Defense & Publication
-**Goal:** Synthesize the meta-methodology.
+---
 
-* **1. The CS Focus:** Document the structural taxonomy. Did systemic diseases inherently favor self-attention (Transformers) while localized cancers favored spatial architectures (CNNs)?
-* **2. Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit findings to computational biology conferences (e.g., ISMB, NeurIPS).
+## Phase 4: Thesis Synthesis & Final Deliverables
+
+### Step 1: The Comparative Analysis (The Core Thesis)
+**Goal:** Mine the Optuna database to answer the primary research question.
+* **Structural Taxonomy:** Map the final architectures against the disease types. Compare if localized, highly mutated cancers (BRCA) inherently select spatial architectures (CNNs) while systemic, slow-progressing conditions (Alzheimer's) favor self-attention mechanisms (Transformers) or classical models.
+* **Interpretability:** Use SHAP to determine which specific omic layers carried the most predictive weight across different disease categories.
+
+### Step 2: The Patient-Facing Software App
+**Goal:** Deliver a production-ready diagnostic UI.
+* Build a `streamlit` web dashboard.
+* Users select a disease track, upload multi-omic `.CSV` data, and receive a phenotype probability, severity stage, and prognostic timeline powered by the highly optimized models.

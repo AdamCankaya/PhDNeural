@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -24,21 +25,24 @@ from github_projects import (
     resolve_token,
     validate_config,
 )
-from phd_parser import PHASE_OPTIONS, SEMESTER_DISPLAY, PhdTask, load_tasks
+from phd_parser import PHASE_OPTIONS, PhdTask, load_tasks
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_STATE_PATH = ROOT / ".phd-github-sync.json"
 
 LABEL_COLORS = {
     "phd-sync": "5319e7",
-    "year-1": "0e8a16",
-    "year-2": "1d76db",
-    "year-3": "d93f0b",
-    "fall": "fbca04",
-    "spring": "c2e0c6",
-    "summer": "fef2c0",
-    "foundation": "006b75",
-    "nas-execution": "0052cc",
+    "phase-1": "0e8a16",
+    "phase-2": "1d76db",
+    "phase-3": "d93f0b",
+    "phase-4": "5319e7",
+    "step-1": "fbca04",
+    "step-2": "c2e0c6",
+    "step-3": "fef2c0",
+    "step-4": "bfd4f2",
+    "brca-anchor": "006b75",
+    "abstraction": "0052cc",
+    "scaling": "e99695",
     "thesis-deliverable": "b60205",
 }
 
@@ -92,12 +96,8 @@ def save_state(path: Path, state: dict) -> None:
     path.write_text(json.dumps(state, indent=2), encoding="utf-8")
 
 
-def semester_display(semester: str) -> str:
-    return SEMESTER_DISPLAY.get(semester, semester.title())
-
-
-def year_display(year: int) -> str:
-    return f"Year {year}"
+def step_display(step: int) -> str:
+    return f"Step {step}"
 
 
 def status_option_name(project_fields: dict, desired: str = "Todo") -> str | None:
@@ -128,35 +128,28 @@ def setup_project_fields(
     project_fields: dict,
     tasks: list[PhdTask],
 ) -> tuple[dict, dict, dict]:
-    years = sorted({year_display(t.year) for t in tasks})
-    semesters = sorted({semester_display(t.semester) for t in tasks}, key=_semester_sort_key)
+    steps = sorted({step_display(t.step) for t in tasks}, key=_step_sort_key)
 
-    year_field = client.ensure_single_select_field(
-        project_id, "Year", years, project_fields
+    step_field = client.ensure_single_select_field(
+        project_id, "Step", steps, project_fields
     )
-    semester_field = client.ensure_single_select_field(
-        project_id, "Semester", semesters, project_fields
-    )
-    section_field = client.ensure_text_field(project_id, "Section", project_fields)
     phase_field = client.ensure_single_select_field(
         project_id, "Phase", PHASE_OPTIONS, project_fields
     )
 
     return (
         {
-            "year": year_field,
-            "semester": semester_field,
-            "section": section_field,
+            "step": step_field,
             "phase": phase_field,
         },
-        {year_display(t.year): year_display(t.year) for t in tasks},
-        {semester_display(t.semester): semester_display(t.semester) for t in tasks},
+        {step_display(t.step): step_display(t.step) for t in tasks},
+        {t.phase_label(): t.phase_label() for t in tasks},
     )
 
 
-def _semester_sort_key(name: str) -> int:
-    order = {"Fall": 0, "Spring": 1, "Spring & Summer": 2, "Summer": 3}
-    return order.get(name, 99)
+def _step_sort_key(name: str) -> int:
+    match = re.match(r"Step (\d+)", name)
+    return int(match.group(1)) if match else 99
 
 
 def apply_project_fields(
@@ -166,37 +159,19 @@ def apply_project_fields(
     task: PhdTask,
     custom_fields: dict,
 ) -> None:
-    year_field = custom_fields.get("year")
-    semester_field = custom_fields.get("semester")
-    section_field = custom_fields.get("section")
+    step_field = custom_fields.get("step")
     phase_field = custom_fields.get("phase")
 
-    if year_field:
-        year_name = year_display(task.year)
-        option_id = year_field.options.get(year_name)
+    if step_field:
+        step_name = step_display(task.step)
+        option_id = step_field.options.get(step_name)
         if option_id:
             client.set_single_select_field(
-                project_id, item_id, year_field.field_id, option_id
+                project_id, item_id, step_field.field_id, option_id
             )
-
-    if semester_field:
-        sem_name = semester_display(task.semester)
-        option_id = semester_field.options.get(sem_name)
-        if option_id:
-            client.set_single_select_field(
-                project_id, item_id, semester_field.field_id, option_id
-            )
-
-    if section_field:
-        client.set_text_field(
-            project_id,
-            item_id,
-            section_field.field_id,
-            f"{task.section_number}. {task.section_title}",
-        )
 
     if phase_field:
-        phase_name = task.phase()
+        phase_name = task.phase_label()
         option_id = phase_field.options.get(phase_name)
         if option_id:
             client.set_single_select_field(
@@ -218,12 +193,11 @@ def print_parse_summary(tasks: list[PhdTask]) -> None:
     print(f"Parsed {len(tasks)} tasks from master plan.\n")
     current_key = None
     for task in tasks:
-        key = (task.year, task.semester, task.section_number)
+        key = (task.phase, task.step)
         if key != current_key:
             current_key = key
             print(
-                f"\nYear {task.year} / {task.semester.title()} / "
-                f"{task.section_number}. {task.section_title}"
+                f"\nPhase {task.phase} / Step {task.step}: {task.step_title}"
             )
             print(f"  Goal: {task.goal}")
         print(f"  - [{task.task_id}] {task.title}")
