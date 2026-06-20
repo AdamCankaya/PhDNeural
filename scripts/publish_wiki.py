@@ -112,6 +112,17 @@ def clone_or_update_wiki(clone_url: str, token: str) -> Path:
     raise RuntimeError(f"git clone failed: {stderr}")
 
 
+def ensure_git_identity(wiki_root: Path) -> None:
+    """Set local git identity when not configured (e.g. GitHub Actions)."""
+    for key, value in (
+        ("user.email", "github-actions[bot]@users.noreply.github.com"),
+        ("user.name", "github-actions[bot]"),
+    ):
+        check = run_git(["config", key], wiki_root, check=False)
+        if check.returncode != 0 or not check.stdout.strip():
+            run_git(["config", key, value], wiki_root)
+
+
 def sync_files(source_files: list[Path], wiki_root: Path) -> list[str]:
     changed: list[str] = []
     for src in source_files:
@@ -142,6 +153,7 @@ def publish(message: str) -> int:
     print(f"Publishing {len(source_files)} file(s) to {owner}/{repo} wiki")
 
     wiki_root = clone_or_update_wiki(clone_url, token)
+    ensure_git_identity(wiki_root)
     changed = sync_files(source_files, wiki_root)
 
     run_git(["add", "-A"], wiki_root)
@@ -158,7 +170,11 @@ def publish(message: str) -> int:
     else:
         print("Changes detected in wiki clone (non-content or deletions).")
 
-    run_git(["commit", "-m", message], wiki_root)
+    run_git(["commit", "-m", message], wiki_root, check=False)
+    if run_git(["rev-parse", "HEAD"], wiki_root, check=False).returncode != 0:
+        print("Nothing to commit after sync.")
+        print(f"Wiki URL: {wiki_url}")
+        return 0
     push = run_git(["push", "origin", "main"], wiki_root, check=False)
     if push.returncode != 0:
         push = run_git(["push", "-u", "origin", "HEAD:main"], wiki_root, check=False)
