@@ -234,9 +234,26 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
         if IMPLEMENTATION_TARGETS_RE.match(line):
             state.in_implementation_targets = True
             state.in_core_objective = False
+            state.phase = 1
+            state.phase_title = "The Anchor (BRCA Proof of Concept)"
+            state.step = 5
+            state.step_title = "Implementation Targets"
+            state.section_kind = SECTION_KIND_STEP
+            state.goal = ""
+            item_counter = 0
+            base_indent = None
             continue
 
         if state.in_implementation_targets:
+            impl_goal = GOAL_RE.match(line)
+            if impl_goal:
+                state.goal = impl_goal.group(1).strip()
+                continue
+            if not _is_checklist_item(line):
+                continue
+            detail = _checklist_detail(line)
+            if detail:
+                item_counter = _append_task(tasks, state, detail, item_counter)
             continue
 
         if state.in_core_objective:

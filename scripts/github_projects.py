@@ -224,6 +224,16 @@ class GitHubProjectsClient:
 
     def list_synced_issues(self, owner: str, repo: str) -> dict[str, dict[str, Any]]:
         """Return existing phd-sync issues keyed by sync-id parsed from body."""
+        all_issues = self.list_all_synced_issues(owner, repo)
+        found: dict[str, dict[str, Any]] = {}
+        for issue in all_issues:
+            sync_id = issue.get("sync_id")
+            if sync_id:
+                found[sync_id] = issue
+        return found
+
+    def list_all_synced_issues(self, owner: str, repo: str) -> list[dict[str, Any]]:
+        """Return every phd-sync issue, including duplicate sync-id entries."""
         query = """
         query($owner: String!, $repo: String!, $cursor: String) {
           repository(owner: $owner, name: $repo) {
@@ -247,7 +257,7 @@ class GitHubProjectsClient:
         }
         """
         sync_id_re = __import__("re").compile(r"phd-sync-id:\s*([^\s>]+)")
-        found: dict[str, dict[str, Any]] = {}
+        found: list[dict[str, Any]] = []
         cursor = None
         while True:
             data = self._request(query, {"owner": owner, "repo": repo, "cursor": cursor})["data"]
@@ -255,8 +265,8 @@ class GitHubProjectsClient:
             for issue in issues["nodes"]:
                 body = issue.get("body") or ""
                 match = sync_id_re.search(body)
-                if match:
-                    found[match.group(1)] = issue
+                issue["sync_id"] = match.group(1) if match else None
+                found.append(issue)
             if not issues["pageInfo"]["hasNextPage"]:
                 break
             cursor = issues["pageInfo"]["endCursor"]
@@ -342,7 +352,8 @@ class GitHubProjectsClient:
         )
         return result["data"]["addProjectV2ItemById"]["item"]["id"]
 
-    def get_project_item_for_issue(self, project_id: str, issue_node_id: str) -> str | None:
+    def list_project_items(self, project_id: str) -> list[dict[str, Any]]:
+        """Return all project items with issue metadata and Status field value."""
         query = """
         query($projectId: ID!, $cursor: String) {
           node(id: $projectId) {
@@ -350,8 +361,22 @@ class GitHubProjectsClient:
               items(first: 100, after: $cursor) {
                 nodes {
                   id
+                  fieldValues(first: 20) {
+                    nodes {
+                      ... on ProjectV2ItemFieldSingleSelectValue {
+                        name
+                        field { ... on ProjectV2SingleSelectField { name } }
+                      }
+                    }
+                  }
                   content {
-                    ... on Issue { id }
+                    ... on Issue {
+                      id
+                      number
+                      title
+                      state
+                      body
+                    }
                   }
                 }
                 pageInfo { hasNextPage endCursor }
@@ -360,18 +385,66 @@ class GitHubProjectsClient:
           }
         }
         """
+        import re
+
+        sync_id_re = re.compile(r"phd-sync-id:\s*([^\s>]+)")
+        results: list[dict[str, Any]] = []
         cursor = None
         while True:
             data = self._request(query, {"projectId": project_id, "cursor": cursor})["data"]
             items = data["node"]["items"]
             for item in items["nodes"]:
                 content = item.get("content") or {}
-                if content.get("id") == issue_node_id:
-                    return item["id"]
+                body = content.get("body") or ""
+                match = sync_id_re.search(body)
+                status = None
+                for fv in item.get("fieldValues", {}).get("nodes", []):
+                    field = (fv.get("field") or {}).get("name", "")
+                    if field.lower() == "status":
+                        status = fv.get("name")
+                        break
+                results.append(
+                    {
+                        "project_item_id": item["id"],
+                        "issue_node_id": content.get("id"),
+                        "issue_number": content.get("number"),
+                        "issue_title": content.get("title"),
+                        "issue_state": content.get("state"),
+                        "sync_id": match.group(1) if match else None,
+                        "status": status,
+                    }
+                )
             if not items["pageInfo"]["hasNextPage"]:
                 break
             cursor = items["pageInfo"]["endCursor"]
+        return results
+
+    def delete_project_item(self, project_id: str, item_id: str) -> None:
+        if self.dry_run:
+            return
+        mutation = """
+        mutation($projectId: ID!, $itemId: ID!) {
+          deleteProjectV2Item(input: {projectId: $projectId, itemId: $itemId}) {
+            deletedItemId
+          }
+        }
+        """
+        self._request(mutation, {"projectId": project_id, "itemId": item_id})
+
+    def get_project_item_for_issue(self, project_id: str, issue_node_id: str) -> str | None:
+        for item in self.list_project_items(project_id):
+            if item.get("issue_node_id") == issue_node_id:
+                return item["project_item_id"]
         return None
+
+    def get_all_project_items_for_issue(
+        self, project_id: str, issue_node_id: str
+    ) -> list[str]:
+        return [
+            item["project_item_id"]
+            for item in self.list_project_items(project_id)
+            if item.get("issue_node_id") == issue_node_id
+        ]
 
     def set_text_field(
         self, project_id: str, item_id: str, field_id: str, value: str

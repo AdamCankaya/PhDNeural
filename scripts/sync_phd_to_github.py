@@ -4,8 +4,12 @@ Sync PhD master plan tasks to GitHub Issues and GitHub Projects (v2).
 
 Usage:
   python scripts/sync_phd_to_github.py --dry-run
-  python scripts/sync_phd_to_github.py
+  python scripts/sync_phd_to_github.py --update-existing --additive
   python scripts/sync_phd_to_github.py --parse-only
+
+By default, sync is additive: new tasks create issues, existing sync-ids are
+matched, and unmatched phd-sync issues stay open. Pass --close-stale only when
+you intentionally want to close issues removed from the plan.
 """
 
 from __future__ import annotations
@@ -82,7 +86,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--close-stale",
         action="store_true",
-        help="Close open phd-sync issues whose sync-id is no longer in the plan.",
+        help="Close open phd-sync issues whose sync-id is no longer in the plan. "
+        "Opt-in only; default (and --additive) leaves unmatched issues open.",
+    )
+    parser.add_argument(
+        "--additive",
+        action="store_true",
+        help="Additive sync mode: create/update plan tasks but never close stale issues "
+        "or prune them from local state (same as omitting --close-stale).",
+    )
+    parser.add_argument(
+        "--prune-project",
+        action="store_true",
+        help="Remove project board items whose sync-id is not in the current plan, "
+        "dedupe duplicate board entries, and close stale issues.",
+    )
+    parser.add_argument(
+        "--reset-status-todo",
+        action="store_true",
+        help="Set Status field to Todo for every item remaining on the project board.",
     )
     return parser.parse_args()
 
@@ -210,15 +232,133 @@ def print_parse_summary(tasks: list[PhdTask]) -> None:
         print(f"  - [{task.task_id}] {task.title}")
 
 
+SYNC_ID_RE = re.compile(r"phd-sync-id:\s*([^\s>]+)")
+
+
+def prune_project_board(
+    client: GitHubProjectsClient,
+    project_id: str,
+    current_task_ids: set[str],
+    existing_issues: dict[str, dict],
+) -> dict[str, int]:
+    """Remove stale/duplicate items from the project board; close stale issues."""
+    items = client.list_project_items(project_id)
+    stale_removed = 0
+    duplicates_removed = 0
+    issues_closed = 0
+    seen_sync_ids: dict[str, dict] = {}
+    seen_issue_items: dict[str, list[str]] = {}
+
+    for item in items:
+        issue_id = item.get("issue_node_id")
+        if issue_id:
+            seen_issue_items.setdefault(issue_id, []).append(item["project_item_id"])
+
+    items_to_remove: set[str] = set()
+
+    for item in items:
+        sync_id = item.get("sync_id")
+        item_id = item["project_item_id"]
+
+        if not sync_id or sync_id not in current_task_ids:
+            items_to_remove.add(item_id)
+            continue
+
+        if sync_id in seen_sync_ids:
+            prev = seen_sync_ids[sync_id]
+            prev_num = prev.get("issue_number") or 0
+            curr_num = item.get("issue_number") or 0
+            if curr_num >= prev_num:
+                items_to_remove.add(prev["project_item_id"])
+                seen_sync_ids[sync_id] = item
+            else:
+                items_to_remove.add(item_id)
+            duplicates_removed += 1
+            continue
+        seen_sync_ids[sync_id] = item
+
+    for issue_id, item_ids in seen_issue_items.items():
+        if len(item_ids) <= 1:
+            continue
+        keep = next((i for i in item_ids if i not in items_to_remove), item_ids[0])
+        for item_id in item_ids:
+            if item_id != keep:
+                items_to_remove.add(item_id)
+                duplicates_removed += 1
+
+    closed_issue_ids: set[str] = set()
+    for item in items:
+        if item["project_item_id"] not in items_to_remove:
+            continue
+        sync_id = item.get("sync_id")
+        issue_id = item.get("issue_node_id")
+        issue_number = item.get("issue_number", "?")
+        label = sync_id or f"issue #{issue_number}"
+        print(f"Removing from project: {label} (item {item['project_item_id'][-8:]})")
+        client.delete_project_item(project_id, item["project_item_id"])
+        stale_removed += 1
+        time.sleep(0.15)
+
+        if not issue_id or issue_id in closed_issue_ids:
+            continue
+        if sync_id and sync_id in current_task_ids:
+            continue
+        issue_state = item.get("issue_state")
+        if issue_state != "OPEN":
+            continue
+        print(f"Closing stale issue #{issue_number} ({sync_id or 'no sync-id'})")
+        client.close_issue(
+            issue_id,
+            "Task removed from phd_master_plan.md during roadmap update.",
+        )
+        closed_issue_ids.add(issue_id)
+        issues_closed += 1
+        time.sleep(0.2)
+
+    return {
+        "stale_removed": stale_removed,
+        "duplicates_removed": duplicates_removed,
+        "issues_closed": issues_closed,
+    }
+
+
+def reset_all_status_todo(
+    client: GitHubProjectsClient,
+    project_id: str,
+    status_field,
+) -> int:
+    """Set Status to Todo for every project item."""
+    option_name = status_option_name({"status": status_field}, "Todo")
+    if not option_name:
+        print("Warning: Todo status option not found on project.", file=sys.stderr)
+        return 0
+    option_id = status_field.options.get(option_name)
+    if not option_id:
+        return 0
+
+    reset = 0
+    for item in client.list_project_items(project_id):
+        if item.get("status") == option_name:
+            continue
+        client.set_single_select_field(
+            project_id, item["project_item_id"], status_field.field_id, option_id
+        )
+        reset += 1
+        time.sleep(0.1)
+    return reset
+
+
 def close_stale_issues(
     client: GitHubProjectsClient,
-    existing_issues: dict[str, dict],
+    owner: str,
+    repo: str,
     current_task_ids: set[str],
 ) -> int:
-    """Close open synced issues that are no longer in the master plan."""
+    """Close every open synced issue whose sync-id is no longer in the master plan."""
     closed = 0
-    for sync_id, issue in existing_issues.items():
-        if sync_id in current_task_ids:
+    for issue in client.list_all_synced_issues(owner, repo):
+        sync_id = issue.get("sync_id")
+        if not sync_id or sync_id in current_task_ids:
             continue
         if issue.get("state") != "OPEN":
             continue
@@ -240,6 +380,9 @@ def sync_tasks(
     state_path: Path,
     update_existing: bool,
     close_stale: bool,
+    additive: bool = False,
+    prune_project: bool = False,
+    reset_status_todo: bool = False,
 ) -> dict:
     owner = config["GITHUB_OWNER"]
     repo = config["GITHUB_REPO"]
@@ -267,10 +410,24 @@ def sync_tasks(
     skipped = 0
     linked = 0
     closed = 0
+    pruned = {"stale_removed": 0, "duplicates_removed": 0, "issues_closed": 0}
+    reset_todo = 0
     current_task_ids = {task.task_id for task in tasks}
 
-    if close_stale:
-        closed = close_stale_issues(client, existing_issues, current_task_ids)
+    if prune_project:
+        print("Pruning project board (stale + duplicates)...\n")
+        pruned = prune_project_board(
+            client, project.project_id, current_task_ids, existing_issues
+        )
+        existing_issues = client.list_synced_issues(owner, repo)
+        print(
+            f"  Removed from board: {pruned['stale_removed']}\n"
+            f"  Duplicates removed: {pruned['duplicates_removed']}\n"
+            f"  Issues closed:      {pruned['issues_closed']}\n"
+        )
+
+    if close_stale and not additive and not prune_project:
+        closed = close_stale_issues(client, owner, repo, current_task_ids)
 
     for index, task in enumerate(tasks, start=1):
         print(f"[{index}/{len(tasks)}] {task.issue_title()}")
@@ -313,16 +470,34 @@ def sync_tasks(
             print(f"  Created issue #{issue_number}")
             time.sleep(0.3)
 
-        item_id = client.get_project_item_for_issue(project.project_id, issue_node_id)
-        if not item_id:
+        item_ids = client.get_all_project_items_for_issue(
+            project.project_id, issue_node_id
+        )
+        if not item_ids:
             item_id = client.add_issue_to_project(project.project_id, issue_node_id)
             linked += 1
             print("  Added to project")
             time.sleep(0.2)
         else:
+            item_id = item_ids[0]
+            for extra_id in item_ids[1:]:
+                print(f"  Removing duplicate project item {extra_id[-8:]}")
+                client.delete_project_item(project.project_id, extra_id)
+                pruned["duplicates_removed"] += 1
+                time.sleep(0.15)
             print("  Already on project")
 
         apply_project_fields(client, project.project_id, item_id, task, custom_field_map)
+
+        if reset_status_todo and "status" in custom_field_map:
+            option_name = status_option_name(custom_field_map, "Todo")
+            status_field = custom_field_map["status"]
+            if option_name:
+                option_id = status_field.options.get(option_name)
+                if option_id:
+                    client.set_single_select_field(
+                        project.project_id, item_id, status_field.field_id, option_id
+                    )
 
         state["tasks"][task.task_id] = {
             "issue_number": issue_number,
@@ -342,16 +517,26 @@ def sync_tasks(
     if not client.dry_run:
         save_state(state_path, state)
 
+    if reset_status_todo and "status" in project.fields:
+        print("\nResetting all remaining project items to Todo...")
+        reset_todo = reset_all_status_todo(
+            client, project.project_id, project.fields["status"]
+        )
+        print(f"  Reset to Todo: {reset_todo}")
+
     stale_ids = set(existing_issues) - current_task_ids
-    for stale_id in stale_ids:
-        state.get("tasks", {}).pop(stale_id, None)
+    if not additive:
+        for stale_id in stale_ids:
+            state.get("tasks", {}).pop(stale_id, None)
 
     return {
         "created": created,
         "updated": updated,
         "skipped": skipped,
         "linked": linked,
-        "closed": closed,
+        "closed": closed if not prune_project else pruned["issues_closed"],
+        "pruned": pruned,
+        "reset_todo": reset_todo,
         "total": len(tasks),
     }
 
@@ -417,6 +602,12 @@ def main() -> int:
     if args.dry_run:
         print("DRY RUN — mutations disabled; read-only GitHub checks enabled.\n")
 
+    if args.close_stale and args.additive:
+        print(
+            "Note: --additive overrides --close-stale; stale issues will remain open.",
+            file=sys.stderr,
+        )
+
     try:
         summary = sync_tasks(
             client,
@@ -425,6 +616,9 @@ def main() -> int:
             state_path,
             update_existing=args.update_existing,
             close_stale=args.close_stale,
+            additive=args.additive,
+            prune_project=args.prune_project,
+            reset_status_todo=args.reset_status_todo,
         )
     except GitHubApiError as exc:
         print(f"GitHub API error: {exc}", file=sys.stderr)
@@ -442,6 +636,14 @@ def main() -> int:
         f"  Linked:      {summary['linked']}\n"
         f"  Closed:      {summary.get('closed', 0)}"
     )
+    pruned = summary.get("pruned")
+    if pruned and any(pruned.values()):
+        print(
+            f"  Board pruned: {pruned.get('stale_removed', 0)}\n"
+            f"  Duplicates:   {pruned.get('duplicates_removed', 0)}"
+        )
+    if summary.get("reset_todo"):
+        print(f"  Reset Todo:  {summary['reset_todo']}")
     if args.dry_run:
         print("\nRe-run without --dry-run to apply changes.")
     else:

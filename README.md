@@ -1,8 +1,10 @@
 # PhDNeural
 
+> **Planning phase:** All roadmap tasks are tracked as open GitHub issues; none are marked done yet. Roadmap updates are **additive**—new bullets create new issues; existing issues stay open unless you explicitly pass `--close-stale` to the sync script.
+
 **Two-Stage Multi-Omic Fusion Neural Architecture Search**
 
-A PhD research program that builds a generalized, multi-task Neural Architecture Search (NAS) framework using a **vertical slice** methodology on Breast Invasive Carcinoma (BRCA). Phase 1 follows a strict **two-stage evolution**: Stage 1 stress-tests the full pipeline via **Early Fusion (concatenation)**; Stage 2 upgrades to a **Stacked Late Fusion Ensemble** with modality-specific expert networks and an ElasticNet meta-classifier trained on clean Out-of-Fold predictions. The framework uses [Optuna](https://optuna.org/) for distributed NAS, ingests multi-omic patient data through a unified (then generalized) pipeline, and delivers Multi-Task Learning (MTL) models with an end-to-end [Streamlit](https://streamlit.io/) inference portal.
+A PhD research program that builds a generalized, multi-task Neural Architecture Search (NAS) framework using a **vertical slice** methodology on Breast Invasive Carcinoma (BRCA). The roadmap is **additive by design**: vertical-slice foundation tasks (sourcing, infrastructure, architecture, Optuna NAS) remain tracked as first-class issues, while **two-stage fusion** (Stage 1 early concat baseline → Stage 2 stacked late fusion with OOF + ElasticNet) layers on top as an enhancement—not a replacement. The framework uses [Optuna](https://optuna.org/) for distributed NAS, ingests multi-omic patient data through a unified (then generalized) pipeline, and delivers Multi-Task Learning (MTL) models with an end-to-end [Streamlit](https://streamlit.io/) inference portal.
 
 | Resource | Link |
 |----------|------|
@@ -14,6 +16,8 @@ A PhD research program that builds a generalized, multi-task Neural Architecture
 ---
 
 ## Executive Strategy
+
+Roadmap updates are **additive**: new work creates new GitHub issues; existing issues stay open unless you explicitly run sync with `--close-stale`. Two-stage fusion enhances Phase 1—it does not replace the vertical-slice BRCA foundation.
 
 To minimize engineering risk and isolate computational bugs, the BRCA anchor pipeline follows a strict two-stage evolution:
 
@@ -38,7 +42,7 @@ The central hypothesis is that disease topology—localized oncological mutation
 
 | Phase | Theme |
 |-------|-------|
-| **Phase 1 — BRCA anchor** | Stage 1 early fusion baseline → Stage 2 stacked late fusion with OOF + ElasticNet meta-classifier |
+| **Phase 1 — BRCA anchor** | Vertical-slice foundation (Steps 1–4) **plus** Stage 1 early fusion baseline → Stage 2 stacked late fusion with OOF + ElasticNet meta-classifier |
 | **Phase 2 — Abstraction** | Refactor hardcoded BRCA code into a universal disease pipeline with dynamic omic branches and MTL heads |
 | **Phase 3 — Scaling** | Deploy generalized pipeline to Alzheimer's, rheumatoid arthritis, type 2 diabetes, and Down syndrome |
 | **Phase 4 — Thesis** | Comparative structural taxonomy, SHAP interpretability, and Streamlit patient portal |
@@ -218,7 +222,7 @@ The roadmap follows four phases in [phd_master_plan.md](phd_master_plan.md).
 | Master plan | [phd_master_plan.md](phd_master_plan.md) | Authoritative two-stage roadmap and task checklist |
 | Architecture diagram | [docs/architecture-stacked-fusion.png](docs/architecture-stacked-fusion.png) | Stage 2 stacked late fusion schematic |
 | Timeline dashboard | [phd_timeline_dashboard.html](phd_timeline_dashboard.html) | Interactive 4-phase progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html)) |
-| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2) |
+| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2); default is additive (`--additive`); use `--close-stale` only to retire removed tasks |
 | Setup guide | [GITHUB_PROJECTS_SETUP.md](GITHUB_PROJECTS_SETUP.md) | GitHub Projects v2 configuration and sync workflow |
 | CI sync workflow | `.github/workflows/sync-phd-plan.yml` | Manual GitHub Actions re-sync trigger |
 

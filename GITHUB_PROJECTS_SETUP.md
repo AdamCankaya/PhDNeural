@@ -173,10 +173,10 @@ python scripts/sync_phd_to_github.py
 
 On first run, the script will:
 
-- Create labels: `phd-sync`, `year-1`, `year-2`, `year-3`, `fall`, `spring`, `summer`, plus category labels
+- Create labels: `phd-sync`, `phase-1`–`phase-4`, `step-*`, `stage-*`, plus category labels (`brca-anchor`, `abstraction`, `scaling`, `thesis-deliverable`)
 - Create one issue per checklist item
 - Add each issue to your project board
-- Set **Year**, **Semester**, **Section**, and **Phase** custom fields
+- Set **Step**, **Phase**, and **Status** (Todo) custom fields
 - Save state to `.phd-github-sync.json`
 
 Re-running is safe: existing tasks (matched by sync ID in the issue body) are **skipped**.
@@ -186,6 +186,30 @@ To refresh issue titles/bodies and project fields after editing the master plan:
 ```powershell
 python scripts/sync_phd_to_github.py --update-existing
 ```
+
+### Clean sync workflow (prune + reset)
+
+When the master plan changes substantially, reset the project board to match the current plan only:
+
+```powershell
+# Full clean sync: prune stale board items, sync plan, reset all to Todo
+python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-status-todo
+```
+
+| Flag | Effect |
+|------|--------|
+| `--close-stale` | Close open `phd-sync` issues whose sync-id is no longer in the plan (does not remove from board) |
+| `--prune-project` | Remove non-plan items from the project board, dedupe duplicate entries, and close stale issues |
+| `--reset-status-todo` | Set **Status** to Todo for every item on the board |
+| `--additive` | Never close stale issues (overrides `--close-stale`) |
+
+Recommended one-shot after a roadmap rewrite:
+
+```powershell
+python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-status-todo
+```
+
+The default sync deduplicates project items: if the same issue appears twice on the board, extras are removed automatically.
 
 ---
 
