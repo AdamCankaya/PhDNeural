@@ -1,173 +1,111 @@
-# PhD Master Roadmap: Vertical Slice + Two-Stage Multi-Omic Fusion (BRCA Anchor)
+# PhD Master Roadmap: Dual-Track Multi-Omic Fusion & Bio-NAS
 
 ## Core Objective
-Develop a generalized, multi-task Neural Architecture Search (NAS) framework using a **vertical slice** methodology on Breast Invasive Carcinoma (BRCA). Engineering proceeds in two additive layers: first, the full end-to-end BRCA pipeline (sourcing, infrastructure, architecture, Optuna NAS); second, a **two-stage fusion evolution**—Stage 1 stress-tests ingestion via **Early Fusion (concatenation)**, Stage 2 upgrades to a **Stacked Late Fusion Ensemble** with modality-specific expert networks and an ElasticNet meta-classifier on clean Out-of-Fold predictions. Once validated, the pipeline abstracts and scales across four additional disease categories for comparative analysis.
+This three-year Ph.D. project investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies.
 
 ---
 
-## Static MTL Baseline
-
-All five disease pipelines share a **Static Multi-Task Learning (MTL) baseline**: time-related variables are always tabular clinical inputs, and every cohort solves the same two prediction tasks. This contract ensures Optuna studies across diseases optimize an identical mathematical problem (two weighted losses, same head topology).
-
-### Time as Input Context (Uniform)
-
-Time-related fields are **continuous tabular features** in the `clinical` modality—Z-scored on the training partition only (same leakage guardrails as other demographics). The baseline does **not** model patient timelines as sequences (no RNN/Transformer over visit-level time series).
-
-| Feature | Description | BRCA example |
-|---------|-------------|--------------|
-| `age_at_sample` | Patient age at collection | TCGA `age_at_index` |
-| `years_since_diagnosis` | Duration since first diagnosis | Derived from diagnosis date |
-| `days_since_sample_collection` | Timeline offset within study | Study day / collection offset |
-| `survival_days` | Observed follow-up duration | TCGA `days_to_death` / last follow-up |
-| `time_since_last_visit` | Gap between visits | Derived (longitudinal cohorts) |
-
-Censoring indicators (e.g. `event_observed`) may appear as tabular inputs when survival duration is present, but are **not** a baseline prediction target.
-
-### Two Standardized Tasks
-
-| Task | Head | Loss | Canonical label | Per-disease mapping |
-|------|------|------|-----------------|---------------------|
-| **Phenotype** | `phenotype_head` (1 logit) | Binary cross-entropy | `0=Healthy`, `1=Diseased` | BRCA: normal vs. tumor; AD: control vs. AD; etc. |
-| **Severity** | `severity_head` (K logits) | Ordinal log-loss | `0..K-1` ordered | BRCA: Stage I–IV (K=4); AD: CDR/MMSE bands; T2D: HbA1c brackets; RA: DAS28 tiers |
-
-Per-disease label mappings and `n_severity_classes` (variable K) are defined in `src/config/disease_registry.yaml`. Samples without severity labels mask the ordinal loss.
-
-### Input / Label Separation (No Severity Leakage)
-
-**Severity and stage source columns are labels only**—they must not appear in the clinical input concatenation branch. This fixes tumor-stage leakage where stage was previously listed as both a clinical feature and an ordinal target.
-
-### Stacking Meta-Features
-
-Stage 2 OOF stacking concatenates expert predictions across both tasks: **4 modality experts × 2 tasks = 8 meta-features** per sample in $P_{\text{OOF}}$.
-
----
-
-## Year 1: BRCA Anchor & Two-Stage Fusion (2026–2027)
+## Year 1: The Anchor & Algorithmic Innovation (BRCA)
 > Phases: 1
 
-### Summer 2026 Semester: TCGA Sourcing & Data Foundation
-**Phase:** 1 | **Goal:** Acquire the most feature-dense dataset to stress-test every branch of the neural network.
+### Summer 2026 Semester: Mass Data Import & ETL Pipeline
+**Phase:** 1 | **Goal:** Build the infrastructure, invent the Bio-NAS algorithm, and prove it works on the most feature-dense cancer dataset.
 
-#### Step 1: BRCA Multi-Omic Sourcing & Split
-**Goal:** Acquire the most feature-dense dataset to stress-test every branch of the neural network.
-* **Source:** TCGA (Level 3 Open Access).
-* **Target Modalities:** Methylation (Beta-values), Transcriptomics (RNA-Seq), Genomics (Somatic Mutations), CNVs, and Clinical Demographics.
-* **The Strict Boundary:** Immediately split the BRCA dataset into an **80% Training/Validation Set** and a locked **20% Holdout Test Set** before any preprocessing.
-* **HDF5 Storage:** Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 databases for memory-mapped PyTorch ingestion.
+#### Step 1: Mass Data Import & ETL Pipeline
+**Goal:** Source multi-omic data and build the ETL pipeline.
+* Source multi-omic data (Methylation, RNA-Seq, Clinical) for Breast Invasive Carcinoma (BRCA) from TCGA.
+* Build the automated PyTorch ETL pipeline that aligns patient IDs and compiles the data into an HDF5 database.
+* *Crucial Step:* Enforce the strict 80/20 train/holdout split immediately to prevent data leakage.
 
-### Fall 2026 Semester: Infrastructure & Static MTL Architecture
-**Phase:** 1 | **Goal:** Establish distributed execution infrastructure and engineer the multi-task neural architecture.
+### Fall 2026 Semester: Track A and Track B Innovation
+**Phase:** 1 | **Goal:** Build standard NAS and invent Bio-NAS framework.
 
-#### Step 2: Infrastructure & Database Orchestration
-**Goal:** Establish the remote environments required for distributed Optuna execution.
-* **Central Hub:** Deploy a Dockerized PostgreSQL instance on your Hetzner Linux server to act as the permanent, centralized Optuna study hub.
-* **CI/CD Pipeline:** Configure a GitHub Actions runner to orchestrate and deploy your PyTorch worker scripts natively from your repository to your university's Slurm compute clusters.
+#### Step 2: Track A (The Control) - Standard NAS
+**Goal:** Build the standard Late Fusion meta-classifier and optimize.
+* Build the standard Late Fusion meta-classifier.
+* Deploy Optuna to optimize standard hyperparameters (layers, nodes, dropout) for BRCA prediction purely based on mathematical efficiency.
 
-#### Step 3: Engineering the Multi-Task Architecture
-**Goal:** Write the PyTorch modules that handle multi-modal fusion and multi-task learning.
-* **Input Branches:** Construct flexible ingestion layers for dense continuous data (1D-CNNs/Transformers for Methylation/RNA) and sparse data (Linear layers for Genomics).
-* **Phenotype Head (Binary Cross-Entropy Loss):** Healthy vs. Diseased (BRCA: tumor vs. normal matched tissue).
-* **Severity Head (Ordinal Loss):** Stage I, II, III, or IV (K=4 for BRCA; configurable per disease).
+#### Step 3: Track B (The Innovation) - Bio-NAS Framework
+**Goal:** Convert blueprints to matrices and shift Optuna.
+* Download biological blueprints (KEGG, Reactome) and convert them into binary Adjacency Matrices.
+* Write the custom PyTorch `MaskedLinear` layers that sever non-biological artificial synapses.
+* Shift the Optuna search space to select optimal biological pathways rather than hidden nodes.
 
-### Spring 2027 Semester: NAS Benchmarking & Early Fusion Baseline
-**Phase:** 1 | **Goal:** Execute Optuna NAS, establish classical baselines, validate the PoC holdout, and build the Stage 1 early fusion pipeline; begin Stage 2 expert networks.
+### Spring 2027 Semester: The First Validation
+**Phase:** 1 | **Goal:** Validate Track A vs Track B on BRCA.
 
-#### Step 4: Optuna NAS & Baseline Benchmarking
-**Goal:** Execute the search space specifically for BRCA on the 80% Training Set using 5-Fold Cross Validation.
-* **Neural Search (Optuna):** Tune the 5 deep learning topologies (MLP, 1D-CNN, Transformer, TabNet, Cross-Attention Fusion) to find the optimal BRCA network. Have Optuna dynamically weigh the multi-task loss functions.
-* **Classical Baselines:** Train XGBoost, LightGBM, and ElasticNet strictly on the tabular/methylation data to establish a performance floor.
-* **The PoC Validation:** Evaluate the single best Optuna-discovered model against the classical baselines using the locked 20% Holdout Test Set.
-
-#### Stage 1: Early Fusion Proof-of-Concept
-**Goal:** Establish an end-to-end software baseline using immediate feature concatenation to stress-test data ingestion, PyTorch tensor formatting, multi-task heads, and distributed Optuna logging without algorithmic complexity.
-* **Data Splitting & Leakage Guardrails:** Isolate a strict **20% Holdout Test Set** from the TCGA-BRCA cohort prior to any scaling, normalization, or feature selection.
-* **Variance Masks (Train Only):** Compute variance-based dimensionality reduction to select the top 10,000 highly variable methylation CpG sites **strictly within the 80% training partition** to prevent test-set leakage.
-* **Concatenation Architecture:** Build a unified PyTorch HDF5 pipeline reading Methylation, RNA-Seq, CNV, Somatic Mutation, and Clinical features; fuse via $X_{\text{fused}} = [X_{\text{methylation}} \parallel X_{\text{transcriptomics}} \parallel X_{\text{genomics}} \parallel X_{\text{cnv}} \parallel X_{\text{clinical}}]$ through an MLP trunk into a dense latent vector.
-* **Phenotype Head (Early Fusion):** Binary Cross-Entropy (Healthy vs. Diseased; BRCA: tumor vs. normal control).
-* **Severity Head (Early Fusion):** Ordinal Log-Loss (Stages I–IV; K configurable via disease registry).
-* **Optuna Verification:** Connect the early fusion model to the Dockerized PostgreSQL database on the Hetzner server and execute a small Optuna search space to verify parallel workers can read, train, and log metrics successfully.
-
-#### Stage 2: Stacking Late Fusion Upgrade (Begin)
-**Goal:** Begin training isolated modality expert networks for the stacked late fusion ensemble.
-* **Methylation Expert (1D-CNN):** Train an isolated 1D-CNN feature extractor on methylation beta-values; output independent multi-task predictions.
-* **Transcriptomics Expert (Deep MLP):** Train an isolated deep MLP on RNA-Seq expression; output independent multi-task predictions.
+#### Step 4: The First Validation
+**Goal:** Prove Bio-NAS works on the BRCA holdout test set.
+* Compare Track A vs. Track B for BRCA on the 20% holdout test set. If Bio-NAS achieves comparable accuracy with greater sparsity and interpretability, the core algorithm is successfully invented.
 
 ---
 
-## Year 2: Abstraction & Comparative Scaling (2027–2028)
+## Year 2: Scaling the A/B Test Across Modalities
 > Phases: 2, 3
 
-### Summer 2027 Semester: Complete Stacked Fusion & Implementation Scaffolds
-**Phase:** 1 | **Goal:** Finish Stage 2 OOF stacking with ElasticNet meta-classifier and scaffold core `src/` modules.
+### Summer 2027 Semester: Neurological & Autoimmune Ingestion
+**Phase:** 2 | **Goal:** Source new datasets and execute tracks.
 
-#### Stage 2: Stacking Late Fusion Upgrade (Complete)
-**Goal:** Refactor the validated Stage 1 pipeline into a modular Late Fusion architecture with rigorous OOF stacking and an interpretable ElasticNet meta-classifier—eliminating data leakage entirely.
-* **Genomics Expert (Sparse Linear):** Train an isolated sparse linear network on somatic mutation features; output independent multi-task predictions.
-* **CNV Expert (Sparse Linear):** Train an isolated sparse linear network on copy-number variation features; output independent multi-task predictions.
-* **Rigorous Stacking Cross-Validation (OOF):** Divide the 80% training pool into 5 folds; for each fold $k$, train all 4 expert networks on the remaining 4 folds and generate predictions on fold $k$; concatenate validation predictions across all folds to construct a complete **Clean Out-of-Fold Predictions** matrix ($P_{\text{OOF}}$) for the entire 80% dataset.
-* **ElasticNet Meta-Classifier Integration:** Train downstream **Logistic Regression with ElasticNet Regularization** (`penalty='elasticnet'`, `solver='saga'`) meta-models on $P_{\text{OOF}}$ (8 meta-features: 4 experts × 2 tasks) with true biological labels; tune $\lambda$ and $\alpha$ via Optuna; extract sparse non-zero coefficients ($w$) to chart how much weight each omic expert network receives for phenotype and severity outcomes.
+#### Step 1: Neurological & Autoimmune Ingestion
+**Goal:** Source AD and RA data and run ETL.
+* Source Alzheimer's Disease data (NCBI GEO: brain tissue methylation/expression).
+* Source Rheumatoid Arthritis data (NCBI GEO: synovial tissue/blood profiles).
+* Run both datasets through the automated ETL HDF5 pipeline.
 
-#### Step 5: Implementation Targets
-**Goal:** Scaffold core `src/` modules that implement the two-stage fusion pipeline.
-* `src/config/disease_registry.yaml` — Per-disease phenotype/severity label mappings and `n_severity_classes`.
-* `src/data/clinical_time.py` — Normalize raw dates/durations into canonical Z-scored time tabular features.
-* `src/data/brca_dataset.py` — PyTorch Dataset switching between flat concatenated tensor (Stage 1) and modality dict (Stage 2); clinical inputs exclude severity labels.
-* `src/models/brca_early_fusion.py` — Stage 1 `torch.cat` model with MLP trunk and two Static MTL heads (phenotype BCE, severity ordinal).
-* `src/models/losses.py` — `PhenotypeBCELoss` and `OrdinalSeverityLoss` for the two-task baseline.
-* `src/pipelines/train_stacking.py` — Stage 2 five-fold OOF loop and sklearn ElasticNet meta-classifier on $P_{\text{OOF}}$ (4 experts × 2 tasks = 8 meta-features).
+#### Step 2: Dual-Track Execution (Brain & Inflammation)
+**Goal:** Execute standard and Bio-NAS for brain and inflammation.
+* Execute Optuna Track A (Standard) and Track B (Bio-NAS) for Alzheimer's and Rheumatoid Arthritis.
 
-### Fall 2027 Semester: Code Abstraction & Disease Sourcing
-**Phases:** 2, 3 | **Goal:** Refactor BRCA code into a universal pipeline and source four comparative disease cohorts.
+### Fall 2027 Semester: Metabolic & Genetic Ingestion
+**Phase:** 3 | **Goal:** Source metabolic and genetic data.
 
-#### Step 1: Refactoring the Base Classes
-**Phase:** 2
-**Goal:** Transition the hardcoded BRCA script into a universal disease pipeline.
-* **Abstract Data Loaders:** Refactor the PyTorch `Dataset` class so it dynamically counts the number of available omic layers. If a dataset is missing RNA-Seq, the loader simply drops that tensor branch without crashing the network.
-* **Configurable Severity Cardinality:** Keep the same ordinal `severity_head` topology across diseases; vary K and per-cohort label mapping via `disease_registry.yaml` (e.g., BRCA Stage I–IV vs. Alzheimer's CDR/MMSE bands).
+#### Step 3: Metabolic & Genetic Ingestion
+**Goal:** Source T2D and Down Syndrome data and run ETL.
+* Source Type 2 Diabetes data (NCBI GEO / recount3).
+* Source Down Syndrome data (NCBI GEO: Trisomy 21 multi-omic profiles).
+* Run through the ETL pipeline.
 
-#### Step 1: Sourcing the 4 Distinct Pathologies
-**Phase:** 3
-**Goal:** Gather the datasets that represent the remaining functional disease categories.
-* **Neurological:** Alzheimer's Disease (GEO) - Focus on progressive structural shifts.
-* **Autoimmune:** Rheumatoid Arthritis (GEO) - Focus on systemic inflammation.
-* **Metabolic:** Type 2 Diabetes (GEO / `recountmethylation`) - Focus on lifestyle-driven epigenetic markers.
-* **Genetic:** Down Syndrome (GEO) - Focus on innate chromosomal baseline differences.
+### Spring 2028 Semester: Metabolic & Chromosomal Execution
+**Phase:** 3 | **Goal:** Complete dual-track execution for all 5 diseases.
 
-### Spring 2028 Semester: Distributed Optuna Execution
-**Phase:** 3 | **Goal:** Push the generalized pipeline to the university cluster with parallel Optuna studies.
-
-#### Step 2: High-Throughput Distributed Execution
-**Goal:** Push the generalized pipeline to the university cluster.
-* Run 4 parallel Optuna studies pointing to the Hetzner PostgreSQL database.
-* Because the infrastructure and code were proven in Phase 1, this phase is strictly computational execution and monitoring.
+#### Step 4: Dual-Track Execution (Metabolic & Chromosomal)
+**Goal:** Complete the remaining Optuna studies.
+* Execute Optuna Track A and Track B for Type 2 Diabetes and Down Syndrome.
+* *Milestone:* By the end of Year 2, the database will contain 10 completed optimization studies (5 diseases × 2 tracks).
 
 ---
 
-## Year 3: Thesis & Deliverables (2028–2029)
+## Year 3: Comparative Analysis & Thesis Synthesis
 > Phases: 4
 
-### Summer 2028 Semester: Comparative Analysis & Interpretability
-**Phase:** 4 | **Goal:** Mine the Optuna database to answer the primary research question.
+### Summer 2028 Semester: Audits & Interpretability
+**Phase:** 4 | **Goal:** Audit performance and extract pathways.
 
-#### Step 1: The Comparative Analysis (The Core Thesis)
-**Goal:** Mine the Optuna database to answer the primary research question.
-* **Structural Taxonomy:** Map the final architectures against the disease types. Compare if localized, highly mutated cancers (BRCA) inherently select spatial architectures (CNNs) while systemic, slow-progressing conditions (Alzheimer's) favor self-attention mechanisms (Transformers) or classical models.
-* **Interpretability:** Use SHAP to determine which specific omic layers carried the most predictive weight across different disease categories.
+#### Step 1: Performance & Efficiency Audits
+**Goal:** Quantify predictive metrics and compute reduction.
+* Chart the predictive metrics (F1-Score, ROC-AUC, C-Index) comparing standard NAS to Bio-NAS across all five diseases.
+* Quantify the computational efficiency: calculate the exact reduction in GPU memory and model parameters achieved by severing non-biological connections.
 
-### Fall 2028 Semester: Patient-Facing Software Portal
-**Phase:** 4 | **Goal:** Deliver a production-ready diagnostic UI.
+#### Step 2: LLM-Driven Biological Interpretability
+**Goal:** Summarize mechanistic pathways via LLM.
+* Extract the highest-weighted biological pathways from the 5 Bio-NAS models.
+* Run these pathways through an LLM (e.g., Gemini Pro) to generate mechanistic summaries. Answer the question: *Why did the neural network select these specific pathways to predict each disease?*
 
-#### Step 2: The Patient-Facing Software App
-**Goal:** Deliver a production-ready diagnostic UI.
-* Build a `streamlit` web dashboard.
-* Users select a disease track, upload multi-omic `.CSV` data, and receive a phenotype probability and severity stage powered by the highly optimized Static MTL models.
+### Fall 2028 Semester: Taxonomy Mapping
+**Phase:** 4 | **Goal:** Map the architectures side-by-side.
 
-### Spring 2029 Semester: Thesis Synthesis & Publication
-**Phase:** 4 | **Goal:** Finalize thesis deliverables and open-source the framework.
+#### Step 3: Multi-Disease Taxonomy Mapping
+**Goal:** Identify overlapping biological networks across diseases.
+* Lay the five optimal biological architectures side-by-side.
+* Map the overlapping biological networks (e.g., Did the optimizer use the exact same inflammatory sub-network to predict both Alzheimer's and Rheumatoid Arthritis?).
 
-#### Step 2: The Patient-Facing Software App (Publication)
-**Goal:** Open-source the multi-pipeline framework and submit comparative findings.
-* **Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit comparative findings to a computational biology or applied machine learning venue.
+### Spring 2029 Semester: Thesis Synthesis
+**Phase:** 4 | **Goal:** Finalize the written dissertation and defense.
+
+#### Step 4: Thesis Defense
+**Goal:** Finalize and present the thesis.
+* Finalize the written dissertation.
+* Present the project not as five separate disease models, but as the invention and universal validation of the Bio-NAS framework.
 
 ---
 
@@ -175,20 +113,12 @@ Stage 2 OOF stacking concatenates expert predictions across both tasks: **4 moda
 
 | Year | Semester | Phase(s) | Focus | Tasks |
 |------|----------|----------|-------|-------|
-| **Year 1** | Summer 2026 | 1 | TCGA sourcing, modalities, 80/20 split, HDF5 storage | 4 |
-| **Year 1** | Fall 2026 | 1 | PostgreSQL hub, GitHub Actions/Slurm CI/CD; MTL input branches + phenotype/severity heads | 5 |
-| **Year 1** | Spring 2027 | 1 | Optuna NAS + classical baselines + PoC holdout; Stage 1 early fusion; begin Stage 2 expert nets | 11 |
-| **Year 2** | Summer 2027 | 1 | Complete Stage 2 (OOF + ElasticNet); implementation scaffolds (`src/` modules) | 10 |
-| **Year 2** | Fall 2027 | 2, 3 | Abstract loaders + severity registry; source Alzheimer's, RA, T2D, Down Syndrome | 6 |
-| **Year 2** | Spring 2028 | 3 | 4 parallel Optuna studies on Slurm | 2 |
-| **Year 3** | Summer 2028 | 4 | Structural taxonomy + SHAP interpretability | 2 |
-| **Year 3** | Fall 2028 | 4 | Streamlit patient portal | 2 |
-| **Year 3** | Spring 2029 | 4 | Thesis synthesis + publication | 1 |
-
----
-
-## Optional Extension: Prognostic Survival Modeling (Cox-PH)
-
-**Scope:** Post-thesis optional work—not part of the five-pipeline comparative NAS baseline.
-
-A third **prognostic head** using Cox Proportional Hazards negative log-partial likelihood can be added after the Static MTL baseline is validated. Survival duration (`survival_days`) remains a tabular clinical input in the baseline; Cox-PH would treat censored time-to-event as an additional prediction target. This extension enables prognostic timeline outputs in Streamlit and a 4-experts × 3-tasks = 12 meta-feature stacking variant, but is deferred to keep all Optuna studies comparable on the shared two-task contract.
+| **Year 1** | Summer 2026 | 1 | Mass Data Import & ETL Pipeline | 3 |
+| **Year 1** | Fall 2026 | 1 | Track A and Track B | 5 |
+| **Year 1** | Spring 2027 | 1 | The First Validation | 1 |
+| **Year 2** | Summer 2027 | 2 | Neurological & Autoimmune | 4 |
+| **Year 2** | Fall 2027 | 3 | Metabolic & Genetic Ingestion | 3 |
+| **Year 2** | Spring 2028 | 3 | Metabolic & Chromosomal Execution | 2 |
+| **Year 3** | Summer 2028 | 4 | Audits & Interpretability | 4 |
+| **Year 3** | Fall 2028 | 4 | Taxonomy Mapping | 2 |
+| **Year 3** | Spring 2029 | 4 | Thesis Synthesis | 2 |

@@ -1,0 +1,19 @@
+# Ignore heavy dataset files and directories
+data/
+datasets/
+*.csv
+*.parquet
+*.npz
+*.npy
+
+# Ignore historical tracking and log footprints
+logs/
+checkpoints/
+runs/
+.tensorboard/
+*.log
+
+# Ignore raw build artifacts and environment caches
+.venv/
+__pycache__/
+.idea/
