@@ -2,7 +2,7 @@
 
 Welcome to the **PhDNeural** project wiki — a published mirror of documentation under [`docs/wiki/`](https://github.com/AdamCankaya/PhDNeural/tree/main/docs/wiki) in the repository.
 
-> **Planning phase:** All **43** roadmap tasks are tracked as open GitHub issues; none are marked done yet. Roadmap updates are **additive** — new bullets create new issues; existing issues stay open unless you explicitly pass `--close-stale` to the sync script.
+> **Planning phase:** All roadmap tasks are tracked as open GitHub issues; none are marked done yet. Roadmap updates are **additive** — new bullets create new issues; existing issues stay open unless you explicitly pass `--close-stale` to the sync script.
 
 ## Quick links
 
@@ -16,26 +16,24 @@ Welcome to the **PhDNeural** project wiki — a published mirror of documentatio
 
 ## Research overview
 
-**Two-Stage Multi-Omic Fusion Neural Architecture Search** on Breast Invasive Carcinoma (BRCA), scaling to five disease categories over a **3-year academic calendar** (Summer 2026 → Spring 2029).
+**Dual-Track Multi-Omic Fusion & Bio-NAS** starting with Breast Invasive Carcinoma (BRCA) as the anchor, scaling to five disease categories over a **3-year academic calendar** (Summer 2026 → Spring 2029).
 
-| Stage | Approach | Purpose |
+| Track | Approach | Purpose |
 |-------|----------|---------|
-| **Stage 1 — Early Fusion** | Feature concatenation through an MLP trunk | Stress-test HDF5 ingestion, Static MTL heads, Optuna logging |
-| **Stage 2 — Stacked Late Fusion** | 4 modality experts + ElasticNet on OOF predictions | Eliminate leakage; interpretable sparse meta-classifier |
-
-![Two-Stage Stacked Late Fusion Architecture](https://raw.githubusercontent.com/AdamCankaya/PhDNeural/main/docs/architecture-stacked-fusion.png)
+| **Track A — Standard NAS (Control)** | Unconstrained hyperparameter search (layers, nodes) | Establish standard Late Fusion meta-classifier baseline |
+| **Track B — Bio-NAS (Innovation)** | `MaskedLinear` layers constrained by KEGG/Reactome matrices | Force Optuna to select and optimize true biological pathways |
 
 ## Wiki navigation
 
 | Page | Description |
 |------|-------------|
 | [Workflow](Workflow) | Master plan → dashboard → GitHub sync loop |
-| [Roadmap and Tracking](Roadmap-and-Tracking) | 43-task semester calendar, issue format, labels |
-| [Static MTL Baseline](Static-MTL-Baseline) | Two-task contract, 8 meta-features, Cox-PH deferred |
+| [Roadmap and Tracking](Roadmap-and-Tracking) | 3-year semester calendar, issue format, labels |
+| [Static MTL Baseline](Static-MTL-Baseline) | Multi-task prediction contract |
 | [Code Map and Status](Code-Map-and-Status) | `src/` implementation status |
 | [Glossary](Glossary) | Key terms |
 | [Infrastructure Runbook](Infrastructure-Runbook) | Hetzner PostgreSQL, Docker, Slurm CI/CD |
 | [Data Acquisition BRCA](Data-Acquisition-BRCA) | TCGA sourcing, HDF5, disease registry |
-| [Architecture Decisions](Architecture-Decisions) | ADRs for fusion and MTL design |
+| [Architecture Decisions](Architecture-Decisions) | ADRs for Bio-NAS and MTL design |
 | [Experiment Log Template](Experiment-Log-Template) | Reproducible experiment records |
 | [FAQ and Troubleshooting](FAQ-and-Troubleshooting) | Sync, dashboard, and wiki FAQs |

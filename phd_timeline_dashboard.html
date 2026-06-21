@@ -163,19 +163,19 @@
   <script>
     // ─── Embedded Plan Data (from phd_master_plan.md) ───────────────────────
     const PLAN = {
-  "title": "PhD Master Roadmap: Vertical Slice + Two-Stage Multi-Omic Fusion (BRCA Anchor)",
-  "coreObjective": "Develop a generalized, multi-task Neural Architecture Search (NAS) framework using a **vertical slice** methodology on Breast Invasive Carcinoma (BRCA). Engineering proceeds in two additive layers: first, the full end-to-end BRCA pipeline (sourcing, infrastructure, architecture, Optuna NAS); second, a **two-stage fusion evolution**—Stage 1 stress-tests ingestion via **Early Fusion (concatenation)**, Stage 2 upgrades to a **Stacked Late Fusion Ensemble** with modality-specific expert networks and an ElasticNet meta-classifier on clean Out-of-Fold predictions. Once validated, the pipeline abstracts and scales across four additional disease categories for comparative analysis.",
+  "title": "PhD Master Roadmap: Dual-Track Multi-Omic Fusion & Bio-NAS",
+  "coreObjective": "This three-year Ph.D. project investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies.",
   "years": [
     {
       "id": "y1",
       "label": "Year 1",
-      "subtitle": "BRCA Anchor & Two-Stage Fusion (2026–2027)",
+      "subtitle": "The Anchor & Algorithmic Innovation (BRCA)",
       "color": "#6366f1",
       "semesters": [
         {
           "id": "y1-summer-2026",
           "label": "Summer 2026",
-          "title": "TCGA Sourcing & Data Foundation",
+          "title": "Mass Data Import & ETL Pipeline",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
@@ -184,28 +184,23 @@
               "id": "y1-summer-2026-p1-step1",
               "num": 1,
               "kind": "step",
-              "title": "BRCA Multi-Omic Sourcing & Split",
-              "goal": "Acquire the most feature-dense dataset to stress-test every branch of the neural network.",
+              "title": "Mass Data Import & ETL Pipeline",
+              "goal": "Source multi-omic data and build the ETL pipeline.",
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-summer-2026-phase-1-step-1-item-1-source-tcga-level-3-open-access",
-                  "text": "**Source:** TCGA (Level 3 Open Access).",
+                  "id": "year-1-summer-2026-phase-1-step-1-item-1-source-multi-omic-data-methylation-rna-s",
+                  "text": "Source multi-omic data (Methylation, RNA-Seq, Clinical) for Breast Invasive Carcinoma (BRCA) from TCGA.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-summer-2026-phase-1-step-1-item-2-target-modalities-methylation-beta-value",
-                  "text": "**Target Modalities:** Methylation (Beta-values), Transcriptomics (RNA-Seq), Genomics (Somatic Mutations), CNVs, and Clinical Demographics.",
+                  "id": "year-1-summer-2026-phase-1-step-1-item-2-build-the-automated-pytorch-etl-pipeline",
+                  "text": "Build the automated PyTorch ETL pipeline that aligns patient IDs and compiles the data into an HDF5 database.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-summer-2026-phase-1-step-1-item-3-the-strict-boundary-immediately-split-th",
-                  "text": "**The Strict Boundary:** Immediately split the BRCA dataset into an **80% Training/Validation Set** and a locked **20% Holdout Test Set** before any preprocessing.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-summer-2026-phase-1-step-1-item-4-hdf5-storage-serialize-aligned-preproces",
-                  "text": "**HDF5 Storage:** Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 databases for memory-mapped PyTorch ingestion.",
+                  "id": "year-1-summer-2026-phase-1-step-1-item-3-crucial-step-enforce-the-strict-80-20-tr",
+                  "text": "*Crucial Step:* Enforce the strict 80/20 train/holdout split immediately to prevent data leakage.",
                   "phase": 1
                 }
               ]
@@ -215,7 +210,7 @@
         {
           "id": "y1-fall-2026",
           "label": "Fall 2026",
-          "title": "Infrastructure & Static MTL Architecture",
+          "title": "Track A and Track B Innovation",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
@@ -224,18 +219,18 @@
               "id": "y1-fall-2026-p1-step2",
               "num": 2,
               "kind": "step",
-              "title": "Infrastructure & Database Orchestration",
-              "goal": "Establish the remote environments required for distributed Optuna execution.",
+              "title": "Track A (The Control) - Standard NAS",
+              "goal": "Build the standard Late Fusion meta-classifier and optimize.",
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-fall-2026-phase-1-step-2-item-1-central-hub-deploy-a-dockerized-postgres",
-                  "text": "**Central Hub:** Deploy a Dockerized PostgreSQL instance on your Hetzner Linux server to act as the permanent, centralized Optuna study hub.",
+                  "id": "year-1-fall-2026-phase-1-step-2-item-1-build-the-standard-late-fusion-meta-clas",
+                  "text": "Build the standard Late Fusion meta-classifier.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-fall-2026-phase-1-step-2-item-2-ci-cd-pipeline-configure-a-github-action",
-                  "text": "**CI/CD Pipeline:** Configure a GitHub Actions runner to orchestrate and deploy your PyTorch worker scripts natively from your repository to your university's Slurm compute clusters.",
+                  "id": "year-1-fall-2026-phase-1-step-2-item-2-deploy-optuna-to-optimize-standard-hyper",
+                  "text": "Deploy Optuna to optimize standard hyperparameters (layers, nodes, dropout) for BRCA prediction purely based on mathematical efficiency.",
                   "phase": 1
                 }
               ]
@@ -244,23 +239,23 @@
               "id": "y1-fall-2026-p1-step3",
               "num": 3,
               "kind": "step",
-              "title": "Engineering the Multi-Task Architecture",
-              "goal": "Write the PyTorch modules that handle multi-modal fusion and multi-task learning.",
+              "title": "Track B (The Innovation) - Bio-NAS Framework",
+              "goal": "Convert blueprints to matrices and shift Optuna.",
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-fall-2026-phase-1-step-3-item-1-input-branches-construct-flexible-ingest",
-                  "text": "**Input Branches:** Construct flexible ingestion layers for dense continuous data (1D-CNNs/Transformers for Methylation/RNA) and sparse data (Linear layers for Genomics).",
+                  "id": "year-1-fall-2026-phase-1-step-3-item-1-download-biological-blueprints-kegg-reac",
+                  "text": "Download biological blueprints (KEGG, Reactome) and convert them into binary Adjacency Matrices.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-fall-2026-phase-1-step-3-item-2-phenotype-head-binary-cross-entropy-loss",
-                  "text": "**Phenotype Head (Binary Cross-Entropy Loss):** Healthy vs. Diseased (BRCA: tumor vs. normal matched tissue).",
+                  "id": "year-1-fall-2026-phase-1-step-3-item-2-write-the-custom-pytorch-maskedlinear-la",
+                  "text": "Write the custom PyTorch `MaskedLinear` layers that sever non-biological artificial synapses.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-fall-2026-phase-1-step-3-item-3-severity-head-ordinal-loss-stage-i-ii-ii",
-                  "text": "**Severity Head (Ordinal Loss):** Stage I, II, III, or IV (K=4 for BRCA; configurable per disease).",
+                  "id": "year-1-fall-2026-phase-1-step-3-item-3-shift-the-optuna-search-space-to-select",
+                  "text": "Shift the Optuna search space to select optimal biological pathways rather than hidden nodes.",
                   "phase": 1
                 }
               ]
@@ -270,92 +265,22 @@
         {
           "id": "y1-spring-2027",
           "label": "Spring 2027",
-          "title": "NAS Benchmarking & Early Fusion Baseline",
+          "title": "The First Validation",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-spring-2027-p1-stage1",
-              "num": 1,
-              "kind": "stage",
-              "title": "Early Fusion Proof-of-Concept",
-              "goal": "Establish an end-to-end software baseline using immediate feature concatenation to stress-test data ingestion, PyTorch tensor formatting, multi-task heads, and distributed Optuna logging without algorithmic complexity.",
-              "phase": 1,
-              "tasks": [
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-1-item-1-data-splitting-leakage-guardrails-isolat",
-                  "text": "**Data Splitting & Leakage Guardrails:** Isolate a strict **20% Holdout Test Set** from the TCGA-BRCA cohort prior to any scaling, normalization, or feature selection.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-1-item-2-variance-masks-train-only-compute-varian",
-                  "text": "**Variance Masks (Train Only):** Compute variance-based dimensionality reduction to select the top 10,000 highly variable methylation CpG sites **strictly within the 80% training partition** to prevent test-set leakage.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-1-item-3-concatenation-architecture-build-a-unifi",
-                  "text": "**Concatenation Architecture:** Build a unified PyTorch HDF5 pipeline reading Methylation, RNA-Seq, CNV, Somatic Mutation, and Clinical features; fuse via $X_{\text{fused}} = [X_{\text{methylation}} \parallel X_{\text{transcriptomics}} \parallel X_{\text{genomics}} \parallel X_{\text{cnv}} \parallel X_{\text{clinical}}]$ through an MLP trunk into a dense latent vector.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-1-item-4-phenotype-head-early-fusion-binary-cross",
-                  "text": "**Phenotype Head (Early Fusion):** Binary Cross-Entropy (Healthy vs. Diseased; BRCA: tumor vs. normal control).",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-1-item-5-severity-head-early-fusion-ordinal-log-l",
-                  "text": "**Severity Head (Early Fusion):** Ordinal Log-Loss (Stages I–IV; K configurable via disease registry).",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-1-item-6-optuna-verification-connect-the-early-fu",
-                  "text": "**Optuna Verification:** Connect the early fusion model to the Dockerized PostgreSQL database on the Hetzner server and execute a small Optuna search space to verify parallel workers can read, train, and log metrics successfully.",
-                  "phase": 1
-                }
-              ]
-            },
-            {
-              "id": "y1-spring-2027-p1-stage2",
-              "num": 2,
-              "kind": "stage",
-              "title": "Stacking Late Fusion Upgrade (Begin)",
-              "goal": "Begin training isolated modality expert networks for the stacked late fusion ensemble.",
-              "phase": 1,
-              "tasks": [
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-2-item-1-methylation-expert-1d-cnn-train-an-isola",
-                  "text": "**Methylation Expert (1D-CNN):** Train an isolated 1D-CNN feature extractor on methylation beta-values; output independent multi-task predictions.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-stage-2-item-2-transcriptomics-expert-deep-mlp-train-an",
-                  "text": "**Transcriptomics Expert (Deep MLP):** Train an isolated deep MLP on RNA-Seq expression; output independent multi-task predictions.",
-                  "phase": 1
-                }
-              ]
-            },
-            {
               "id": "y1-spring-2027-p1-step4",
               "num": 4,
               "kind": "step",
-              "title": "Optuna NAS & Baseline Benchmarking",
-              "goal": "Execute the search space specifically for BRCA on the 80% Training Set using 5-Fold Cross Validation.",
+              "title": "The First Validation",
+              "goal": "Prove Bio-NAS works on the BRCA holdout test set.",
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-spring-2027-phase-1-step-4-item-1-neural-search-optuna-tune-the-5-deep-lea",
-                  "text": "**Neural Search (Optuna):** Tune the 5 deep learning topologies (MLP, 1D-CNN, Transformer, TabNet, Cross-Attention Fusion) to find the optimal BRCA network. Have Optuna dynamically weigh the multi-task loss functions.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-step-4-item-2-classical-baselines-train-xgboost-lightg",
-                  "text": "**Classical Baselines:** Train XGBoost, LightGBM, and ElasticNet strictly on the tabular/methylation data to establish a performance floor.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-1-spring-2027-phase-1-step-4-item-3-the-poc-validation-evaluate-the-single-b",
-                  "text": "**The PoC Validation:** Evaluate the single best Optuna-discovered model against the classical baselines using the locked 20% Holdout Test Set.",
+                  "id": "year-1-spring-2027-phase-1-step-4-item-1-compare-track-a-vs-track-b-for-brca-on-t",
+                  "text": "Compare Track A vs. Track B for BRCA on the 20% holdout test set. If Bio-NAS achieves comparable accuracy with greater sparsity and interpretability, the core algorithm is successfully invented.",
                   "phase": 1
                 }
               ]
@@ -367,84 +292,54 @@
     {
       "id": "y2",
       "label": "Year 2",
-      "subtitle": "Abstraction & Comparative Scaling (2027–2028)",
+      "subtitle": "Scaling the A/B Test Across Modalities",
       "color": "#8b5cf6",
       "semesters": [
         {
           "id": "y2-summer-2027",
           "label": "Summer 2027",
-          "title": "Complete Stacked Fusion & Implementation Scaffolds",
-          "phase": 1,
-          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "title": "Neurological & Autoimmune Ingestion",
+          "phase": 2,
+          "phaseLabel": "Phase 2: Code Abstraction & Generalization",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-summer-2027-p1-stage2",
-              "num": 2,
-              "kind": "stage",
-              "title": "Stacking Late Fusion Upgrade (Complete)",
-              "goal": "Refactor the validated Stage 1 pipeline into a modular Late Fusion architecture with rigorous OOF stacking and an interpretable ElasticNet meta-classifier—eliminating data leakage entirely.",
-              "phase": 1,
+              "id": "y2-summer-2027-p2-step1",
+              "num": 1,
+              "kind": "step",
+              "title": "Neurological & Autoimmune Ingestion",
+              "goal": "Source AD and RA data and run ETL.",
+              "phase": 2,
               "tasks": [
                 {
-                  "id": "year-2-summer-2027-phase-1-stage-2-item-1-genomics-expert-sparse-linear-train-an-i",
-                  "text": "**Genomics Expert (Sparse Linear):** Train an isolated sparse linear network on somatic mutation features; output independent multi-task predictions.",
-                  "phase": 1
+                  "id": "year-2-summer-2027-phase-2-step-1-item-1-source-alzheimer-s-disease-data-ncbi-geo",
+                  "text": "Source Alzheimer's Disease data (NCBI GEO: brain tissue methylation/expression).",
+                  "phase": 2
                 },
                 {
-                  "id": "year-2-summer-2027-phase-1-stage-2-item-2-cnv-expert-sparse-linear-train-an-isolat",
-                  "text": "**CNV Expert (Sparse Linear):** Train an isolated sparse linear network on copy-number variation features; output independent multi-task predictions.",
-                  "phase": 1
+                  "id": "year-2-summer-2027-phase-2-step-1-item-2-source-rheumatoid-arthritis-data-ncbi-ge",
+                  "text": "Source Rheumatoid Arthritis data (NCBI GEO: synovial tissue/blood profiles).",
+                  "phase": 2
                 },
                 {
-                  "id": "year-2-summer-2027-phase-1-stage-2-item-3-rigorous-stacking-cross-validation-oof-d",
-                  "text": "**Rigorous Stacking Cross-Validation (OOF):** Divide the 80% training pool into 5 folds; for each fold $k$, train all 4 expert networks on the remaining 4 folds and generate predictions on fold $k$; concatenate validation predictions across all folds to construct a complete **Clean Out-of-Fold Predictions** matrix ($P_{\text{OOF}}$) for the entire 80% dataset.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-2-summer-2027-phase-1-stage-2-item-4-elasticnet-meta-classifier-integration-t",
-                  "text": "**ElasticNet Meta-Classifier Integration:** Train downstream **Logistic Regression with ElasticNet Regularization** (`penalty='elasticnet'`, `solver='saga'`) meta-models on $P_{\text{OOF}}$ (8 meta-features: 4 experts × 2 tasks) with true biological labels; tune $\lambda$ and $\alpha$ via Optuna; extract sparse non-zero coefficients ($w$) to chart how much weight each omic expert network receives for phenotype and severity outcomes.",
-                  "phase": 1
+                  "id": "year-2-summer-2027-phase-2-step-1-item-3-run-both-datasets-through-the-automated",
+                  "text": "Run both datasets through the automated ETL HDF5 pipeline.",
+                  "phase": 2
                 }
               ]
             },
             {
-              "id": "y2-summer-2027-p1-step5",
-              "num": 5,
+              "id": "y2-summer-2027-p2-step2",
+              "num": 2,
               "kind": "step",
-              "title": "Implementation Targets",
-              "goal": "Scaffold core `src/` modules that implement the two-stage fusion pipeline.",
-              "phase": 1,
+              "title": "Dual-Track Execution (Brain & Inflammation)",
+              "goal": "Execute standard and Bio-NAS for brain and inflammation.",
+              "phase": 2,
               "tasks": [
                 {
-                  "id": "year-2-summer-2027-phase-1-step-5-item-1-src-config-disease-registry-yaml-per-dis",
-                  "text": "`src/config/disease_registry.yaml` — Per-disease phenotype/severity label mappings and `n_severity_classes`.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-2-summer-2027-phase-1-step-5-item-2-src-data-clinical-time-py-normalize-raw",
-                  "text": "`src/data/clinical_time.py` — Normalize raw dates/durations into canonical Z-scored time tabular features.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-2-summer-2027-phase-1-step-5-item-3-src-data-brca-dataset-py-pytorch-dataset",
-                  "text": "`src/data/brca_dataset.py` — PyTorch Dataset switching between flat concatenated tensor (Stage 1) and modality dict (Stage 2); clinical inputs exclude severity labels.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-2-summer-2027-phase-1-step-5-item-4-src-models-brca-early-fusion-py-stage-1",
-                  "text": "`src/models/brca_early_fusion.py` — Stage 1 `torch.cat` model with MLP trunk and two Static MTL heads (phenotype BCE, severity ordinal).",
-                  "phase": 1
-                },
-                {
-                  "id": "year-2-summer-2027-phase-1-step-5-item-5-src-models-losses-py-phenotypebceloss-an",
-                  "text": "`src/models/losses.py` — `PhenotypeBCELoss` and `OrdinalSeverityLoss` for the two-task baseline.",
-                  "phase": 1
-                },
-                {
-                  "id": "year-2-summer-2027-phase-1-step-5-item-6-src-pipelines-train-stacking-py-stage-2",
-                  "text": "`src/pipelines/train_stacking.py` — Stage 2 five-fold OOF loop and sklearn ElasticNet meta-classifier on $P_{\text{OOF}}$ (4 experts × 2 tasks = 8 meta-features).",
-                  "phase": 1
+                  "id": "year-2-summer-2027-phase-2-step-2-item-1-execute-optuna-track-a-standard-and-trac",
+                  "text": "Execute Optuna Track A (Standard) and Track B (Bio-NAS) for Alzheimer's and Rheumatoid Arthritis.",
+                  "phase": 2
                 }
               ]
             }
@@ -453,57 +348,32 @@
         {
           "id": "y2-fall-2027",
           "label": "Fall 2027",
-          "title": "Code Abstraction & Disease Sourcing",
-          "phase": 2,
-          "phaseLabel": "Phase 2: Code Abstraction & Generalization",
+          "title": "Metabolic & Genetic Ingestion",
+          "phase": 3,
+          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-fall-2027-p2-step1",
-              "num": 1,
+              "id": "y2-fall-2027-p3-step3",
+              "num": 3,
               "kind": "step",
-              "title": "Refactoring the Base Classes",
-              "goal": "Transition the hardcoded BRCA script into a universal disease pipeline.",
-              "phase": 2,
-              "tasks": [
-                {
-                  "id": "year-2-fall-2027-phase-2-step-1-item-1-abstract-data-loaders-refactor-the-pytor",
-                  "text": "**Abstract Data Loaders:** Refactor the PyTorch `Dataset` class so it dynamically counts the number of available omic layers. If a dataset is missing RNA-Seq, the loader simply drops that tensor branch without crashing the network.",
-                  "phase": 2
-                },
-                {
-                  "id": "year-2-fall-2027-phase-2-step-1-item-2-configurable-severity-cardinality-keep-t",
-                  "text": "**Configurable Severity Cardinality:** Keep the same ordinal `severity_head` topology across diseases; vary K and per-cohort label mapping via `disease_registry.yaml` (e.g., BRCA Stage I–IV vs. Alzheimer's CDR/MMSE bands).",
-                  "phase": 2
-                }
-              ]
-            },
-            {
-              "id": "y2-fall-2027-p3-step1",
-              "num": 1,
-              "kind": "step",
-              "title": "Sourcing the 4 Distinct Pathologies",
-              "goal": "Gather the datasets that represent the remaining functional disease categories.",
+              "title": "Metabolic & Genetic Ingestion",
+              "goal": "Source T2D and Down Syndrome data and run ETL.",
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-fall-2027-phase-3-step-1-item-1-neurological-alzheimer-s-disease-geo-foc",
-                  "text": "**Neurological:** Alzheimer's Disease (GEO) - Focus on progressive structural shifts.",
+                  "id": "year-2-fall-2027-phase-3-step-3-item-1-source-type-2-diabetes-data-ncbi-geo-rec",
+                  "text": "Source Type 2 Diabetes data (NCBI GEO / recount3).",
                   "phase": 3
                 },
                 {
-                  "id": "year-2-fall-2027-phase-3-step-1-item-2-autoimmune-rheumatoid-arthritis-geo-focu",
-                  "text": "**Autoimmune:** Rheumatoid Arthritis (GEO) - Focus on systemic inflammation.",
+                  "id": "year-2-fall-2027-phase-3-step-3-item-2-source-down-syndrome-data-ncbi-geo-triso",
+                  "text": "Source Down Syndrome data (NCBI GEO: Trisomy 21 multi-omic profiles).",
                   "phase": 3
                 },
                 {
-                  "id": "year-2-fall-2027-phase-3-step-1-item-3-metabolic-type-2-diabetes-geo-recountmet",
-                  "text": "**Metabolic:** Type 2 Diabetes (GEO / `recountmethylation`) - Focus on lifestyle-driven epigenetic markers.",
-                  "phase": 3
-                },
-                {
-                  "id": "year-2-fall-2027-phase-3-step-1-item-4-genetic-down-syndrome-geo-focus-on-innat",
-                  "text": "**Genetic:** Down Syndrome (GEO) - Focus on innate chromosomal baseline differences.",
+                  "id": "year-2-fall-2027-phase-3-step-3-item-3-run-through-the-etl-pipeline",
+                  "text": "Run through the ETL pipeline.",
                   "phase": 3
                 }
               ]
@@ -513,27 +383,27 @@
         {
           "id": "y2-spring-2028",
           "label": "Spring 2028",
-          "title": "Distributed Optuna Execution",
+          "title": "Metabolic & Chromosomal Execution",
           "phase": 3,
           "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-spring-2028-p3-step2",
-              "num": 2,
+              "id": "y2-spring-2028-p3-step4",
+              "num": 4,
               "kind": "step",
-              "title": "High-Throughput Distributed Execution",
-              "goal": "Push the generalized pipeline to the university cluster.",
+              "title": "Dual-Track Execution (Metabolic & Chromosomal)",
+              "goal": "Complete the remaining Optuna studies.",
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-spring-2028-phase-3-step-2-item-1-run-4-parallel-optuna-studies-pointing-t",
-                  "text": "Run 4 parallel Optuna studies pointing to the Hetzner PostgreSQL database.",
+                  "id": "year-2-spring-2028-phase-3-step-4-item-1-execute-optuna-track-a-and-track-b-for-t",
+                  "text": "Execute Optuna Track A and Track B for Type 2 Diabetes and Down Syndrome.",
                   "phase": 3
                 },
                 {
-                  "id": "year-2-spring-2028-phase-3-step-2-item-2-because-the-infrastructure-and-code-were",
-                  "text": "Because the infrastructure and code were proven in Phase 1, this phase is strictly computational execution and monitoring.",
+                  "id": "year-2-spring-2028-phase-3-step-4-item-2-milestone-by-the-end-of-year-2-the-datab",
+                  "text": "*Milestone:* By the end of Year 2, the database will contain 10 completed optimization studies (5 diseases × 2 tracks).",
                   "phase": 3
                 }
               ]
@@ -545,13 +415,13 @@
     {
       "id": "y3",
       "label": "Year 3",
-      "subtitle": "Thesis & Deliverables (2028–2029)",
+      "subtitle": "Comparative Analysis & Thesis Synthesis",
       "color": "#06b6d4",
       "semesters": [
         {
           "id": "y3-summer-2028",
           "label": "Summer 2028",
-          "title": "Comparative Analysis & Interpretability",
+          "title": "Audits & Interpretability",
           "phase": 4,
           "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
@@ -560,18 +430,38 @@
               "id": "y3-summer-2028-p4-step1",
               "num": 1,
               "kind": "step",
-              "title": "The Comparative Analysis (The Core Thesis)",
-              "goal": "Mine the Optuna database to answer the primary research question.",
+              "title": "Performance & Efficiency Audits",
+              "goal": "Quantify predictive metrics and compute reduction.",
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-summer-2028-phase-4-step-1-item-1-structural-taxonomy-map-the-final-archit",
-                  "text": "**Structural Taxonomy:** Map the final architectures against the disease types. Compare if localized, highly mutated cancers (BRCA) inherently select spatial architectures (CNNs) while systemic, slow-progressing conditions (Alzheimer's) favor self-attention mechanisms (Transformers) or classical models.",
+                  "id": "year-3-summer-2028-phase-4-step-1-item-1-chart-the-predictive-metrics-f1-score-ro",
+                  "text": "Chart the predictive metrics (F1-Score, ROC-AUC, C-Index) comparing standard NAS to Bio-NAS across all five diseases.",
                   "phase": 4
                 },
                 {
-                  "id": "year-3-summer-2028-phase-4-step-1-item-2-interpretability-use-shap-to-determine-w",
-                  "text": "**Interpretability:** Use SHAP to determine which specific omic layers carried the most predictive weight across different disease categories.",
+                  "id": "year-3-summer-2028-phase-4-step-1-item-2-quantify-the-computational-efficiency-ca",
+                  "text": "Quantify the computational efficiency: calculate the exact reduction in GPU memory and model parameters achieved by severing non-biological connections.",
+                  "phase": 4
+                }
+              ]
+            },
+            {
+              "id": "y3-summer-2028-p4-step2",
+              "num": 2,
+              "kind": "step",
+              "title": "LLM-Driven Biological Interpretability",
+              "goal": "Summarize mechanistic pathways via LLM.",
+              "phase": 4,
+              "tasks": [
+                {
+                  "id": "year-3-summer-2028-phase-4-step-2-item-1-extract-the-highest-weighted-biological",
+                  "text": "Extract the highest-weighted biological pathways from the 5 Bio-NAS models.",
+                  "phase": 4
+                },
+                {
+                  "id": "year-3-summer-2028-phase-4-step-2-item-2-run-these-pathways-through-an-llm-e-g-ge",
+                  "text": "Run these pathways through an LLM (e.g., Gemini Pro) to generate mechanistic summaries. Answer the question: *Why did the neural network select these specific pathways to predict each disease?*",
                   "phase": 4
                 }
               ]
@@ -581,27 +471,27 @@
         {
           "id": "y3-fall-2028",
           "label": "Fall 2028",
-          "title": "Patient-Facing Software Portal",
+          "title": "Taxonomy Mapping",
           "phase": 4,
           "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-fall-2028-p4-step2",
-              "num": 2,
+              "id": "y3-fall-2028-p4-step3",
+              "num": 3,
               "kind": "step",
-              "title": "The Patient-Facing Software App",
-              "goal": "Deliver a production-ready diagnostic UI.",
+              "title": "Multi-Disease Taxonomy Mapping",
+              "goal": "Identify overlapping biological networks across diseases.",
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-fall-2028-phase-4-step-2-item-1-build-a-streamlit-web-dashboard",
-                  "text": "Build a `streamlit` web dashboard.",
+                  "id": "year-3-fall-2028-phase-4-step-3-item-1-lay-the-five-optimal-biological-architec",
+                  "text": "Lay the five optimal biological architectures side-by-side.",
                   "phase": 4
                 },
                 {
-                  "id": "year-3-fall-2028-phase-4-step-2-item-2-users-select-a-disease-track-upload-mult",
-                  "text": "Users select a disease track, upload multi-omic `.CSV` data, and receive a phenotype probability and severity stage powered by the highly optimized Static MTL models.",
+                  "id": "year-3-fall-2028-phase-4-step-3-item-2-map-the-overlapping-biological-networks",
+                  "text": "Map the overlapping biological networks (e.g., Did the optimizer use the exact same inflammatory sub-network to predict both Alzheimer's and Rheumatoid Arthritis?).",
                   "phase": 4
                 }
               ]
@@ -611,22 +501,27 @@
         {
           "id": "y3-spring-2029",
           "label": "Spring 2029",
-          "title": "Thesis Synthesis & Publication",
+          "title": "Thesis Synthesis",
           "phase": 4,
           "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-spring-2029-p4-step2",
-              "num": 2,
+              "id": "y3-spring-2029-p4-step4",
+              "num": 4,
               "kind": "step",
-              "title": "The Patient-Facing Software App (Publication)",
-              "goal": "Open-source the multi-pipeline framework and submit comparative findings.",
+              "title": "Thesis Defense",
+              "goal": "Finalize and present the thesis.",
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-spring-2029-phase-4-step-2-item-1-publication-open-source-the-multi-pipeli",
-                  "text": "**Publication:** Open-source the multi-pipeline PyTorch NAS framework and submit comparative findings to a computational biology or applied machine learning venue.",
+                  "id": "year-3-spring-2029-phase-4-step-4-item-1-finalize-the-written-dissertation",
+                  "text": "Finalize the written dissertation.",
+                  "phase": 4
+                },
+                {
+                  "id": "year-3-spring-2029-phase-4-step-4-item-2-present-the-project-not-as-five-separate",
+                  "text": "Present the project not as five separate disease models, but as the invention and universal validation of the Bio-NAS framework.",
                   "phase": 4
                 }
               ]
@@ -642,28 +537,28 @@
       "label": "Phase 1",
       "subtitle": "The Anchor (BRCA PoC)",
       "color": "#6366f1",
-      "taskCount": 30
+      "taskCount": 9
     },
     {
       "id": "p2",
       "label": "Phase 2",
       "subtitle": "Code Abstraction & Generalization",
       "color": "#8b5cf6",
-      "taskCount": 2
+      "taskCount": 4
     },
     {
       "id": "p3",
       "label": "Phase 3",
       "subtitle": "Scaling to the Comparative Matrix",
       "color": "#06b6d4",
-      "taskCount": 6
+      "taskCount": 5
     },
     {
       "id": "p4",
       "label": "Phase 4",
       "subtitle": "Thesis Synthesis & Final Deliverables",
       "color": "#10b981",
-      "taskCount": 5
+      "taskCount": 8
     }
   ]
 };
