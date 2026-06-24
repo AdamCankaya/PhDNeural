@@ -29,12 +29,13 @@ def main() -> int:
     html = dashboard_path.read_text(encoding="utf-8")
     plan_js = json.dumps(plan, indent=2, ensure_ascii=False)
 
-    html = re.sub(
-        r"const PLAN = \{[\s\S]*?\n\};",
-        f"const PLAN = {plan_js};",
-        html,
-        count=1,
-    )
+    # Use string replacement to avoid re.sub/f-string issues with backslashes
+    parts = html.split("const PLAN = {", 1)
+    if len(parts) == 2:
+        end_parts = parts[1].split("};", 1)
+        if len(end_parts) == 2:
+            new_html = parts[0] + "const PLAN = " + plan_js + ";" + end_parts[1]
+            html = new_html
 
     html = re.sub(
         r"<title>PhD Roadmap Dashboard — .*?</title>",

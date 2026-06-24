@@ -3,6 +3,9 @@
 ## Executive Summary
 This three-year Ph.D. project investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies, now utilizing a Spatio-Temporal framework.
 
+## Core Objective
+Develop a high-performance, distributed Neural Architecture Search (NAS) framework utilizing Optuna to discover optimal Spatio-Temporal Deep Learning networks across 5 distinct disease categories to model, predict, and forecast disease progression trajectories.
+
 ---
 
 ## Year 1: Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure
