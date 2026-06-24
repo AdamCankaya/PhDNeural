@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 YEAR_RE = re.compile(r"^## Year (\d+):\s*(.+?)\s*$")
-SEMESTER_RE = re.compile(r"^### (Summer|Fall|Spring) (\d{4}) Semester:\s*(.+?)\s*$")
+QUARTER_RE = re.compile(r"^### (Q[1-4]) Quarter:\s*(.+?)\s*$")
 PHASE_META_RE = re.compile(
     r"^\*\*Phases?:\*\*\s*([^|\n]+?)(?:\s*\|\s*\*\*Goal:\*\*\s*(.+))?\s*$"
 )
@@ -57,7 +57,7 @@ SECTION_KIND_STAGE = "stage"
 
 PHASE_OPTIONS = list(PHASE_BY_NUMBER.values())
 
-SEMESTER_ORDER = {"summer": 0, "fall": 1, "spring": 2}
+QUARTER_ORDER = {"q1": 0, "q2": 1, "q3": 2, "q4": 3}
 
 YEAR_COLORS = {1: "#6366f1", 2: "#8b5cf6", 3: "#06b6d4"}
 
@@ -69,10 +69,10 @@ class PhdTask:
     task_id: str
     year: int
     year_title: str
-    semester: str
-    semester_year: int
-    semester_label: str
-    semester_title: str
+    quarter: str
+    quarter_year: int
+    quarter_label: str
+    quarter_title: str
     phase: int
     phase_title: str
     step: int
@@ -95,7 +95,7 @@ class PhdTask:
         return f"Step {self.step}"
 
     def issue_title(self) -> str:
-        prefix = f"[Y{self.year} {self.semester_label}]"
+        prefix = f"[Y{self.year} {self.quarter_label}]"
         return f"{prefix} {self.title}"
 
     def issue_body(self) -> str:
@@ -107,7 +107,7 @@ class PhdTask:
             "## Context",
             "",
             f"- **Year:** {self.year} — {self.year_title}",
-            f"- **Semester:** {self.semester_label} — {self.semester_title}",
+            f"- **Quarter:** {self.quarter_label} — {self.quarter_title}",
             f"- **Phase:** {self.phase} — {self.phase_title}",
             f"- **{section_name}:** {self.step} — {self.step_title}",
             f"- **Goal:** {self.goal}",
@@ -127,11 +127,11 @@ class _ParseState:
     plan_title: str = ""
     year: int = 0
     year_title: str = ""
-    semester: str = ""
-    semester_year: int = 0
-    semester_label: str = ""
-    semester_title: str = ""
-    semester_phase: int = 0
+    quarter: str = ""
+    quarter_year: int = 0
+    quarter_label: str = ""
+    quarter_title: str = ""
+    quarter_phase: int = 0
     phase: int = 0
     phase_title: str = ""
     step: int = 0
@@ -154,19 +154,19 @@ def _parse_phase_meta(text: str) -> int:
 
 def _build_labels(
     year: int,
-    semester: str,
-    semester_year: int,
+    quarter: str,
+    quarter_year: int,
     phase: int,
     step: int,
     section_kind: str,
 ) -> tuple[str, ...]:
     category = PHASE_CATEGORY_LABELS.get(phase, "phd")
     section_tag = f"stage-{step}" if section_kind == SECTION_KIND_STAGE else f"step-{step}"
-    semester_slug = f"{semester}-{semester_year}"
+    quarter_slug = f"{quarter}-{quarter_year}"
     return (
         "phd-sync",
         f"year-{year}",
-        semester_slug,
+        quarter_slug,
         f"phase-{phase}",
         section_tag,
         category,
@@ -175,8 +175,8 @@ def _build_labels(
 
 def _make_task_id(
     year: int,
-    semester: str,
-    semester_year: int,
+    quarter: str,
+    quarter_year: int,
     phase: int,
     step: int,
     section_kind: str,
@@ -186,7 +186,7 @@ def _make_task_id(
     section_slug = "stage" if section_kind == SECTION_KIND_STAGE else "step"
     parts = [
         f"year-{year}",
-        f"{semester}-{semester_year}",
+        f"{quarter}-{quarter_year}",
         f"phase-{phase}",
         f"{section_slug}-{step}",
         f"item-{item_index}",
@@ -252,8 +252,8 @@ def _append_task(
     title = _extract_item_title(detail)
     task_id = _make_task_id(
         state.year,
-        state.semester,
-        state.semester_year,
+        state.quarter,
+        state.quarter_year,
         state.phase,
         state.step,
         state.section_kind,
@@ -265,10 +265,10 @@ def _append_task(
             task_id=task_id,
             year=state.year,
             year_title=state.year_title,
-            semester=state.semester,
-            semester_year=state.semester_year,
-            semester_label=f"{state.semester.title()} {state.semester_year}",
-            semester_title=state.semester_title,
+            quarter=state.quarter,
+            quarter_year=state.quarter_year,
+            quarter_label=f"{state.quarter.upper()} {state.quarter_year}",
+            quarter_title=state.quarter_title,
             phase=state.phase,
             phase_title=state.phase_title,
             step=state.step,
@@ -279,8 +279,8 @@ def _append_task(
             section_kind=state.section_kind,
             labels=_build_labels(
                 state.year,
-                state.semester,
-                state.semester_year,
+                state.quarter,
+                state.quarter_year,
                 state.phase,
                 state.step,
                 state.section_kind,
@@ -340,14 +340,13 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
             state.year_title = year_match.group(2).strip()
             continue
 
-        semester_match = SEMESTER_RE.match(line)
-        if semester_match:
-            season = semester_match.group(1).lower()
-            year4 = int(semester_match.group(2))
-            state.semester = season
-            state.semester_year = year4
-            state.semester_label = f"{season.title()} {year4}"
-            state.semester_title = semester_match.group(3).strip()
+        quarter_match = QUARTER_RE.match(line)
+        if quarter_match:
+            season = quarter_match.group(1).lower()
+            state.quarter = season
+            state.quarter_year = state.year
+            state.quarter_label = season.upper()
+            state.quarter_title = quarter_match.group(2).strip()
             state.step = 0
             state.step_title = ""
             state.section_kind = SECTION_KIND_STEP
@@ -358,8 +357,8 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
 
         phase_meta = PHASE_META_RE.match(line)
         if phase_meta:
-            state.semester_phase = _parse_phase_meta(phase_meta.group(1))
-            state.phase = state.semester_phase
+            state.quarter_phase = _parse_phase_meta(phase_meta.group(1))
+            state.phase = state.quarter_phase
             state.phase_title = PHASE_BY_NUMBER.get(
                 state.phase, f"Phase {state.phase}"
             ).split(": ", 1)[-1]
@@ -403,7 +402,7 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
         if not _is_checklist_item(line):
             continue
 
-        if not state.year or not state.semester or not state.step:
+        if not state.year or not state.quarter or not state.step:
             continue
 
         indent = _checklist_indent(line)
@@ -424,10 +423,10 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
                     task_id=last.task_id,
                     year=last.year,
                     year_title=last.year_title,
-                    semester=last.semester,
-                    semester_year=last.semester_year,
-                    semester_label=last.semester_label,
-                    semester_title=last.semester_title,
+                    quarter=last.quarter,
+                    quarter_year=last.quarter_year,
+                    quarter_label=last.quarter_label,
+                    quarter_title=last.quarter_title,
                     phase=last.phase,
                     phase_title=last.phase_title,
                     step=last.step,
@@ -483,29 +482,29 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
                 "label": f"Year {task.year}",
                 "subtitle": task.year_title,
                 "color": YEAR_COLORS.get(task.year, "#6366f1"),
-                "semesters": {},
+                "quarters": {},
             }
 
         year_entry = years_map[task.year]
-        sem_key = f"{task.semester}-{task.semester_year}"
-        if sem_key not in year_entry["semesters"]:
-            year_entry["semesters"][sem_key] = {
-                "id": f"y{task.year}-{task.semester}-{task.semester_year}",
-                "label": task.semester_label,
-                "title": task.semester_title,
+        quarter_key = f"{task.quarter}-{task.quarter_year}"
+        if quarter_key not in year_entry["quarters"]:
+            year_entry["quarters"][quarter_key] = {
+                "id": f"y{task.year}-{task.quarter}-{task.quarter_year}",
+                "label": task.quarter_label,
+                "title": task.quarter_title,
                 "phase": task.phase,
                 "phaseLabel": task.phase_label(),
                 "color": YEAR_COLORS.get(task.year, "#6366f1"),
                 "steps": {},
             }
 
-        sem_entry = year_entry["semesters"][sem_key]
+        quarter_entry = year_entry["quarters"][quarter_key]
         step_key = (task.phase, task.section_kind, task.step)
-        if step_key not in sem_entry["steps"]:
+        if step_key not in quarter_entry["steps"]:
             kind = task.section_kind
             section_slug = "stage" if kind == SECTION_KIND_STAGE else "step"
-            sem_entry["steps"][step_key] = {
-                "id": f"y{task.year}-{task.semester}-{task.semester_year}-p{task.phase}-{section_slug}{task.step}",
+            quarter_entry["steps"][step_key] = {
+                "id": f"y{task.year}-{task.quarter}-{task.quarter_year}-p{task.phase}-{section_slug}{task.step}",
                 "num": task.step,
                 "kind": kind,
                 "title": task.step_title,
@@ -514,7 +513,7 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
                 "tasks": [],
             }
 
-        sem_entry["steps"][step_key]["tasks"].append(
+        quarter_entry["steps"][step_key]["tasks"].append(
             {"id": task.task_id, "text": task.detail, "phase": task.phase}
         )
 
@@ -535,27 +534,27 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
     years_list = []
     for year_num in sorted(years_map):
         year_entry = years_map[year_num]
-        semesters_list = []
-        for sem_key in sorted(
-            year_entry["semesters"],
+        quarters_list = []
+        for quarter_key in sorted(
+            year_entry["quarters"],
             key=lambda k: (
-                year_entry["semesters"][k]["label"].split()[-1],
-                SEMESTER_ORDER.get(k.split("-")[0], 99),
+                year_entry["quarters"][k]["label"].split()[-1],
+                QUARTER_ORDER.get(k.split("-")[0], 99),
             ),
         ):
-            sem_entry = year_entry["semesters"][sem_key]
+            quarter_entry = year_entry["quarters"][quarter_key]
             steps_list = [
-                sem_entry["steps"][k]
-                for k in sorted(sem_entry["steps"], key=lambda x: (0 if x[0] == SECTION_KIND_STAGE else 1, x[1]))
+                quarter_entry["steps"][k]
+                for k in sorted(quarter_entry["steps"], key=lambda x: (0 if x[0] == SECTION_KIND_STAGE else 1, x[1]))
             ]
-            semesters_list.append(
+            quarters_list.append(
                 {
-                    "id": sem_entry["id"],
-                    "label": sem_entry["label"],
-                    "title": sem_entry["title"],
-                    "phase": sem_entry["phase"],
-                    "phaseLabel": sem_entry["phaseLabel"],
-                    "color": sem_entry["color"],
+                    "id": quarter_entry["id"],
+                    "label": quarter_entry["label"],
+                    "title": quarter_entry["title"],
+                    "phase": quarter_entry["phase"],
+                    "phaseLabel": quarter_entry["phaseLabel"],
+                    "color": quarter_entry["color"],
                     "steps": steps_list,
                 }
             )
@@ -565,7 +564,7 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
                 "label": year_entry["label"],
                 "subtitle": year_entry["subtitle"],
                 "color": year_entry["color"],
-                "semesters": semesters_list,
+                "quarters": quarters_list,
             }
         )
 

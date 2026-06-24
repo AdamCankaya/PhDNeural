@@ -28,7 +28,7 @@ Welcome to the **PhDNeural** project wiki — a published mirror of documentatio
 | Page | Description |
 |------|-------------|
 | [Workflow](Workflow) | Master plan → dashboard → GitHub sync loop |
-| [Roadmap and Tracking](Roadmap-and-Tracking) | 3-year semester calendar, issue format, labels |
+| [Roadmap and Tracking](Roadmap-and-Tracking) | 3-year quarter calendar, issue format, labels |
 | [Static MTL Baseline](Static-MTL-Baseline) | Multi-task prediction contract |
 | [Code Map and Status](Code-Map-and-Status) | `src/` implementation status |
 | [Glossary](Glossary) | Key terms |

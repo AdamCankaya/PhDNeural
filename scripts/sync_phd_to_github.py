@@ -167,7 +167,7 @@ def setup_project_fields(
 ) -> tuple[dict, dict, dict, dict, dict]:
     steps = sorted({step_display(t) for t in tasks}, key=_step_sort_key)
     years = sorted({t.year_label() for t in tasks}, key=lambda y: int(y.split()[-1]))
-    semesters = sorted({t.semester_label for t in tasks}, key=_semester_sort_key)
+    quarters = sorted({t.quarter_label for t in tasks}, key=_quarter_sort_key)
 
     step_field = client.ensure_single_select_field(
         project_id, "Step", steps, project_fields
@@ -178,8 +178,8 @@ def setup_project_fields(
     year_field = client.ensure_single_select_field(
         project_id, "Year", years, project_fields
     )
-    semester_field = client.ensure_single_select_field(
-        project_id, "Semester", semesters, project_fields
+    quarter_field = client.ensure_single_select_field(
+        project_id, "Quarter", quarters, project_fields
     )
 
     return (
@@ -187,12 +187,12 @@ def setup_project_fields(
             "step": step_field,
             "phase": phase_field,
             "year": year_field,
-            "semester": semester_field,
+            "quarter": quarter_field,
         },
         {step_display(t): step_display(t) for t in tasks},
         {t.phase_label(): t.phase_label() for t in tasks},
         {t.year_label(): t.year_label() for t in tasks},
-        {t.semester_label: t.semester_label for t in tasks},
+        {t.quarter_label: t.quarter_label for t in tasks},
     )
 
 
@@ -206,7 +206,7 @@ def _step_sort_key(name: str) -> tuple[int, int]:
     return (2, 99)
 
 
-def _semester_sort_key(label: str) -> tuple[int, int]:
+def _quarter_sort_key(label: str) -> tuple[int, int]:
     parts = label.split()
     if len(parts) != 2:
         return (9999, 99)
@@ -228,7 +228,7 @@ def apply_project_fields(
     step_field = custom_fields.get("step")
     phase_field = custom_fields.get("phase")
     year_field = custom_fields.get("year")
-    semester_field = custom_fields.get("semester")
+    quarter_field = custom_fields.get("quarter")
 
     if step_field:
         step_name = step_display(task)
@@ -254,11 +254,11 @@ def apply_project_fields(
                 project_id, item_id, year_field.field_id, option_id
             )
 
-    if semester_field:
-        option_id = semester_field.options.get(task.semester_label)
+    if quarter_field:
+        option_id = quarter_field.options.get(task.quarter_label)
         if option_id:
             client.set_single_select_field(
-                project_id, item_id, semester_field.field_id, option_id
+                project_id, item_id, quarter_field.field_id, option_id
             )
 
     status_field = custom_fields.get("status")
@@ -277,10 +277,10 @@ def print_parse_summary(tasks: list[PhdTask]) -> None:
     by_year: dict[int, dict[str, int]] = {}
     for task in tasks:
         by_year.setdefault(task.year, {})
-        by_year[task.year][task.semester_label] = (
-            by_year[task.year].get(task.semester_label, 0) + 1
+        by_year[task.year][task.quarter_label] = (
+            by_year[task.year].get(task.quarter_label, 0) + 1
         )
-    print("Tasks per year/semester:")
+    print("Tasks per year/quarter:")
     for year in sorted(by_year):
         for sem, count in sorted(by_year[year].items()):
             print(f"  Year {year} / {sem}: {count}")
@@ -288,11 +288,11 @@ def print_parse_summary(tasks: list[PhdTask]) -> None:
 
     current_key = None
     for task in tasks:
-        key = (task.year, task.semester_label, task.phase, task.section_kind, task.step)
+        key = (task.year, task.quarter_label, task.phase, task.section_kind, task.step)
         if key != current_key:
             current_key = key
             print(
-                f"\nY{task.year} {task.semester_label} / "
+                f"\nY{task.year} {task.quarter_label} / "
                 f"Phase {task.phase} / {task.section_label()}: {task.step_title}"
             )
             print(f"  Goal: {task.goal}")

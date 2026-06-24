@@ -15,7 +15,7 @@
 | **Additive sync** | Default sync mode: new plan items create issues; removed items stay open unless `--close-stale` |
 | **Disease registry** | `src/config/disease_registry.yaml` — per-disease phenotype/severity column mappings and K |
 | **Severity masking (`-1`)** | Missing severity labels use `-1` and mask the ordinal loss (e.g. normal tissue without stage) |
-| **Semester-first roadmap** | Tasks grouped by Year 1–3 semesters (Summer 2026 → Spring 2029), not legacy Phase 1 = Year 1 |
+| **Quarter-first roadmap** | Tasks grouped by Year 1–3 quarters (Summer 2026 → Spring 2029), not legacy Phase 1 = Year 1 |
 | **Cox-PH** | Cox Proportional Hazards — optional post-thesis prognostic head; **not** in Static MTL baseline |
 
 ## Related pages

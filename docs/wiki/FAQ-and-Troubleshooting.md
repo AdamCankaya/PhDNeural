@@ -30,11 +30,11 @@ During wiki bootstrap (Jun 2026), `gh issue list` returned rate-limit errors —
 
 Should not happen if issues retain `<!-- phd-sync-id: ... -->` markers. Close duplicates manually and re-run sync.
 
-## Semester roadmap rewrite
+## Quarter roadmap rewrite
 
 ### Stale sync-ids on Project #2
 
-After migrating from phase-first (`phase-1-step-1-...`) to semester-first (`year-1-summer-2026-...`) IDs:
+After migrating from phase-first (`phase-1-step-1-...`) to quarter-first (`year-1-summer-2026-...`) IDs:
 
 ```powershell
 python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-status-todo
@@ -60,7 +60,7 @@ Run `--parse-only` locally (expects 43). If GitHub has a different count, run th
 
 ### Dashboard v7 localStorage stale
 
-After major semester rewrite, clear browser `localStorage` for the dashboard page (version key: `phd_plan_progress_v7`).
+After major quarter rewrite, clear browser `localStorage` for the dashboard page (version key: `phd_plan_progress_v7`).
 
 ## Wiki publish
 

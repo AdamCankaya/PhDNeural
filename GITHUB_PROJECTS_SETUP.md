@@ -2,14 +2,14 @@
 
 > **This guide has moved to the project wiki.**
 
-For the full GitHub Projects v2 setup, sync workflow, semester roadmap tracking, and troubleshooting:
+For the full GitHub Projects v2 setup, sync workflow, quarter roadmap tracking, and troubleshooting:
 
 - **Wiki (published):** [Workflow](https://github.com/AdamCankaya/PhDNeural/wiki/Workflow)
 - **Repo source (edit here):** [`docs/wiki/Workflow.md`](docs/wiki/Workflow.md)
 
 Related wiki pages:
 
-- [Roadmap and Tracking](https://github.com/AdamCankaya/PhDNeural/wiki/Roadmap-and-Tracking) — 43-task semester calendar, issue format, labels
+- [Roadmap and Tracking](https://github.com/AdamCankaya/PhDNeural/wiki/Roadmap-and-Tracking) — 43-task quarter calendar, issue format, labels
 - [FAQ and Troubleshooting](https://github.com/AdamCankaya/PhDNeural/wiki/FAQ-and-Troubleshooting)
 
 Quick start:
