@@ -1,10 +1,10 @@
-# PhDNeural
+# PhDNeural: Spatio-Temporal Bio-NAS
 
 > **Planning phase:** All roadmap tasks are tracked as open GitHub issues; none are marked done yet. Roadmap updates are **additive**—new bullets create new issues; existing issues stay open unless you explicitly pass `--close-stale` to the sync script.
 
-**Dual-Track Multi-Omic Fusion & Bio-NAS**
+**Spatio-Temporal Dual-Track Multi-Omic Fusion & Bio-NAS**
 
-A three-year PhD research program that investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies.
+A three-year PhD research program that investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction, now utilizing a Spatio-Temporal framework. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies.
 
 | Resource | Link |
 |----------|------|

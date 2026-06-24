@@ -163,68 +163,39 @@
   <script>
     // ─── Embedded Plan Data (from phd_master_plan.md) ───────────────────────
     const PLAN = {
-  "phases": [
-    {
-      "id": "p1",
-      "label": "Phase 1",
-      "subtitle": "The Anchor (BRCA PoC)",
-      "color": "#6366f1"
-    },
-    {
-      "id": "p2",
-      "label": "Phase 2",
-      "subtitle": "Neurological & Autoimmune",
-      "color": "#8b5cf6"
-    },
-    {
-      "id": "p3",
-      "label": "Phase 3",
-      "subtitle": "Metabolic & Chromosomal",
-      "color": "#ec4899"
-    },
-    {
-      "id": "p4",
-      "label": "Phase 4",
-      "subtitle": "Synthesis & Defense",
-      "color": "#06b6d4"
-    }
-  ],
+  "title": "PhD Master Roadmap: Comparative Spatio-Temporal Neural Architecture Search for Multi-Omic Disease Prediction",
+  "coreObjective": "",
   "years": [
     {
       "id": "y1",
       "label": "Year 1",
-      "subtitle": "The Anchor & Algorithmic Innovation (BRCA)",
+      "subtitle": "Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure",
       "color": "#6366f1",
       "quarters": [
         {
-          "id": "y1-q1",
-          "label": "Q1",
-          "title": "Mass Data Import & ETL Pipeline",
+          "id": "y1-q1-1",
+          "label": "Q1 1",
+          "title": "Longitudinal Multi-Omic Cohort Sourcing",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q1-s1",
+              "id": "y1-q1-1-p1-step1",
               "num": 1,
               "kind": "step",
-              "title": "Mass Data Import & ETL Pipeline",
-              "goal": "Source multi-omic data and build the ETL pipeline.",
+              "title": "Data Acquisition",
+              "goal": "",
               "phase": 1,
               "tasks": [
                 {
-                  "id": "t-y1-q1-1",
-                  "text": "Source multi-omic data (Methylation, RNA-Seq, Clinical) for Breast Invasive Carcinoma (BRCA) from TCGA.",
+                  "id": "year-1-q1-1-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase",
+                  "text": "Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).",
                   "phase": 1
                 },
                 {
-                  "id": "t-y1-q1-2",
-                  "text": "Build the automated PyTorch ETL pipeline that aligns patient IDs and compiles the data into an HDF5 database.",
-                  "phase": 1
-                },
-                {
-                  "id": "t-y1-q1-3",
-                  "text": "Crucial Step: Enforce the strict 80/20 train/holdout split immediately to prevent data leakage.",
+                  "id": "year-1-q1-1-phase-1-step-1-item-2-source-longitudinal-tracking-options-foc",
+                  "text": "Source longitudinal tracking options focusing on primary vs. recurrent match points.",
                   "phase": 1
                 }
               ]
@@ -232,29 +203,29 @@
           ]
         },
         {
-          "id": "y1-q2",
-          "label": "Q2",
-          "title": "Track A (The Control) - Standard NAS",
+          "id": "y1-q2-1",
+          "label": "Q2 1",
+          "title": "Spatio-Temporal Data Modalities",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q2-s1",
-              "num": 2,
+              "id": "y1-q2-1-p1-step1",
+              "num": 1,
               "kind": "step",
-              "title": "Track A (The Control) - Standard NAS",
-              "goal": "Build the standard Late Fusion meta-classifier and optimize.",
+              "title": "Feature Mapping",
+              "goal": "",
               "phase": 1,
               "tasks": [
                 {
-                  "id": "t-y1-q2-1",
-                  "text": "Build the standard Late Fusion meta-classifier.",
+                  "id": "year-1-q2-1-phase-1-step-1-item-1-map-spatial-dimension-sequence-coordinat",
+                  "text": "Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).",
                   "phase": 1
                 },
                 {
-                  "id": "t-y1-q2-2",
-                  "text": "Deploy Optuna to optimize standard hyperparameters (layers, nodes, dropout) for BRCA prediction purely based on mathematical efficiency.",
+                  "id": "year-1-q2-1-phase-1-step-1-item-2-define-genomic-structural-spacing",
+                  "text": "Define genomic structural spacing.",
                   "phase": 1
                 }
               ]
@@ -262,60 +233,65 @@
           ]
         },
         {
-          "id": "y1-q3",
-          "label": "Q3",
-          "title": "Track B (The Innovation) - Bio-NAS Framework",
-          "phase": 1,
-          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "id": "y1-q3-1",
+          "label": "Q3 1",
+          "title": "4D Tensor Construction & Irregular Time-Step Normalization",
+          "phase": 2,
+          "phaseLabel": "Phase 2: Code Abstraction & Generalization",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q3-s1",
-              "num": 3,
+              "id": "y1-q3-1-p2-step1",
+              "num": 1,
               "kind": "step",
-              "title": "Track B (The Innovation) - Bio-NAS Framework",
-              "goal": "Convert blueprints to matrices and shift Optuna.",
-              "phase": 1,
+              "title": "ETL Pipeline",
+              "goal": "",
+              "phase": 2,
               "tasks": [
                 {
-                  "id": "t-y1-q3-1",
-                  "text": "Download biological blueprints (KEGG, Reactome) and convert them into binary Adjacency Matrices.",
-                  "phase": 1
+                  "id": "year-1-q3-1-phase-2-step-1-item-1-partition-data-by-patient-id-80-20-train",
+                  "text": "Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).",
+                  "phase": 2
                 },
                 {
-                  "id": "t-y1-q3-2",
-                  "text": "Write the custom PyTorch MaskedLinear layers that sever non-biological artificial synapses.",
-                  "phase": 1
+                  "id": "year-1-q3-1-phase-2-step-1-item-2-implement-time-delta-embedding-layer-del",
+                  "text": "Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals.",
+                  "phase": 2
                 },
                 {
-                  "id": "t-y1-q3-3",
-                  "text": "Shift the Optuna search space to select optimal biological pathways rather than hidden nodes.",
-                  "phase": 1
+                  "id": "year-1-q3-1-phase-2-step-1-item-3-construct-4d-tensors-batch-time-steps-sp",
+                  "text": "Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).",
+                  "phase": 2
                 }
               ]
             }
           ]
         },
         {
-          "id": "y1-q4",
-          "label": "Q4",
-          "title": "The First Validation",
-          "phase": 1,
-          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "id": "y1-q4-1",
+          "label": "Q4 1",
+          "title": "Spatio-Temporal Software Integration & Central Hub",
+          "phase": 2,
+          "phaseLabel": "Phase 2: Code Abstraction & Generalization",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q4-s1",
-              "num": 4,
+              "id": "y1-q4-1-p2-step1",
+              "num": 1,
               "kind": "step",
-              "title": "The First Validation",
-              "goal": "Prove Bio-NAS works on the BRCA holdout test set.",
-              "phase": 1,
+              "title": "Infrastructure",
+              "goal": "",
+              "phase": 2,
               "tasks": [
                 {
-                  "id": "t-y1-q4-1",
-                  "text": "Compare Track A vs. Track B for BRCA on the 20% holdout test set. If Bio-NAS achieves comparable accuracy with greater sparsity and interpretability, the core algorithm is successfully invented.",
-                  "phase": 1
+                  "id": "year-1-q4-1-phase-2-step-1-item-1-provision-compute-servers-with-torch-tsa",
+                  "text": "Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.",
+                  "phase": 2
+                },
+                {
+                  "id": "year-1-q4-1-phase-2-step-1-item-2-set-up-dockerized-postgresql-engine-for",
+                  "text": "Set up Dockerized PostgreSQL engine for orchestration.",
+                  "phase": 2
                 }
               ]
             }
@@ -326,98 +302,53 @@
     {
       "id": "y2",
       "label": "Year 2",
-      "subtitle": "Scaling the A/B Test Across Modalities",
+      "subtitle": "Spatio-Temporal NAS Execution & Multi-Task Forecasting",
       "color": "#8b5cf6",
       "quarters": [
         {
-          "id": "y2-q1",
-          "label": "Q1",
-          "title": "Neurological & Autoimmune Ingestion",
-          "phase": 2,
-          "phaseLabel": "Phase 2: Neurological & Autoimmune",
+          "id": "y2-q1-2",
+          "label": "Q1 2",
+          "title": "Engineering the Spatio-Temporal Search Space",
+          "phase": 3,
+          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-q1-s1",
+              "id": "y2-q1-2-p3-step1",
               "num": 1,
               "kind": "step",
-              "title": "Neurological & Autoimmune Ingestion",
-              "goal": "Source AD and RA data and run ETL.",
-              "phase": 2,
+              "title": "Spatial Modules",
+              "goal": "",
+              "phase": 3,
               "tasks": [
                 {
-                  "id": "t-y2-q1-1",
-                  "text": "Source Alzheimer's Disease data (NCBI GEO: brain tissue methylation/expression).",
-                  "phase": 2
-                },
-                {
-                  "id": "t-y2-q1-2",
-                  "text": "Source Rheumatoid Arthritis data (NCBI GEO: synovial tissue/blood profiles).",
-                  "phase": 2
-                },
-                {
-                  "id": "t-y2-q1-3",
-                  "text": "Run both datasets through the automated ETL HDF5 pipeline.",
-                  "phase": 2
+                  "id": "year-2-q1-2-phase-3-step-1-item-1-develop-1d-cnns-for-local-clusters-of-cp",
+                  "text": "Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.",
+                  "phase": 3
                 }
               ]
             }
           ]
         },
         {
-          "id": "y2-q2",
-          "label": "Q2",
-          "title": "Dual-Track Execution (Brain & Inflammation)",
-          "phase": 2,
-          "phaseLabel": "Phase 2: Neurological & Autoimmune",
+          "id": "y2-q2-2",
+          "label": "Q2 2",
+          "title": "Temporal Progression Modules",
+          "phase": 3,
+          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-q2-s1",
-              "num": 2,
+              "id": "y2-q2-2-p3-step1",
+              "num": 1,
               "kind": "step",
-              "title": "Dual-Track Execution (Brain & Inflammation)",
-              "goal": "Execute standard and Bio-NAS for brain and inflammation.",
-              "phase": 2,
-              "tasks": [
-                {
-                  "id": "t-y2-q2-1",
-                  "text": "Execute Optuna Track A (Standard) and Track B (Bio-NAS) for Alzheimer's and Rheumatoid Arthritis.",
-                  "phase": 2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "y2-q3",
-          "label": "Q3",
-          "title": "Metabolic & Genetic Ingestion",
-          "phase": 3,
-          "phaseLabel": "Phase 3: Metabolic & Chromosomal",
-          "color": "#ec4899",
-          "steps": [
-            {
-              "id": "y2-q3-s1",
-              "num": 3,
-              "kind": "step",
-              "title": "Metabolic & Genetic Ingestion",
-              "goal": "Source T2D and Down Syndrome data and run ETL.",
+              "title": "Temporal Modules",
+              "goal": "",
               "phase": 3,
               "tasks": [
                 {
-                  "id": "t-y2-q3-1",
-                  "text": "Source Type 2 Diabetes data (NCBI GEO / recount3).",
-                  "phase": 3
-                },
-                {
-                  "id": "t-y2-q3-2",
-                  "text": "Source Down Syndrome data (NCBI GEO: Trisomy 21 multi-omic profiles).",
-                  "phase": 3
-                },
-                {
-                  "id": "t-y2-q3-3",
-                  "text": "Run through the ETL pipeline.",
+                  "id": "year-2-q2-2-phase-3-step-1-item-1-implement-convlstm-gru-blocks-and-tempor",
+                  "text": "Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.",
                   "phase": 3
                 }
               ]
@@ -425,29 +356,64 @@
           ]
         },
         {
-          "id": "y2-q4",
-          "label": "Q4",
-          "title": "Dual-Track Execution (Metabolic & Chromosomal)",
+          "id": "y2-q3-2",
+          "label": "Q3 2",
+          "title": "Parallel Search Optimization",
           "phase": 3,
-          "phaseLabel": "Phase 3: Metabolic & Chromosomal",
-          "color": "#ec4899",
+          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
+          "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-q4-s1",
-              "num": 4,
+              "id": "y2-q3-2-p3-step1",
+              "num": 1,
               "kind": "step",
-              "title": "Dual-Track Execution (Metabolic & Chromosomal)",
-              "goal": "Execute standard and Bio-NAS for metabolic and chromosomal.",
+              "title": "Large Scale Search",
+              "goal": "",
               "phase": 3,
               "tasks": [
                 {
-                  "id": "t-y2-q4-1",
-                  "text": "Execute Optuna Track A and Track B for Type 2 Diabetes and Down Syndrome.",
+                  "id": "year-2-q3-2-phase-3-step-1-item-1-execute-large-scale-spatio-temporal-arch",
+                  "text": "Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.",
                   "phase": 3
                 },
                 {
-                  "id": "t-y2-q4-2",
-                  "text": "Milestone: By the end of Year 2, the database will contain 10 completed optimization studies (5 diseases × 2 tracks).",
+                  "id": "year-2-q3-2-phase-3-step-1-item-2-use-horizontally-scaled-workers-via-slur",
+                  "text": "Use Horizontally Scaled Workers via Slurm and HyperbandPruner.",
+                  "phase": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y2-q4-2",
+          "label": "Q4 2",
+          "title": "Structural Taxonomy & Baseline Benchmarking",
+          "phase": 3,
+          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
+          "color": "#8b5cf6",
+          "steps": [
+            {
+              "id": "y2-q4-2-p3-step1",
+              "num": 1,
+              "kind": "step",
+              "title": "Benchmarking",
+              "goal": "",
+              "phase": 3,
+              "tasks": [
+                {
+                  "id": "year-2-q4-2-phase-3-step-1-item-1-evaluate-architectures-on-20-holdout-tra",
+                  "text": "Evaluate architectures on 20% holdout trajectories.",
+                  "phase": 3
+                },
+                {
+                  "id": "year-2-q4-2-phase-3-step-1-item-2-ablation-study-spatial-vs-spatio-tempora",
+                  "text": "Ablation study: Spatial vs. Spatio-Temporal predictive gain.",
+                  "phase": 3
+                },
+                {
+                  "id": "year-2-q4-2-phase-3-step-1-item-3-compare-with-longitudinal-random-forests",
+                  "text": "Compare with longitudinal Random Forests/XGBoost.",
                   "phase": 3
                 }
               ]
@@ -459,33 +425,33 @@
     {
       "id": "y3",
       "label": "Year 3",
-      "subtitle": "Comparative Analysis & Thesis Synthesis",
+      "subtitle": "Spatio-Temporal Interpretability and Clinical Interface",
       "color": "#06b6d4",
       "quarters": [
         {
-          "id": "y3-q1",
-          "label": "Q1",
-          "title": "Performance & Efficiency Audits",
+          "id": "y3-q1-3",
+          "label": "Q1 3",
+          "title": "Spatio-Temporal Interpretability",
           "phase": 4,
-          "phaseLabel": "Phase 4: Synthesis & Defense",
+          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-q1-s1",
+              "id": "y3-q1-3-p4-step1",
               "num": 1,
               "kind": "step",
-              "title": "Performance & Efficiency Audits",
-              "goal": "Quantify predictive metrics and compute reduction.",
+              "title": "Multi-dimensional Attribution",
+              "goal": "",
               "phase": 4,
               "tasks": [
                 {
-                  "id": "t-y3-q1-1",
-                  "text": "Chart the predictive metrics (F1-Score, ROC-AUC, C-Index) comparing standard NAS to Bio-NAS across all five diseases.",
+                  "id": "year-3-q1-3-phase-4-step-1-item-1-implement-captum-or-shap-for-multi-dimen",
+                  "text": "Implement `captum` or `shap` for multi-dimensional attribution.",
                   "phase": 4
                 },
                 {
-                  "id": "t-y3-q1-2",
-                  "text": "Quantify the computational efficiency: calculate the exact reduction in GPU memory and model parameters achieved by severing non-biological connections.",
+                  "id": "year-3-q1-3-phase-4-step-1-item-2-extract-maps-identifying-cpg-sites-and-t",
+                  "text": "Extract maps identifying CpG sites and timestamps driving disease progression predictions.",
                   "phase": 4
                 }
               ]
@@ -493,29 +459,29 @@
           ]
         },
         {
-          "id": "y3-q2",
-          "label": "Q2",
-          "title": "LLM-Driven Biological Interpretability",
+          "id": "y3-q2-3",
+          "label": "Q2 3",
+          "title": "The Trajectory Dashboard Application",
           "phase": 4,
-          "phaseLabel": "Phase 4: Synthesis & Defense",
+          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-q2-s1",
-              "num": 2,
+              "id": "y3-q2-3-p4-step1",
+              "num": 1,
               "kind": "step",
-              "title": "LLM-Driven Biological Interpretability",
-              "goal": "Summarize mechanistic pathways via LLM.",
+              "title": "Streamlit Dashboard",
+              "goal": "",
               "phase": 4,
               "tasks": [
                 {
-                  "id": "t-y3-q2-1",
-                  "text": "Extract the highest-weighted biological pathways from the 5 Bio-NAS models.",
+                  "id": "year-3-q2-3-phase-4-step-1-item-1-build-interactive-streamlit-interface",
+                  "text": "Build interactive `streamlit` interface.",
                   "phase": 4
                 },
                 {
-                  "id": "t-y3-q2-2",
-                  "text": "Run these pathways through an LLM (e.g., Gemini Pro) to generate mechanistic summaries. Answer the question: Why did the neural network select these specific pathways to predict each disease?",
+                  "id": "year-3-q2-3-phase-4-step-1-item-2-render-health-trajectories-and-risk-fore",
+                  "text": "Render health trajectories and risk forecasting curves.",
                   "phase": 4
                 }
               ]
@@ -523,29 +489,29 @@
           ]
         },
         {
-          "id": "y3-q3",
-          "label": "Q3",
-          "title": "Multi-Disease Taxonomy Mapping",
+          "id": "y3-q3-3",
+          "label": "Q3 3",
+          "title": "Thesis Synthesis and Framework Release",
           "phase": 4,
-          "phaseLabel": "Phase 4: Synthesis & Defense",
+          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-q3-s1",
-              "num": 3,
+              "id": "y3-q3-3-p4-step1",
+              "num": 1,
               "kind": "step",
-              "title": "Multi-Disease Taxonomy Mapping",
-              "goal": "Identify overlapping biological networks across diseases.",
+              "title": "Synthesis",
+              "goal": "",
               "phase": 4,
               "tasks": [
                 {
-                  "id": "t-y3-q3-1",
-                  "text": "Lay the five optimal biological architectures side-by-side.",
+                  "id": "year-3-q3-3-phase-4-step-1-item-1-document-structural-taxonomy-discovered",
+                  "text": "Document structural taxonomy discovered.",
                   "phase": 4
                 },
                 {
-                  "id": "t-y3-q3-2",
-                  "text": "Map the overlapping biological networks (e.g., Did the optimizer use the exact same inflammatory sub-network to predict both Alzheimer's and Rheumatoid Arthritis?).",
+                  "id": "year-3-q3-3-phase-4-step-1-item-2-compare-slow-progressing-vs-fast-acting",
+                  "text": "Compare slow-progressing vs. fast-acting condition architectures.",
                   "phase": 4
                 }
               ]
@@ -553,29 +519,29 @@
           ]
         },
         {
-          "id": "y3-q4",
-          "label": "Q4",
+          "id": "y3-q4-3",
+          "label": "Q4 3",
           "title": "Thesis Defense",
           "phase": 4,
-          "phaseLabel": "Phase 4: Synthesis & Defense",
+          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-q4-s1",
-              "num": 4,
+              "id": "y3-q4-3-p4-step1",
+              "num": 1,
               "kind": "step",
-              "title": "Thesis Defense",
-              "goal": "Finalize and present the thesis.",
+              "title": "Defense",
+              "goal": "",
               "phase": 4,
               "tasks": [
                 {
-                  "id": "t-y3-q4-1",
-                  "text": "Finalize the written dissertation.",
+                  "id": "year-3-q4-3-phase-4-step-1-item-1-finalize-dissertation",
+                  "text": "Finalize dissertation.",
                   "phase": 4
                 },
                 {
-                  "id": "t-y3-q4-2",
-                  "text": "Present the project not as five separate disease models, but as the invention and universal validation of the Bio-NAS framework.",
+                  "id": "year-3-q4-3-phase-4-step-1-item-2-release-the-complete-open-source-python",
+                  "text": "Release the complete open-source Python framework.",
                   "phase": 4
                 }
               ]
@@ -583,6 +549,36 @@
           ]
         }
       ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "p1",
+      "label": "Phase 1",
+      "subtitle": "The Anchor (BRCA PoC)",
+      "color": "#6366f1",
+      "taskCount": 4
+    },
+    {
+      "id": "p2",
+      "label": "Phase 2",
+      "subtitle": "Code Abstraction & Generalization",
+      "color": "#8b5cf6",
+      "taskCount": 5
+    },
+    {
+      "id": "p3",
+      "label": "Phase 3",
+      "subtitle": "Scaling to the Comparative Matrix",
+      "color": "#06b6d4",
+      "taskCount": 7
+    },
+    {
+      "id": "p4",
+      "label": "Phase 4",
+      "subtitle": "Thesis Synthesis & Final Deliverables",
+      "color": "#10b981",
+      "taskCount": 8
     }
   ]
 };
