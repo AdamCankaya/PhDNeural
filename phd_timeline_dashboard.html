@@ -163,25 +163,49 @@
   <script>
     // ─── Embedded Plan Data (from phd_master_plan.md) ───────────────────────
     const PLAN = {
-  "title": "PhD Master Roadmap: Dual-Track Multi-Omic Fusion & Bio-NAS",
-  "coreObjective": "This three-year Ph.D. project investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies.",
+  "phases": [
+    {
+      "id": "p1",
+      "label": "Phase 1",
+      "subtitle": "The Anchor (BRCA PoC)",
+      "color": "#6366f1"
+    },
+    {
+      "id": "p2",
+      "label": "Phase 2",
+      "subtitle": "Neurological & Autoimmune",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "p3",
+      "label": "Phase 3",
+      "subtitle": "Metabolic & Chromosomal",
+      "color": "#ec4899"
+    },
+    {
+      "id": "p4",
+      "label": "Phase 4",
+      "subtitle": "Synthesis & Defense",
+      "color": "#06b6d4"
+    }
+  ],
   "years": [
     {
       "id": "y1",
       "label": "Year 1",
       "subtitle": "The Anchor & Algorithmic Innovation (BRCA)",
       "color": "#6366f1",
-      "semesters": [
+      "quarters": [
         {
-          "id": "y1-summer-2026",
-          "label": "Summer 2026",
+          "id": "y1-q1",
+          "label": "Q1",
           "title": "Mass Data Import & ETL Pipeline",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-summer-2026-p1-step1",
+              "id": "y1-q1-s1",
               "num": 1,
               "kind": "step",
               "title": "Mass Data Import & ETL Pipeline",
@@ -189,18 +213,18 @@
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-summer-2026-phase-1-step-1-item-1-source-multi-omic-data-methylation-rna-s",
+                  "id": "t-y1-q1-1",
                   "text": "Source multi-omic data (Methylation, RNA-Seq, Clinical) for Breast Invasive Carcinoma (BRCA) from TCGA.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-summer-2026-phase-1-step-1-item-2-build-the-automated-pytorch-etl-pipeline",
+                  "id": "t-y1-q1-2",
                   "text": "Build the automated PyTorch ETL pipeline that aligns patient IDs and compiles the data into an HDF5 database.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-summer-2026-phase-1-step-1-item-3-crucial-step-enforce-the-strict-80-20-tr",
-                  "text": "*Crucial Step:* Enforce the strict 80/20 train/holdout split immediately to prevent data leakage.",
+                  "id": "t-y1-q1-3",
+                  "text": "Crucial Step: Enforce the strict 80/20 train/holdout split immediately to prevent data leakage.",
                   "phase": 1
                 }
               ]
@@ -208,15 +232,15 @@
           ]
         },
         {
-          "id": "y1-fall-2026",
-          "label": "Fall 2026",
-          "title": "Track A and Track B Innovation",
+          "id": "y1-q2",
+          "label": "Q2",
+          "title": "Track A (The Control) - Standard NAS",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-fall-2026-p1-step2",
+              "id": "y1-q2-s1",
               "num": 2,
               "kind": "step",
               "title": "Track A (The Control) - Standard NAS",
@@ -224,19 +248,29 @@
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-fall-2026-phase-1-step-2-item-1-build-the-standard-late-fusion-meta-clas",
+                  "id": "t-y1-q2-1",
                   "text": "Build the standard Late Fusion meta-classifier.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-fall-2026-phase-1-step-2-item-2-deploy-optuna-to-optimize-standard-hyper",
+                  "id": "t-y1-q2-2",
                   "text": "Deploy Optuna to optimize standard hyperparameters (layers, nodes, dropout) for BRCA prediction purely based on mathematical efficiency.",
                   "phase": 1
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "id": "y1-q3",
+          "label": "Q3",
+          "title": "Track B (The Innovation) - Bio-NAS Framework",
+          "phase": 1,
+          "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
+          "color": "#6366f1",
+          "steps": [
             {
-              "id": "y1-fall-2026-p1-step3",
+              "id": "y1-q3-s1",
               "num": 3,
               "kind": "step",
               "title": "Track B (The Innovation) - Bio-NAS Framework",
@@ -244,17 +278,17 @@
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-fall-2026-phase-1-step-3-item-1-download-biological-blueprints-kegg-reac",
+                  "id": "t-y1-q3-1",
                   "text": "Download biological blueprints (KEGG, Reactome) and convert them into binary Adjacency Matrices.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-fall-2026-phase-1-step-3-item-2-write-the-custom-pytorch-maskedlinear-la",
-                  "text": "Write the custom PyTorch `MaskedLinear` layers that sever non-biological artificial synapses.",
+                  "id": "t-y1-q3-2",
+                  "text": "Write the custom PyTorch MaskedLinear layers that sever non-biological artificial synapses.",
                   "phase": 1
                 },
                 {
-                  "id": "year-1-fall-2026-phase-1-step-3-item-3-shift-the-optuna-search-space-to-select",
+                  "id": "t-y1-q3-3",
                   "text": "Shift the Optuna search space to select optimal biological pathways rather than hidden nodes.",
                   "phase": 1
                 }
@@ -263,15 +297,15 @@
           ]
         },
         {
-          "id": "y1-spring-2027",
-          "label": "Spring 2027",
+          "id": "y1-q4",
+          "label": "Q4",
           "title": "The First Validation",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-spring-2027-p1-step4",
+              "id": "y1-q4-s1",
               "num": 4,
               "kind": "step",
               "title": "The First Validation",
@@ -279,7 +313,7 @@
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-spring-2027-phase-1-step-4-item-1-compare-track-a-vs-track-b-for-brca-on-t",
+                  "id": "t-y1-q4-1",
                   "text": "Compare Track A vs. Track B for BRCA on the 20% holdout test set. If Bio-NAS achieves comparable accuracy with greater sparsity and interpretability, the core algorithm is successfully invented.",
                   "phase": 1
                 }
@@ -294,17 +328,17 @@
       "label": "Year 2",
       "subtitle": "Scaling the A/B Test Across Modalities",
       "color": "#8b5cf6",
-      "semesters": [
+      "quarters": [
         {
-          "id": "y2-summer-2027",
-          "label": "Summer 2027",
+          "id": "y2-q1",
+          "label": "Q1",
           "title": "Neurological & Autoimmune Ingestion",
           "phase": 2,
-          "phaseLabel": "Phase 2: Code Abstraction & Generalization",
+          "phaseLabel": "Phase 2: Neurological & Autoimmune",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-summer-2027-p2-step1",
+              "id": "y2-q1-s1",
               "num": 1,
               "kind": "step",
               "title": "Neurological & Autoimmune Ingestion",
@@ -312,24 +346,34 @@
               "phase": 2,
               "tasks": [
                 {
-                  "id": "year-2-summer-2027-phase-2-step-1-item-1-source-alzheimer-s-disease-data-ncbi-geo",
+                  "id": "t-y2-q1-1",
                   "text": "Source Alzheimer's Disease data (NCBI GEO: brain tissue methylation/expression).",
                   "phase": 2
                 },
                 {
-                  "id": "year-2-summer-2027-phase-2-step-1-item-2-source-rheumatoid-arthritis-data-ncbi-ge",
+                  "id": "t-y2-q1-2",
                   "text": "Source Rheumatoid Arthritis data (NCBI GEO: synovial tissue/blood profiles).",
                   "phase": 2
                 },
                 {
-                  "id": "year-2-summer-2027-phase-2-step-1-item-3-run-both-datasets-through-the-automated",
+                  "id": "t-y2-q1-3",
                   "text": "Run both datasets through the automated ETL HDF5 pipeline.",
                   "phase": 2
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "id": "y2-q2",
+          "label": "Q2",
+          "title": "Dual-Track Execution (Brain & Inflammation)",
+          "phase": 2,
+          "phaseLabel": "Phase 2: Neurological & Autoimmune",
+          "color": "#8b5cf6",
+          "steps": [
             {
-              "id": "y2-summer-2027-p2-step2",
+              "id": "y2-q2-s1",
               "num": 2,
               "kind": "step",
               "title": "Dual-Track Execution (Brain & Inflammation)",
@@ -337,7 +381,7 @@
               "phase": 2,
               "tasks": [
                 {
-                  "id": "year-2-summer-2027-phase-2-step-2-item-1-execute-optuna-track-a-standard-and-trac",
+                  "id": "t-y2-q2-1",
                   "text": "Execute Optuna Track A (Standard) and Track B (Bio-NAS) for Alzheimer's and Rheumatoid Arthritis.",
                   "phase": 2
                 }
@@ -346,15 +390,15 @@
           ]
         },
         {
-          "id": "y2-fall-2027",
-          "label": "Fall 2027",
+          "id": "y2-q3",
+          "label": "Q3",
           "title": "Metabolic & Genetic Ingestion",
           "phase": 3,
-          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
-          "color": "#8b5cf6",
+          "phaseLabel": "Phase 3: Metabolic & Chromosomal",
+          "color": "#ec4899",
           "steps": [
             {
-              "id": "y2-fall-2027-p3-step3",
+              "id": "y2-q3-s1",
               "num": 3,
               "kind": "step",
               "title": "Metabolic & Genetic Ingestion",
@@ -362,17 +406,17 @@
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-fall-2027-phase-3-step-3-item-1-source-type-2-diabetes-data-ncbi-geo-rec",
+                  "id": "t-y2-q3-1",
                   "text": "Source Type 2 Diabetes data (NCBI GEO / recount3).",
                   "phase": 3
                 },
                 {
-                  "id": "year-2-fall-2027-phase-3-step-3-item-2-source-down-syndrome-data-ncbi-geo-triso",
+                  "id": "t-y2-q3-2",
                   "text": "Source Down Syndrome data (NCBI GEO: Trisomy 21 multi-omic profiles).",
                   "phase": 3
                 },
                 {
-                  "id": "year-2-fall-2027-phase-3-step-3-item-3-run-through-the-etl-pipeline",
+                  "id": "t-y2-q3-3",
                   "text": "Run through the ETL pipeline.",
                   "phase": 3
                 }
@@ -381,29 +425,29 @@
           ]
         },
         {
-          "id": "y2-spring-2028",
-          "label": "Spring 2028",
-          "title": "Metabolic & Chromosomal Execution",
+          "id": "y2-q4",
+          "label": "Q4",
+          "title": "Dual-Track Execution (Metabolic & Chromosomal)",
           "phase": 3,
-          "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
-          "color": "#8b5cf6",
+          "phaseLabel": "Phase 3: Metabolic & Chromosomal",
+          "color": "#ec4899",
           "steps": [
             {
-              "id": "y2-spring-2028-p3-step4",
+              "id": "y2-q4-s1",
               "num": 4,
               "kind": "step",
               "title": "Dual-Track Execution (Metabolic & Chromosomal)",
-              "goal": "Complete the remaining Optuna studies.",
+              "goal": "Execute standard and Bio-NAS for metabolic and chromosomal.",
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-spring-2028-phase-3-step-4-item-1-execute-optuna-track-a-and-track-b-for-t",
+                  "id": "t-y2-q4-1",
                   "text": "Execute Optuna Track A and Track B for Type 2 Diabetes and Down Syndrome.",
                   "phase": 3
                 },
                 {
-                  "id": "year-2-spring-2028-phase-3-step-4-item-2-milestone-by-the-end-of-year-2-the-datab",
-                  "text": "*Milestone:* By the end of Year 2, the database will contain 10 completed optimization studies (5 diseases × 2 tracks).",
+                  "id": "t-y2-q4-2",
+                  "text": "Milestone: By the end of Year 2, the database will contain 10 completed optimization studies (5 diseases × 2 tracks).",
                   "phase": 3
                 }
               ]
@@ -417,17 +461,17 @@
       "label": "Year 3",
       "subtitle": "Comparative Analysis & Thesis Synthesis",
       "color": "#06b6d4",
-      "semesters": [
+      "quarters": [
         {
-          "id": "y3-summer-2028",
-          "label": "Summer 2028",
-          "title": "Audits & Interpretability",
+          "id": "y3-q1",
+          "label": "Q1",
+          "title": "Performance & Efficiency Audits",
           "phase": 4,
-          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
+          "phaseLabel": "Phase 4: Synthesis & Defense",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-summer-2028-p4-step1",
+              "id": "y3-q1-s1",
               "num": 1,
               "kind": "step",
               "title": "Performance & Efficiency Audits",
@@ -435,33 +479,13 @@
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-summer-2028-phase-4-step-1-item-1-chart-the-predictive-metrics-f1-score-ro",
+                  "id": "t-y3-q1-1",
                   "text": "Chart the predictive metrics (F1-Score, ROC-AUC, C-Index) comparing standard NAS to Bio-NAS across all five diseases.",
                   "phase": 4
                 },
                 {
-                  "id": "year-3-summer-2028-phase-4-step-1-item-2-quantify-the-computational-efficiency-ca",
+                  "id": "t-y3-q1-2",
                   "text": "Quantify the computational efficiency: calculate the exact reduction in GPU memory and model parameters achieved by severing non-biological connections.",
-                  "phase": 4
-                }
-              ]
-            },
-            {
-              "id": "y3-summer-2028-p4-step2",
-              "num": 2,
-              "kind": "step",
-              "title": "LLM-Driven Biological Interpretability",
-              "goal": "Summarize mechanistic pathways via LLM.",
-              "phase": 4,
-              "tasks": [
-                {
-                  "id": "year-3-summer-2028-phase-4-step-2-item-1-extract-the-highest-weighted-biological",
-                  "text": "Extract the highest-weighted biological pathways from the 5 Bio-NAS models.",
-                  "phase": 4
-                },
-                {
-                  "id": "year-3-summer-2028-phase-4-step-2-item-2-run-these-pathways-through-an-llm-e-g-ge",
-                  "text": "Run these pathways through an LLM (e.g., Gemini Pro) to generate mechanistic summaries. Answer the question: *Why did the neural network select these specific pathways to predict each disease?*",
                   "phase": 4
                 }
               ]
@@ -469,15 +493,45 @@
           ]
         },
         {
-          "id": "y3-fall-2028",
-          "label": "Fall 2028",
-          "title": "Taxonomy Mapping",
+          "id": "y3-q2",
+          "label": "Q2",
+          "title": "LLM-Driven Biological Interpretability",
           "phase": 4,
-          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
+          "phaseLabel": "Phase 4: Synthesis & Defense",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-fall-2028-p4-step3",
+              "id": "y3-q2-s1",
+              "num": 2,
+              "kind": "step",
+              "title": "LLM-Driven Biological Interpretability",
+              "goal": "Summarize mechanistic pathways via LLM.",
+              "phase": 4,
+              "tasks": [
+                {
+                  "id": "t-y3-q2-1",
+                  "text": "Extract the highest-weighted biological pathways from the 5 Bio-NAS models.",
+                  "phase": 4
+                },
+                {
+                  "id": "t-y3-q2-2",
+                  "text": "Run these pathways through an LLM (e.g., Gemini Pro) to generate mechanistic summaries. Answer the question: Why did the neural network select these specific pathways to predict each disease?",
+                  "phase": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y3-q3",
+          "label": "Q3",
+          "title": "Multi-Disease Taxonomy Mapping",
+          "phase": 4,
+          "phaseLabel": "Phase 4: Synthesis & Defense",
+          "color": "#06b6d4",
+          "steps": [
+            {
+              "id": "y3-q3-s1",
               "num": 3,
               "kind": "step",
               "title": "Multi-Disease Taxonomy Mapping",
@@ -485,12 +539,12 @@
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-fall-2028-phase-4-step-3-item-1-lay-the-five-optimal-biological-architec",
+                  "id": "t-y3-q3-1",
                   "text": "Lay the five optimal biological architectures side-by-side.",
                   "phase": 4
                 },
                 {
-                  "id": "year-3-fall-2028-phase-4-step-3-item-2-map-the-overlapping-biological-networks",
+                  "id": "t-y3-q3-2",
                   "text": "Map the overlapping biological networks (e.g., Did the optimizer use the exact same inflammatory sub-network to predict both Alzheimer's and Rheumatoid Arthritis?).",
                   "phase": 4
                 }
@@ -499,15 +553,15 @@
           ]
         },
         {
-          "id": "y3-spring-2029",
-          "label": "Spring 2029",
-          "title": "Thesis Synthesis",
+          "id": "y3-q4",
+          "label": "Q4",
+          "title": "Thesis Defense",
           "phase": 4,
-          "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
+          "phaseLabel": "Phase 4: Synthesis & Defense",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-spring-2029-p4-step4",
+              "id": "y3-q4-s1",
               "num": 4,
               "kind": "step",
               "title": "Thesis Defense",
@@ -515,12 +569,12 @@
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-spring-2029-phase-4-step-4-item-1-finalize-the-written-dissertation",
+                  "id": "t-y3-q4-1",
                   "text": "Finalize the written dissertation.",
                   "phase": 4
                 },
                 {
-                  "id": "year-3-spring-2029-phase-4-step-4-item-2-present-the-project-not-as-five-separate",
+                  "id": "t-y3-q4-2",
                   "text": "Present the project not as five separate disease models, but as the invention and universal validation of the Bio-NAS framework.",
                   "phase": 4
                 }
@@ -529,36 +583,6 @@
           ]
         }
       ]
-    }
-  ],
-  "phases": [
-    {
-      "id": "p1",
-      "label": "Phase 1",
-      "subtitle": "The Anchor (BRCA PoC)",
-      "color": "#6366f1",
-      "taskCount": 9
-    },
-    {
-      "id": "p2",
-      "label": "Phase 2",
-      "subtitle": "Code Abstraction & Generalization",
-      "color": "#8b5cf6",
-      "taskCount": 4
-    },
-    {
-      "id": "p3",
-      "label": "Phase 3",
-      "subtitle": "Scaling to the Comparative Matrix",
-      "color": "#06b6d4",
-      "taskCount": 5
-    },
-    {
-      "id": "p4",
-      "label": "Phase 4",
-      "subtitle": "Thesis Synthesis & Final Deliverables",
-      "color": "#10b981",
-      "taskCount": 8
     }
   ]
 };
@@ -583,7 +607,7 @@
 
     function allTaskIds() {
       const ids = [];
-      (PLAN.years || []).forEach(y => y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => ids.push(t.id)))));
+      (PLAN.years || []).forEach(y => y.quarters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => ids.push(t.id)))));
       return ids;
     }
 
@@ -595,21 +619,21 @@
 
       const yearStats = (PLAN.years || []).map(y => {
         const yIds = [];
-        y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => yIds.push(t.id))));
+        y.quarters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => yIds.push(t.id))));
         const yDone = yIds.filter(id => progress[id]).length;
         return { id: y.id, label: y.label, subtitle: y.subtitle, done: yDone, total: yIds.length, pct: yIds.length ? Math.round((yDone / yIds.length) * 100) : 0, color: y.color };
       });
 
-      const semesterStats = {};
-      (PLAN.years || []).forEach(y => y.semesters.forEach(s => {
+      const quarterStats = {};
+      (PLAN.years || []).forEach(y => y.quarters.forEach(s => {
         const sIds = [];
         s.steps.forEach(st => st.tasks.forEach(t => sIds.push(t.id)));
         const sDone = sIds.filter(id => progress[id]).length;
-        semesterStats[s.id] = { done: sDone, total: sIds.length, pct: sIds.length ? Math.round((sDone / sIds.length) * 100) : 0 };
+        quarterStats[s.id] = { done: sDone, total: sIds.length, pct: sIds.length ? Math.round((sDone / sIds.length) * 100) : 0 };
       }));
 
       const stepStats = {};
-      (PLAN.years || []).forEach(y => y.semesters.forEach(s => s.steps.forEach(st => {
+      (PLAN.years || []).forEach(y => y.quarters.forEach(s => s.steps.forEach(st => {
         const stIds = st.tasks.map(t => t.id);
         const stDone = stIds.filter(id => progress[id]).length;
         stepStats[st.id] = { done: stDone, total: stIds.length, pct: stIds.length ? Math.round((stDone / stIds.length) * 100) : 0 };
@@ -618,14 +642,14 @@
       const phaseStats = (PLAN.phases || []).map(p => {
         const phaseNum = parseInt(p.id.replace('p', ''), 10);
         const pIds = [];
-        (PLAN.years || []).forEach(y => y.semesters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => {
+        (PLAN.years || []).forEach(y => y.quarters.forEach(s => s.steps.forEach(st => st.tasks.forEach(t => {
           if ((t.phase || st.phase || s.phase) === phaseNum) pIds.push(t.id);
         }))));
         const pDone = pIds.filter(id => progress[id]).length;
         return { id: p.id, label: p.label, subtitle: p.subtitle, done: pDone, total: pIds.length, pct: pIds.length ? Math.round((pDone / pIds.length) * 100) : 0, color: p.color };
       });
 
-      return { ids, done, total, pct, yearStats, semesterStats, stepStats, phaseStats };
+      return { ids, done, total, pct, yearStats, quarterStats, stepStats, phaseStats };
     }
 
     // ─── Render ───────────────────────────────────────────────────────────────
@@ -648,10 +672,10 @@
         html += `<div class="flex-1 ${yi > 0 ? 'border-l border-slate-700/50 pl-3' : ''}">`;
         html += `<p class="text-xs font-bold uppercase tracking-wider mb-3 text-center" style="color:${year.color}">${year.label}</p>`;
         html += '<div class="flex gap-2 justify-center">';
-        year.semesters.forEach(sem => {
-          const semStats = stats.semesterStats[sem.id];
+        year.quarters.forEach(q => {
+          const semStats = stats.quarterStats[q.id];
           html += `
-            <button data-semester="${sem.id}"
+            <button data-quarter="${q.id}"
               class="timeline-node flex-1 min-w-[90px] max-w-[120px] rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-center cursor-pointer hover:bg-slate-800 hover:border-slate-600"
               style="border-top: 3px solid ${sem.color || year.color}">
               <p class="text-[10px] font-bold uppercase tracking-wider" style="color:${sem.color || year.color}">${sem.label}</p>
@@ -688,7 +712,7 @@
       document.querySelectorAll('.step-card').forEach(c => c.classList.remove('highlight'));
       document.querySelectorAll('.timeline-node').forEach(n => n.classList.remove('active'));
       const card = document.getElementById(`card-${id}`);
-      const node = document.querySelector(`[data-semester="${id}"]`);
+      const node = document.querySelector(`[data-quarter="${id}"]`);
       if (card) { card.classList.add('highlight'); setTimeout(() => card.classList.remove('highlight'), 2500); }
       if (node) node.classList.add('active');
     }
@@ -750,12 +774,12 @@
             </div>
             <div class="space-y-4">`;
 
-        year.semesters.forEach(sem => {
-          const semStats = stats.semesterStats[sem.id];
-          const taskCount = sem.steps.reduce((n, st) => n + st.tasks.length, 0);
+        year.quarters.forEach(q => {
+          const semStats = stats.quarterStats[q.id];
+          const taskCount = q.steps.reduce((n, st) => n + st.tasks.length, 0);
 
           html += `
-            <article id="card-${sem.id}" class="step-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <article id="card-${q.id}" class="step-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
               <button class="collapse-toggle w-full text-left px-5 sm:px-6 py-4 flex items-center gap-4 hover:bg-slate-800/50 transition">
                 <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border" style="border-color:${sem.color || year.color}33;background:${(sem.color || year.color)}15">
                   <span class="text-[10px] font-bold uppercase" style="color:${sem.color || year.color}">${sem.label.split(' ')[0]}</span>
@@ -764,14 +788,14 @@
                 <div class="flex-1 min-w-0">
                   <h3 class="text-base sm:text-lg font-semibold text-white truncate">${sem.label}: ${sem.title}</h3>
                   <p class="text-xs text-indigo-400 mt-0.5">${sem.phaseLabel || ''}</p>
-                  <p class="text-xs text-slate-600 mt-1">${taskCount} tasks · ${sem.steps.length} steps</p>
+                  <p class="text-xs text-slate-600 mt-1">${taskCount} tasks · ${q.steps.length} steps</p>
                 </div>
                 <svg class="chevron w-5 h-5 text-slate-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
               <div class="collapse-content border-t border-slate-800">
                 <div class="px-5 sm:px-6 py-5 space-y-6">`;
 
-          sem.steps.forEach(step => {
+          q.steps.forEach(step => {
             const stepStats = stats.stepStats[step.id];
             html += `
                   <div class="border-l-2 pl-4" style="border-color:${sem.color || year.color}55">
@@ -827,7 +851,7 @@
           renderYearBars();
           renderPhaseBars();
           renderTimeline();
-          updateSemesterBadges();
+          updateQuarterBadges();
         });
       });
 
@@ -835,17 +859,17 @@
       if (firstToggle) firstToggle.click();
     }
 
-    function updateSemesterBadges() {
+    function updateQuarterBadges() {
       const stats = getCompletionStats();
-      (PLAN.years || []).forEach(y => y.semesters.forEach(sem => {
-        const semStats = stats.semesterStats[sem.id];
-        const card = document.getElementById(`card-${sem.id}`);
+      (PLAN.years || []).forEach(y => y.quarters.forEach(q => {
+        const semStats = stats.quarterStats[q.id];
+        const card = document.getElementById(`card-${q.id}`);
         if (!card) return;
         const badge = card.querySelector('.collapse-toggle .text-lg');
         if (badge) badge.textContent = semStats.pct + '%';
-        const node = document.querySelector(`[data-semester="${sem.id}"] .progress-bar-fill`);
+        const node = document.querySelector(`[data-quarter="${q.id}"] .progress-bar-fill`);
         if (node) node.style.width = semStats.pct + '%';
-        const nodePct = document.querySelector(`[data-semester="${sem.id}"] p:last-child`);
+        const nodePct = document.querySelector(`[data-quarter="${q.id}"] p:last-child`);
         if (nodePct) nodePct.textContent = semStats.pct + '%';
       }));
     }

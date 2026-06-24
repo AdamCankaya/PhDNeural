@@ -14,7 +14,7 @@ A three-year PhD research program that investigates whether Biologically-Informe
 | Live dashboard | [adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html) |
 | Master plan | [phd_master_plan.md](phd_master_plan.md) |
 
-The roadmap follows a **3-year academic calendar** (Summer 2026 → Spring 2029): nine semesters grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task.
+The roadmap follows a **3-year quarterly calendar**: twelve quarters grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task.
 
 ---
 
@@ -41,11 +41,11 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 ### Roadmap timeline (3-year calendar)
 
-| Year | Semesters | Focus |
+| Year | Quarters | Focus |
 |------|-----------|-------|
-| **Year 1** (2026–2027) | Summer 2026, Fall 2026, Spring 2027 | BRCA anchor: TCGA sourcing, infrastructure, Track A Control, Track B Bio-NAS invention, First Validation |
-| **Year 2** (2027–2028) | Summer 2027, Fall 2027, Spring 2028 | Sourcing & Dual-Track execution across Alzheimer's, Rheumatoid Arthritis, Type 2 Diabetes, and Down Syndrome |
-| **Year 3** (2028–2029) | Summer 2028, Fall 2028, Spring 2029 | Performance audits, LLM-driven interpretability, taxonomy mapping, thesis synthesis |
+| **Year 1** | Q1, Q2, Q3, Q4 | BRCA anchor: TCGA sourcing, infrastructure, Track A Control, Track B Bio-NAS invention, First Validation |
+| **Year 2** | Q1, Q2, Q3, Q4 | Sourcing & Dual-Track execution across Alzheimer's, Rheumatoid Arthritis, Type 2 Diabetes, and Down Syndrome |
+| **Year 3** | Q1, Q2, Q3, Q4 | Performance audits, LLM-driven interpretability, taxonomy mapping, thesis synthesis |
 
 ### Objectives
 
@@ -111,8 +111,8 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 | Component | Location | Purpose |
 |-----------|----------|--------|
 | Master plan | [phd_master_plan.md](phd_master_plan.md) | Authoritative Bio-NAS dual-track roadmap |
-| Timeline dashboard | [phd_timeline_dashboard.html](phd_timeline_dashboard.html) | Interactive 3-year semester progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html)) |
-| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2); sets **Year**, **Semester**, **Phase**, and **Step** fields |
+| Timeline dashboard | [phd_timeline_dashboard.html](phd_timeline_dashboard.html) | Interactive 3-year quarterly progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html)) |
+| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2); sets **Year**, **Quarter**, **Phase**, and **Step** fields |
 | Setup guide | [GITHUB_PROJECTS_SETUP.md](GITHUB_PROJECTS_SETUP.md) | GitHub Projects v2 configuration and sync workflow |
 | CI sync workflow | `.github/workflows/sync-phd-plan.yml` | Manual GitHub Actions re-sync trigger |
 
