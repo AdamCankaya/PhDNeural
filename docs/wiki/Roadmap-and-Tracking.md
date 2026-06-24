@@ -1,6 +1,6 @@
 # Roadmap and Tracking
 
-The PhD roadmap is organized by **year and semester** (Summer 2026 → Spring 2029). Phase 1–4 remain as cross-reference metadata on every task.
+The PhD roadmap is organized by **year and quarter** (Summer 2026 → Spring 2029). Phase 1–4 remain as cross-reference metadata on every task.
 
 **Authoritative source:** [`phd_master_plan.md`](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md)
 
@@ -12,9 +12,9 @@ The PhD roadmap is organized by **year and semester** (Summer 2026 → Spring 20
 
 All **43** roadmap tasks are tracked as **open** issues during the planning phase. Sync is **additive** by default — see [Workflow](Workflow).
 
-## 3-year semester calendar
+## 3-year quarter calendar
 
-| Year | Semester | Phase(s) | Focus | Tasks |
+| Year | Quarter | Phase(s) | Focus | Tasks |
 |------|----------|----------|-------|-------|
 | **Year 1** | Summer 2026 | 1 | TCGA sourcing, modalities, 80/20 split, HDF5 storage | 4 |
 | **Year 1** | Fall 2026 | 1 | PostgreSQL hub, GitHub Actions/Slurm CI/CD; MTL architecture | 5 |
@@ -38,7 +38,7 @@ All **43** roadmap tasks are tracked as **open** issues during the planning phas
 
 ## Issue title format
 
-Titles are prefixed with year and semester:
+Titles are prefixed with year and quarter:
 
 ```
 [Y1 Summer 2026] <task summary>
@@ -56,14 +56,14 @@ Each issue body contains an HTML comment marker:
 <!-- phd-sync-id: year-1-summer-2026-phase-1-step-1-item-1-source-tcga-level-3-open-access -->
 ```
 
-IDs encode: `year-{N}-{semester}-phase-{P}-step-{S}-item-{I}-<slug>` or `...-stage-{S}-item-{I}-...` for Stage blocks.
+IDs encode: `year-{N}-{quarter}-phase-{P}-step-{S}-item-{I}-<slug>` or `...-stage-{S}-item-{I}-...` for Stage blocks.
 
 ## Project custom fields
 
 | Field | Example values |
 |-------|----------------|
 | **Year** | Year 1, Year 2, Year 3 |
-| **Semester** | Summer 2026, Fall 2026, Spring 2027, … |
+| **Quarter** | Summer 2026, Fall 2026, Spring 2027, … |
 | **Phase** | Phase 1: The Anchor (BRCA PoC), … |
 | **Step** | Step 1, Stage 2, etc. |
 | **Status** | Todo, In Progress, Done |
@@ -74,7 +74,7 @@ IDs encode: `year-{N}-{semester}-phase-{P}-step-{S}-item-{I}-<slug>` or `...-sta
 |-------|--------------|
 | `phd-sync` | All synced tasks |
 | `year-1`, `year-2`, `year-3` | Plan year |
-| `summer-2026`, `fall-2026`, `spring-2027`, … | Semester |
+| `summer-2026`, `fall-2026`, `spring-2027`, … | Quarter |
 | `phase-1`–`phase-4` | Phase metadata |
 | `step-*`, `stage-*` | Step/stage number |
 | `brca-anchor`, `abstraction`, `scaling`, `thesis-deliverable` | Category |
@@ -88,7 +88,7 @@ Example filter: `label:phd-sync label:year-1 label:summer-2026`
 | Parsed tasks (`--parse-only`) | 43 | ✓ 43 |
 | Open `phd-sync` issues on GitHub | ~43 | Pending — API rate limit during wiki bootstrap; [verify manually](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync+is%3Aopen) |
 
-If issue count differs from 43 after the semester rewrite, run:
+If issue count differs from 43 after the quarter rewrite, run:
 
 ```powershell
 python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-status-todo
@@ -97,5 +97,5 @@ python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-s
 ## Related pages
 
 - [Workflow](Workflow) — sync loop and configuration
-- [Static MTL Baseline](Static-MTL-Baseline) — two-task contract across all semesters
+- [Static MTL Baseline](Static-MTL-Baseline) — two-task contract across all quarters
 - [Code Map and Status](Code-Map-and-Status) — Y2 Summer 2027 Step 5 implementation targets

@@ -68,7 +68,7 @@ See [Static MTL Baseline](Static-MTL-Baseline).
 
 ---
 
-## ADR-005: Semester-first roadmap sync
+## ADR-005: Quarter-first roadmap sync
 
 **Status:** Accepted
 

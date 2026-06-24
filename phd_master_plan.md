@@ -1,124 +1,88 @@
-# PhD Master Roadmap: Dual-Track Multi-Omic Fusion & Bio-NAS
+# PhD Master Roadmap: Comparative Spatio-Temporal Neural Architecture Search for Multi-Omic Disease Prediction
 
-## Core Objective
-This three-year Ph.D. project investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies.
-
----
-
-## Year 1: The Anchor & Algorithmic Innovation (BRCA)
-> Phases: 1
-
-### Summer 2026 Semester: Mass Data Import & ETL Pipeline
-**Phase:** 1 | **Goal:** Build the infrastructure, invent the Bio-NAS algorithm, and prove it works on the most feature-dense cancer dataset.
-
-#### Step 1: Mass Data Import & ETL Pipeline
-**Goal:** Source multi-omic data and build the ETL pipeline.
-* Source multi-omic data (Methylation, RNA-Seq, Clinical) for Breast Invasive Carcinoma (BRCA) from TCGA.
-* Build the automated PyTorch ETL pipeline that aligns patient IDs and compiles the data into an HDF5 database.
-* *Crucial Step:* Enforce the strict 80/20 train/holdout split immediately to prevent data leakage.
-
-### Fall 2026 Semester: Track A and Track B Innovation
-**Phase:** 1 | **Goal:** Build standard NAS and invent Bio-NAS framework.
-
-#### Step 2: Track A (The Control) - Standard NAS
-**Goal:** Build the standard Late Fusion meta-classifier and optimize.
-* Build the standard Late Fusion meta-classifier.
-* Deploy Optuna to optimize standard hyperparameters (layers, nodes, dropout) for BRCA prediction purely based on mathematical efficiency.
-
-#### Step 3: Track B (The Innovation) - Bio-NAS Framework
-**Goal:** Convert blueprints to matrices and shift Optuna.
-* Download biological blueprints (KEGG, Reactome) and convert them into binary Adjacency Matrices.
-* Write the custom PyTorch `MaskedLinear` layers that sever non-biological artificial synapses.
-* Shift the Optuna search space to select optimal biological pathways rather than hidden nodes.
-
-### Spring 2027 Semester: The First Validation
-**Phase:** 1 | **Goal:** Validate Track A vs Track B on BRCA.
-
-#### Step 4: The First Validation
-**Goal:** Prove Bio-NAS works on the BRCA holdout test set.
-* Compare Track A vs. Track B for BRCA on the 20% holdout test set. If Bio-NAS achieves comparable accuracy with greater sparsity and interpretability, the core algorithm is successfully invented.
+## Executive Summary
+This three-year Ph.D. project investigates whether Biologically-Informed Neural Architecture Search (Bio-NAS)—where neural pathways are constrained by known human anatomy (e.g., Gene Regulatory Networks)—outperforms unconstrained, mathematical optimization in multi-omic disease prediction. The thesis will establish Breast Invasive Carcinoma (BRCA) as the anchor dataset before conducting a comparative A/B test across four additional, distinct pathologies, now utilizing a Spatio-Temporal framework.
 
 ---
 
-## Year 2: Scaling the A/B Test Across Modalities
-> Phases: 2, 3
+## Year 1: Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure
 
-### Summer 2027 Semester: Neurological & Autoimmune Ingestion
-**Phase:** 2 | **Goal:** Source new datasets and execute tracks.
+### Q1 Quarter: Longitudinal Multi-Omic Cohort Sourcing
+**Phases:** 1 | **Goal:** Identify and secure multi-disease datasets.
+#### Step 1: Data Acquisition
+* Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).
+* Source longitudinal tracking options focusing on primary vs. recurrent match points.
 
-#### Step 1: Neurological & Autoimmune Ingestion
-**Goal:** Source AD and RA data and run ETL.
-* Source Alzheimer's Disease data (NCBI GEO: brain tissue methylation/expression).
-* Source Rheumatoid Arthritis data (NCBI GEO: synovial tissue/blood profiles).
-* Run both datasets through the automated ETL HDF5 pipeline.
+### Q2 Quarter: Spatio-Temporal Data Modalities
+**Phases:** 1 | **Goal:** Map spatial/temporal dimensions.
+#### Step 1: Feature Mapping
+* Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).
+* Define genomic structural spacing.
 
-#### Step 2: Dual-Track Execution (Brain & Inflammation)
-**Goal:** Execute standard and Bio-NAS for brain and inflammation.
-* Execute Optuna Track A (Standard) and Track B (Bio-NAS) for Alzheimer's and Rheumatoid Arthritis.
+### Q3 Quarter: 4D Tensor Construction & Irregular Time-Step Normalization
+**Phases:** 2 | **Goal:** Construct a robust ETL pipeline.
+#### Step 1: ETL Pipeline
+* Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).
+* Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals.
+* Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).
 
-### Fall 2027 Semester: Metabolic & Genetic Ingestion
-**Phase:** 3 | **Goal:** Source metabolic and genetic data.
-
-#### Step 3: Metabolic & Genetic Ingestion
-**Goal:** Source T2D and Down Syndrome data and run ETL.
-* Source Type 2 Diabetes data (NCBI GEO / recount3).
-* Source Down Syndrome data (NCBI GEO: Trisomy 21 multi-omic profiles).
-* Run through the ETL pipeline.
-
-### Spring 2028 Semester: Metabolic & Chromosomal Execution
-**Phase:** 3 | **Goal:** Complete dual-track execution for all 5 diseases.
-
-#### Step 4: Dual-Track Execution (Metabolic & Chromosomal)
-**Goal:** Complete the remaining Optuna studies.
-* Execute Optuna Track A and Track B for Type 2 Diabetes and Down Syndrome.
-* *Milestone:* By the end of Year 2, the database will contain 10 completed optimization studies (5 diseases × 2 tracks).
+### Q4 Quarter: Spatio-Temporal Software Integration & Central Hub
+**Phases:** 2 | **Goal:** Provision compute servers.
+#### Step 1: Infrastructure
+* Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.
+* Set up Dockerized PostgreSQL engine for orchestration.
 
 ---
 
-## Year 3: Comparative Analysis & Thesis Synthesis
-> Phases: 4
+## Year 2: Spatio-Temporal NAS Execution & Multi-Task Forecasting
 
-### Summer 2028 Semester: Audits & Interpretability
-**Phase:** 4 | **Goal:** Audit performance and extract pathways.
+### Q1 Quarter: Engineering the Spatio-Temporal Search Space
+**Phases:** 3 | **Goal:** Code the modular PyTorch components.
+#### Step 1: Spatial Modules
+* Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.
 
-#### Step 1: Performance & Efficiency Audits
-**Goal:** Quantify predictive metrics and compute reduction.
-* Chart the predictive metrics (F1-Score, ROC-AUC, C-Index) comparing standard NAS to Bio-NAS across all five diseases.
-* Quantify the computational efficiency: calculate the exact reduction in GPU memory and model parameters achieved by severing non-biological connections.
+### Q2 Quarter: Temporal Progression Modules
+**Phases:** 3 | **Goal:** Implement progression modules.
+#### Step 1: Temporal Modules
+* Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.
 
-#### Step 2: LLM-Driven Biological Interpretability
-**Goal:** Summarize mechanistic pathways via LLM.
-* Extract the highest-weighted biological pathways from the 5 Bio-NAS models.
-* Run these pathways through an LLM (e.g., Gemini Pro) to generate mechanistic summaries. Answer the question: *Why did the neural network select these specific pathways to predict each disease?*
+### Q3 Quarter: Parallel Search Optimization
+**Phases:** 3 | **Goal:** Execute large-scale search.
+#### Step 1: Large Scale Search
+* Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.
+* Use Horizontally Scaled Workers via Slurm and HyperbandPruner.
 
-### Fall 2028 Semester: Taxonomy Mapping
-**Phase:** 4 | **Goal:** Map the architectures side-by-side.
-
-#### Step 3: Multi-Disease Taxonomy Mapping
-**Goal:** Identify overlapping biological networks across diseases.
-* Lay the five optimal biological architectures side-by-side.
-* Map the overlapping biological networks (e.g., Did the optimizer use the exact same inflammatory sub-network to predict both Alzheimer's and Rheumatoid Arthritis?).
-
-### Spring 2029 Semester: Thesis Synthesis
-**Phase:** 4 | **Goal:** Finalize the written dissertation and defense.
-
-#### Step 4: Thesis Defense
-**Goal:** Finalize and present the thesis.
-* Finalize the written dissertation.
-* Present the project not as five separate disease models, but as the invention and universal validation of the Bio-NAS framework.
+### Q4 Quarter: Structural Taxonomy & Baseline Benchmarking
+**Phases:** 3 | **Goal:** Mine the optimization database.
+#### Step 1: Benchmarking
+* Evaluate architectures on 20% holdout trajectories.
+* Ablation study: Spatial vs. Spatio-Temporal predictive gain.
+* Compare with longitudinal Random Forests/XGBoost.
 
 ---
 
-## Timeline Mapping
+## Year 3: Spatio-Temporal Interpretability and Clinical Interface
 
-| Year | Semester | Phase(s) | Focus | Tasks |
-|------|----------|----------|-------|-------|
-| **Year 1** | Summer 2026 | 1 | Mass Data Import & ETL Pipeline | 3 |
-| **Year 1** | Fall 2026 | 1 | Track A and Track B | 5 |
-| **Year 1** | Spring 2027 | 1 | The First Validation | 1 |
-| **Year 2** | Summer 2027 | 2 | Neurological & Autoimmune | 4 |
-| **Year 2** | Fall 2027 | 3 | Metabolic & Genetic Ingestion | 3 |
-| **Year 2** | Spring 2028 | 3 | Metabolic & Chromosomal Execution | 2 |
-| **Year 3** | Summer 2028 | 4 | Audits & Interpretability | 4 |
-| **Year 3** | Fall 2028 | 4 | Taxonomy Mapping | 2 |
-| **Year 3** | Spring 2029 | 4 | Thesis Synthesis | 2 |
+### Q1 Quarter: Spatio-Temporal Interpretability
+**Phases:** 4 | **Goal:** Unpack model tracking changes.
+#### Step 1: Multi-dimensional Attribution
+* Implement `captum` or `shap` for multi-dimensional attribution.
+* Extract maps identifying CpG sites and timestamps driving disease progression predictions.
+
+### Q2 Quarter: The Trajectory Dashboard Application
+**Phases:** 4 | **Goal:** Build interactive dashboard.
+#### Step 1: Streamlit Dashboard
+* Build interactive `streamlit` interface.
+* Render health trajectories and risk forecasting curves.
+
+### Q3 Quarter: Thesis Synthesis and Framework Release
+**Phases:** 4 | **Goal:** Document discovery and release.
+#### Step 1: Synthesis
+* Document structural taxonomy discovered.
+* Compare slow-progressing vs. fast-acting condition architectures.
+
+### Q4 Quarter: Thesis Defense
+**Phases:** 4 | **Goal:** Finalize and release.
+#### Step 1: Defense
+* Finalize dissertation. 
+* Release the complete open-source Python framework.
