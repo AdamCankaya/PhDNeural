@@ -32,7 +32,7 @@ from github_projects import (
 from phd_parser import PHASE_OPTIONS, PhdTask, load_tasks
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_STATE_PATH = ROOT / ".phd-github-sync.json"
+DEFAULT_STATE_PATH = ROOT / ".bio-nas_phd-github-sync.json"
 
 LABEL_COLORS = {
     "phd-sync": "5319e7",
@@ -68,7 +68,7 @@ LABEL_COLORS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Sync phd_master_plan.md tasks to GitHub Projects v2."
+        description="Sync phd_bio-nas_master_plan.md tasks to GitHub Projects v2."
     )
     parser.add_argument(
         "--dry-run",
@@ -89,7 +89,7 @@ def parse_args() -> argparse.Namespace:
         "--plan",
         type=Path,
         default=None,
-        help="Path to phd_master_plan.md (default: repo root).",
+        help="Path to phd_bio-nas_master_plan.md (default: repo root).",
     )
     parser.add_argument(
         "--update-existing",
@@ -380,7 +380,7 @@ def prune_project_board(
         try:
             client.close_issue(
                 issue_id,
-                "Task removed from phd_master_plan.md during roadmap update.",
+                "Task removed from phd_bio-nas_master_plan.md during roadmap update.",
             )
         except GitHubApiError as exc:
             print(f"  Warning: could not close issue: {exc}")
@@ -439,7 +439,7 @@ def close_stale_issues(
         print(f"Closing stale issue #{issue_number} ({sync_id})")
         client.close_issue(
             issue["id"],
-            "Task removed from phd_master_plan.md during roadmap update.",
+            "Task removed from phd_bio-nas_master_plan.md during roadmap update.",
         )
         closed += 1
         time.sleep(0.2)
@@ -629,7 +629,7 @@ def main() -> int:
     args = parse_args()
 
     plan_path = args.plan or Path(
-        load_config().get("PHD_PLAN_PATH", str(ROOT / "phd_master_plan.md"))
+        load_config().get("PHD_PLAN_PATH", str(ROOT / "phd_bio-nas_master_plan.md"))
     )
     if not plan_path.is_absolute():
         plan_path = ROOT / plan_path
@@ -666,7 +666,7 @@ def main() -> int:
         validate_config(config)
     except ValueError as exc:
         print(f"Configuration error:\n{exc}", file=sys.stderr)
-        print("\nSee GITHUB_PROJECTS_SETUP.md for setup instructions.", file=sys.stderr)
+        print("\nSee GITHUB_PROJECTS_BIO-NAS_SETUP.md for setup instructions.", file=sys.stderr)
         return 1
 
     token = resolve_token(config)

@@ -1,7 +1,7 @@
 ﻿# Secrets and local config
 .env
-github_sync.config.json
-.phd-github-sync.json
+bio-nas_github_sync.config.json
+.bio-nas_phd-github-sync.json
 
 # Python
 __pycache__/

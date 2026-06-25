@@ -26,5 +26,5 @@
 **External links**
 
 * [Project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2)
-* [Live dashboard](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html)
-* [Master plan (repo)](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md)
+* [Live dashboard](https://adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html)
+* [Master plan (repo)](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md)

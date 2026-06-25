@@ -10,8 +10,8 @@ Welcome to the **PhDNeural** project wiki — a published mirror of documentatio
 |----------|------|
 | Repository | [github.com/AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural) |
 | Project board | [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2) |
-| Live dashboard | [phd_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html) |
-| Master plan | [phd_master_plan.md](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md) |
+| Live dashboard | [phd_bio-nas_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html) |
+| Master plan | [phd_bio-nas_master_plan.md](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md) |
 | README | [README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/README.md) |
 
 ## Research overview

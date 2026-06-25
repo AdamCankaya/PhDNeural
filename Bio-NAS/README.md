@@ -11,8 +11,8 @@ A three-year PhD research program that investigates whether Biologically-Informe
 | Repository | [github.com/AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural) |
 | Wiki | [github.com/AdamCankaya/PhDNeural/wiki](https://github.com/AdamCankaya/PhDNeural/wiki) |
 | Project board | [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2) |
-| Live dashboard | [adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html) |
-| Master plan | [phd_master_plan.md](phd_master_plan.md) |
+| Live dashboard | [adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html) |
+| Master plan | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) |
 
 The roadmap follows a **3-year quarterly calendar**: twelve quarters grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task.
 
@@ -110,10 +110,10 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 | Component | Location | Purpose |
 |-----------|----------|--------|
-| Master plan | [phd_master_plan.md](phd_master_plan.md) | Authoritative Bio-NAS dual-track roadmap |
-| Timeline dashboard | [phd_timeline_dashboard.html](phd_timeline_dashboard.html) | Interactive 3-year quarterly progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_timeline_dashboard.html)) |
+| Master plan | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) | Authoritative Bio-NAS dual-track roadmap |
+| Timeline dashboard | [phd_bio-nas_timeline_dashboard.html](phd_bio-nas_timeline_dashboard.html) | Interactive 3-year quarterly progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html)) |
 | GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2); sets **Year**, **Quarter**, **Phase**, and **Step** fields |
-| Setup guide | [GITHUB_PROJECTS_SETUP.md](GITHUB_PROJECTS_SETUP.md) | GitHub Projects v2 configuration and sync workflow |
+| Setup guide | [GITHUB_PROJECTS_BIO-NAS_SETUP.md](GITHUB_PROJECTS_BIO-NAS_SETUP.md) | GitHub Projects v2 configuration and sync workflow |
 | CI sync workflow | `.github/workflows/sync-phd-plan.yml` | Manual GitHub Actions re-sync trigger |
 
 ---

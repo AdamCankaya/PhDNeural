@@ -2,7 +2,7 @@
 
 All five disease pipelines share a **Static Multi-Task Learning (MTL) baseline**: time-related variables are tabular clinical inputs, and every cohort solves **two prediction tasks** — **phenotype** and **severity**. Cox-PH prognostic modeling is **deferred** to a post-thesis optional extension.
 
-Full spec: [`phd_master_plan.md` § Static MTL Baseline](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md)
+Full spec: [`phd_bio-nas_master_plan.md` § Static MTL Baseline](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md)
 
 ![Two-Stage Stacked Late Fusion Architecture](https://raw.githubusercontent.com/AdamCankaya/PhDNeural/main/docs/architecture-stacked-fusion.png)
 

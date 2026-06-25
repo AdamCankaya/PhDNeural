@@ -4,7 +4,7 @@
 
 ### `Missing required configuration`
 
-Ensure `github_sync.config.json` exists (copy from `github_sync.config.json.example`) or set `GITHUB_OWNER`, `GITHUB_REPO`, and `GITHUB_PROJECT_NUMBER`.
+Ensure `bio-nas_github_sync.config.json` exists (copy from `bio-nas_github_sync.config.json.example`) or set `GITHUB_OWNER`, `GITHUB_REPO`, and `GITHUB_PROJECT_NUMBER`.
 
 ### `Project #N not found`
 
@@ -55,7 +55,7 @@ Run `--parse-only` locally (expects 43). If GitHub has a different count, run th
 ### Board looks out of date after plan edit
 
 1. Regenerate: `python scripts/embed_dashboard_plan.py`
-2. Commit and push `phd_timeline_dashboard.html`
+2. Commit and push `phd_bio-nas_timeline_dashboard.html`
 3. Hard-refresh browser
 
 ### Dashboard v7 localStorage stale
