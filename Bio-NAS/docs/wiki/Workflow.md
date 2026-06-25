@@ -6,13 +6,13 @@ This page describes the **one-way sync loop** from the master plan to GitHub tra
 
 ```mermaid
 flowchart LR
-  Plan[phd_master_plan.md] --> Dash[phd_timeline_dashboard.html]
+  Plan[phd_bio-nas_master_plan.md] --> Dash[phd_bio-nas_timeline_dashboard.html]
   Plan --> Sync[sync_phd_to_github.py]
   Sync --> Board[Project #2]
   Board --> Issues[phd-sync issues]
 ```
 
-1. **Edit** [`phd_master_plan.md`](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md) — authoritative roadmap (43 checklist tasks, quarter-first).
+1. **Edit** [`phd_bio-nas_master_plan.md`](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md) — authoritative roadmap (43 checklist tasks, quarter-first).
 2. **Regenerate dashboard** (optional but recommended after plan edits):
 
    ```powershell
@@ -29,7 +29,7 @@ flowchart LR
 
 4. **Track progress on the board** — drag cards Todo → In Progress → Done; close linked issues when complete.
 
-> **One-way sync:** Closing an issue does **not** update `phd_master_plan.md`. The plan file is always the source of truth.
+> **One-way sync:** Closing an issue does **not** update `phd_bio-nas_master_plan.md`. The plan file is always the source of truth.
 
 ## Additive default
 
@@ -50,7 +50,7 @@ python scripts/sync_phd_to_github.py --update-existing
 | Check | Result |
 |-------|--------|
 | `python scripts/sync_phd_to_github.py --parse-only` | **43 tasks** parsed (quarter-first IDs) |
-| Local `github_sync.config.json` | Not required; copy from [`github_sync.config.json.example`](https://github.com/AdamCankaya/PhDNeural/blob/main/github_sync.config.json.example) or set env vars |
+| Local `bio-nas_github_sync.config.json` | Not required; copy from [`bio-nas_github_sync.config.json.example`](https://github.com/AdamCankaya/PhDNeural/blob/main/bio-nas_github_sync.config.json.example) or set env vars |
 | `gh auth` | Works locally (`repo`, `project` scopes) |
 | Remote issue count verification | **Blocked by API rate limit** at wiki publish time — verify manually: [issues labeled `phd-sync`](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync) |
 
@@ -65,7 +65,7 @@ python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-s
 Copy and edit local config (never commit tokens):
 
 ```powershell
-Copy-Item github_sync.config.json.example github_sync.config.json
+Copy-Item bio-nas_github_sync.config.json.example bio-nas_github_sync.config.json
 ```
 
 | Setting | Example |

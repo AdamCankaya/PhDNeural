@@ -2,7 +2,7 @@
 
 The PhD roadmap is organized by **year and quarter** (Summer 2026 → Spring 2029). Phase 1–4 remain as cross-reference metadata on every task.
 
-**Authoritative source:** [`phd_master_plan.md`](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md)
+**Authoritative source:** [`phd_bio-nas_master_plan.md`](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md)
 
 **Live tracker:** [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2)
 

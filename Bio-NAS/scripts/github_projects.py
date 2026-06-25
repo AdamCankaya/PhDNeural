@@ -682,7 +682,7 @@ def load_config() -> dict[str, str]:
 def Path_default_config() -> str:
     from pathlib import Path
 
-    return str(Path(__file__).resolve().parent.parent / "github_sync.config.json")
+    return str(Path(__file__).resolve().parent.parent / "bio-nas_github_sync.config.json")
 
 
 def resolve_token(config: dict[str, str]) -> str:

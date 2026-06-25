@@ -1,4 +1,4 @@
-"""Parse phd_master_plan.md into structured tasks for GitHub sync."""
+"""Parse phd_bio-nas_master_plan.md into structured tasks for GitHub sync."""
 
 from __future__ import annotations
 
@@ -117,7 +117,7 @@ class PhdTask:
             self.detail,
             "",
             "---",
-            "_Auto-synced from phd_master_plan.md_",
+            "_Auto-synced from phd_bio-nas_master_plan.md_",
         ]
         return "\n".join(lines)
 
@@ -471,7 +471,7 @@ def parse_plan_metadata(path: Path) -> tuple[str, str]:
 
 
 def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) -> dict:
-    """Build the PLAN object structure used by phd_timeline_dashboard.html."""
+    """Build the PLAN object structure used by phd_bio-nas_timeline_dashboard.html."""
     years_map: dict[int, dict] = {}
     phases_map: dict[int, dict] = {}
 
@@ -590,7 +590,7 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
 def load_tasks(plan_path: Path | None = None) -> list[PhdTask]:
     """Load tasks from the default or provided master plan path."""
     if plan_path is None:
-        plan_path = Path(__file__).resolve().parent.parent / "phd_master_plan.md"
+        plan_path = Path(__file__).resolve().parent.parent / "phd_bio-nas_master_plan.md"
     if not plan_path.exists():
         raise FileNotFoundError(f"Master plan not found: {plan_path}")
     return parse_master_plan(plan_path)

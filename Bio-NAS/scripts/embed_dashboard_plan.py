@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Embed parsed master plan into phd_timeline_dashboard.html."""
+"""Embed parsed master plan into phd_bio-nas_timeline_dashboard.html."""
 
 from __future__ import annotations
 
@@ -19,8 +19,8 @@ STORAGE_KEY = "phd_plan_progress_v7"
 
 
 def main() -> int:
-    plan_path = ROOT / "phd_master_plan.md"
-    dashboard_path = ROOT / "phd_timeline_dashboard.html"
+    plan_path = ROOT / "phd_bio-nas_master_plan.md"
+    dashboard_path = ROOT / "phd_bio-nas_timeline_dashboard.html"
 
     tasks = load_tasks(plan_path)
     title, core_objective = parse_plan_metadata(plan_path)

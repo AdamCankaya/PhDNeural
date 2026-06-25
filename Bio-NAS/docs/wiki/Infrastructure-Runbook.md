@@ -2,7 +2,7 @@
 
 Operational guide for **Year 1 Fall Step 2**: distributed Optuna execution infrastructure.
 
-Plan reference: [Y1 Fall 2026 — Infrastructure & Database Orchestration](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md)
+Plan reference: [Y1 Fall 2026 — Infrastructure & Database Orchestration](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md)
 
 ## Architecture overview
 

@@ -15,7 +15,7 @@ Related wiki pages:
 Quick start:
 
 ```powershell
-Copy-Item github_sync.config.json.example github_sync.config.json
+Copy-Item bio-nas_github_sync.config.json.example bio-nas_github_sync.config.json
 gh auth login
 python scripts/sync_phd_to_github.py --parse-only   # expect 43 tasks
 python scripts/sync_phd_to_github.py

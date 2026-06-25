@@ -2,7 +2,7 @@
 
 Guide for **Year 1 Summer Step 1**: TCGA BRCA multi-omic sourcing, strict train/holdout split, and HDF5 serialization.
 
-Plan reference: [Y1 Summer 2026 — TCGA Sourcing](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_master_plan.md)
+Plan reference: [Y1 Summer 2026 — TCGA Sourcing](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md)
 
 ## Data source
 
