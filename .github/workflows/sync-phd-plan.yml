@@ -36,6 +36,7 @@ jobs:
           GITHUB_REPO: ${{ vars.GITHUB_REPO }}
           GITHUB_PROJECT_NUMBER: ${{ vars.GITHUB_PROJECT_NUMBER }}
         run: |
+          cd Bio-NAS
           ARGS=""
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             ARGS="$ARGS --dry-run"
@@ -50,5 +51,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: phd-github-sync-state
-          path: .phd-github-sync.json
+          path: Bio-NAS/.phd-github-sync.json
           if-no-files-found: ignore
