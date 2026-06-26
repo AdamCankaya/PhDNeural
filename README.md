@@ -15,3 +15,10 @@ Features:
 - Comparative A/B testing initially focused on Breast Invasive Carcinoma (BRCA) before scaling to four other pathologies.
 
 For detailed documentation, tracking, and the codebase, please see the [Bio-NAS README](./Bio-NAS/README.md).
+
+### [Epigenetic Deconvolution SaaS (β-VAE)](./epi-decon)
+**Path:** `epi-decon/`
+
+A 3-year execution roadmap for building, validating, and commercializing a machine learning platform capable of mathematically unmixing bulk epigenetic data into single-cell resolution.
+
+For detailed documentation, tracking, and the roadmap, please see the [epi-decon README](./epi-decon/README.md).
