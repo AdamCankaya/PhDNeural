@@ -1,4 +1,4 @@
-# Epigenetic Deconvolution SaaS (�-VAE)
+﻿# Epigenetic Deconvolution SaaS (β-VAE)
 
 This project aims to build a machine learning platform for epigenetic deconvolution.
 

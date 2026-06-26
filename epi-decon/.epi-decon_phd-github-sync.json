@@ -1,0 +1,186 @@
+{
+  "tasks": {
+    "year-1-q1-1-phase-1-step-1-item-1-write-python-bio-entrez-scripts-to-scrap": {
+      "issue_number": 329,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGoXtqg",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/329",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgwxnHM",
+      "title": "[Y1 Q1 1] Write Python Bio.Entrez scripts to scrape the Human Cell Atlas (HCA) for pure single-cell PBMC refer..."
+    },
+    "year-1-q1-1-phase-1-step-2-item-1-configure-the-local-wsl-2-docker-develop": {
+      "issue_number": 330,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGoXvlA",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/330",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgwxnIc",
+      "title": "[Y1 Q1 1] Configure the local WSL 2/Docker development environment in Cursor."
+    },
+    "year-1-q1-1-phase-1-step-2-item-2-provision-the-remote-hetzner-compute-clu": {
+      "issue_number": 331,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGoXw7w",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/331",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgwxnKI",
+      "title": "[Y1 Q1 1] Provision the remote Hetzner compute cluster and establish the GitHub Actions CI/CD pipeline for aut..."
+    },
+    "year-1-q2-1-phase-1-step-1-item-1-engineer-the-python-digital-blender-scri": {
+      "issue_number": 332,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGoXySA",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/332",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgwxnMY",
+      "title": "[Y1 Q2 1] Engineer the Python \"digital blender\" script."
+    },
+    "year-1-q2-1-phase-1-step-2-item-1-randomly-sample-and-aggregate-pure-singl": {
+      "issue_number": 333,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGoX0OQ",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/333",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgwxnN8",
+      "title": "[Y1 Q2 1] Randomly sample and aggregate pure single-cell vectors to create 50,000+ simulated bulk tissue sampl..."
+    },
+    "year-1-q3-1-phase-1-step-1-item-1-draft-the-dynamic-hourglass-vae-architec": {
+      "issue_number": 334,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxNE9Q",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/334",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw50A4",
+      "title": "[Y1 Q3 1] Draft the dynamic hourglass \u03b2-VAE architecture with parameterized encoder/decoder depths and latent ..."
+    },
+    "year-1-q3-1-phase-1-step-2-item-1-deploy-optuna-to-the-hetzner-cluster-exe": {
+      "issue_number": 335,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxNF-A",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/335",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw50DY",
+      "title": "[Y1 Q3 1] Deploy Optuna to the Hetzner cluster. Execute massive search sweeps focusing on the latent dimension..."
+    },
+    "year-1-q4-1-phase-1-step-1-item-1-run-the-completely-untrained-real-world": {
+      "issue_number": 336,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxNG4w",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/336",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw50Fc",
+      "title": "[Y1 Q4 1] Run the completely untrained, real-world clinical bulk samples (from Q1) through the optimized \u03b2-VAE..."
+    },
+    "year-1-q4-1-phase-1-step-2-item-1-draft-and-submit-chapter-1-of-the-disser": {
+      "issue_number": 337,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxNHwg",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/337",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw50Hw",
+      "title": "[Y1 Q4 1] Draft and submit Chapter 1 of the dissertation / Paper 1: Optimizing \u03b2-VAE Architectures for High-Fi..."
+    },
+    "year-2-q1-2-phase-2-step-1-item-1-scrape-single-cell-and-paired-bulk-datas": {
+      "issue_number": 338,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxN41g",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/338",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51cc",
+      "title": "[Y2 Q1 2] Scrape single-cell and paired bulk datasets for a completely different biological topology (e.g., Br..."
+    },
+    "year-2-q1-2-phase-2-step-2-item-1-abstract-the-pseudobulking-python-script": {
+      "issue_number": 339,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxN59Q",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/339",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51d8",
+      "title": "[Y2 Q1 2] Abstract the pseudobulking Python script to dynamically handle varying tissue structures without req..."
+    },
+    "year-2-q2-2-phase-2-step-1-item-1-spin-up-new-optuna-studies-for-the-solid": {
+      "issue_number": 340,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxN7rQ",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/340",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51g0",
+      "title": "[Y2 Q2 2] Spin up new Optuna studies for the solid tumor datasets, seeding the optimizer with the best spatial..."
+    },
+    "year-2-q2-2-phase-2-step-2-item-1-monitor-the-hetzner-server-load-as-multi": {
+      "issue_number": 341,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxN9iw",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/341",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51iw",
+      "title": "[Y2 Q2 2] Monitor the Hetzner server load as multiple disease-specific networks train simultaneously."
+    },
+    "year-2-q3-2-phase-2-step-1-item-1-aggregate-the-validation-metrics-across": {
+      "issue_number": 342,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOA4w",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/342",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51nQ",
+      "title": "[Y2 Q3 2] Aggregate the validation metrics across the distinct tissue models."
+    },
+    "year-2-q3-2-phase-2-step-2-item-1-map-the-latent-spaces-of-the-different-m": {
+      "issue_number": 343,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxODBg",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/343",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51qI",
+      "title": "[Y2 Q3 2] Map the latent spaces of the different models to mathematically prove why a \u03b2-VAE must be uniquely t..."
+    },
+    "year-2-q4-2-phase-2-step-1-item-1-bind-the-data-engineering-network-archit": {
+      "issue_number": 344,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOF2Q",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/344",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51tw",
+      "title": "[Y2 Q4 2] Bind the data engineering, network architecture search, and multi-tissue comparative analyses into t..."
+    },
+    "year-2-q4-2-phase-2-step-2-item-1-finalize-the-presentation-focusing-stric": {
+      "issue_number": 345,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOHag",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/345",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51v4",
+      "title": "[Y2 Q4 2] Finalize the presentation focusing strictly on the high-performance computing constraints, the Optun..."
+    },
+    "year-3-q1-3-phase-3-step-1-item-1-wrap-the-specialized-pytorch-inference-m": {
+      "issue_number": 346,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOJZg",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/346",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw51yI",
+      "title": "[Y3 Q1 3] Wrap the specialized PyTorch inference models in a high-performance Python framework (like FastAPI)."
+    },
+    "year-3-q1-3-phase-3-step-2-item-1-build-the-metadata-parser-that-reads-inc": {
+      "issue_number": 347,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOLxQ",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/347",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw512g",
+      "title": "[Y3 Q1 3] Build the metadata parser that reads incoming clinical CSVs and instantly routes them to the correct..."
+    },
+    "year-3-q2-3-phase-3-step-1-item-1-implement-api-key-generation-rate-limiti": {
+      "issue_number": 348,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxON-w",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/348",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw514I",
+      "title": "[Y3 Q2 3] Implement API key generation, rate limiting, and OAuth2 security protocols for client verification."
+    },
+    "year-3-q2-3-phase-3-step-2-item-1-ensure-the-pipeline-is-completely-statel": {
+      "issue_number": 349,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOQcw",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/349",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw5170",
+      "title": "[Y3 Q2 3] Ensure the pipeline is completely stateless\u2014clinical data is unmixed in memory and instantly wiped f..."
+    },
+    "year-3-q3-3-phase-3-step-1-item-1-partner-with-a-single-mid-sized-bioinfor": {
+      "issue_number": 350,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOSWQ",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/350",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw519s",
+      "title": "[Y3 Q3 3] Partner with a single, mid-sized bioinformatics lab or university research team. Provide them with f..."
+    },
+    "year-3-q3-3-phase-3-step-2-item-1-allow-the-partner-to-run-massive-batches": {
+      "issue_number": 351,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOUmA",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/351",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw52BM",
+      "title": "[Y3 Q3 3] Allow the partner to run massive batches of cheap bulk sequencing data through the pipeline. Monitor..."
+    },
+    "year-3-q4-3-phase-3-step-1-item-1-finalize-the-api-documentation-and-devel": {
+      "issue_number": 352,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOXXA",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/352",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw52Dg",
+      "title": "[Y3 Q4 3] Finalize the API documentation and developer portal."
+    },
+    "year-3-q4-3-phase-3-step-2-item-1-establish-the-saas-tiers-and-public-laun": {
+      "issue_number": 353,
+      "issue_node_id": "I_kwDOS_kKc88AAAABGxOaMw",
+      "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/353",
+      "project_item_id": "PVTI_lAHOAKZmes4BbmXizgw52F4",
+      "title": "[Y3 Q4 3] Establish the SaaS tiers and public launch of the \\\\Virtual Centrifuge\\\\ platform."
+    }
+  },
+  "last_sync": "2026-06-26T04:24:27.004911+00:00",
+  "project": {
+    "id": "PVT_kwHOAKZmes4BbmXi",
+    "number": 3,
+    "title": "Epigenetic Deconvolution SaaS",
+    "url": "https://github.com/users/AdamCankaya/projects/3"
+  }
+}
