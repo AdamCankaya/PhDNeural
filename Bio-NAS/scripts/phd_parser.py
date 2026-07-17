@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 YEAR_RE = re.compile(r"^## Year (\d+):\s*(.+?)\s*$")
-QUARTER_RE = re.compile(r"^### (Q[1-4])\s*(\d{4}):\s*(.+?)\s*$")
+QUARTER_RE = re.compile(r"^### (Q[1-4])\s*(Spring|Summer|Fall|Winter)?\s*(\d{4}):\s*(.+?)\s*$")
 PHASE_META_RE = re.compile(
     r"^\*\*Phases?:\*\*\s*([^|\n]+?)(?:\s*\|\s*\*\*Goal:\*\*\s*(.+))?\s*$"
 )
@@ -267,7 +267,7 @@ def _append_task(
             year_title=state.year_title,
             quarter=state.quarter,
             quarter_year=state.quarter_year,
-            quarter_label=f"{state.quarter.upper()} {state.quarter_year}",
+            quarter_label=state.quarter_label,
             quarter_title=state.quarter_title,
             phase=state.phase,
             phase_title=state.phase_title,
@@ -343,11 +343,12 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
         quarter_match = QUARTER_RE.match(line)
         if quarter_match:
             season = quarter_match.group(1).lower()
-            q_year = int(quarter_match.group(2))
+            season_word = quarter_match.group(2)
+            q_year = int(quarter_match.group(3))
             state.quarter = season
             state.quarter_year = q_year
-            state.quarter_label = season.upper()
-            state.quarter_title = quarter_match.group(3).strip()
+            state.quarter_label = f"{season.upper()} {season_word} {q_year}" if season_word else f"{season.upper()} {q_year}"
+            state.quarter_title = quarter_match.group(4).strip()
             state.step = 0
             state.step_title = ""
             state.section_kind = SECTION_KIND_STEP

@@ -10,26 +10,26 @@ Develop a high-performance, distributed Neural Architecture Search (NAS) framewo
 
 ## Year 1: Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure
 
-### Q3 2026: Longitudinal Multi-Omic Cohort Sourcing
+### Q3 Fall 2026: Longitudinal Multi-Omic Cohort Sourcing
 **Phases:** 1 | **Goal:** Identify and secure multi-disease datasets.
 #### Step 1: Data Acquisition
 * Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).
 * Source longitudinal tracking options focusing on primary vs. recurrent match points.
 
-### Q4 2026: Spatio-Temporal Data Modalities
+### Q4 Winter 2026: Spatio-Temporal Data Modalities
 **Phases:** 1 | **Goal:** Map spatial/temporal dimensions.
 #### Step 1: Feature Mapping
 * Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).
 * Define genomic structural spacing.
 
-### Q1 2027: 4D Tensor Construction & Irregular Time-Step Normalization
+### Q1 Spring 2027: 4D Tensor Construction & Irregular Time-Step Normalization
 **Phases:** 2 | **Goal:** Construct a robust ETL pipeline.
 #### Step 1: ETL Pipeline
 * Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).
 * Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals.
 * Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).
 
-### Q2 2027: Spatio-Temporal Software Integration & Central Hub
+### Q2 Summer 2027: Spatio-Temporal Software Integration & Central Hub
 **Phases:** 2 | **Goal:** Provision compute servers.
 #### Step 1: Infrastructure
 * Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.
@@ -39,23 +39,23 @@ Develop a high-performance, distributed Neural Architecture Search (NAS) framewo
 
 ## Year 2: Spatio-Temporal NAS Execution & Multi-Task Forecasting
 
-### Q3 2027: Engineering the Spatio-Temporal Search Space
+### Q3 Fall 2027: Engineering the Spatio-Temporal Search Space
 **Phases:** 3 | **Goal:** Code the modular PyTorch components.
 #### Step 1: Spatial Modules
 * Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.
 
-### Q4 2027: Temporal Progression Modules
+### Q4 Winter 2027: Temporal Progression Modules
 **Phases:** 3 | **Goal:** Implement progression modules.
 #### Step 1: Temporal Modules
 * Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.
 
-### Q1 2028: Parallel Search Optimization
+### Q1 Spring 2028: Parallel Search Optimization
 **Phases:** 3 | **Goal:** Execute large-scale search.
 #### Step 1: Large Scale Search
 * Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.
 * Use Horizontally Scaled Workers via Slurm and HyperbandPruner.
 
-### Q2 2028: Structural Taxonomy & Baseline Benchmarking
+### Q2 Summer 2028: Structural Taxonomy & Baseline Benchmarking
 **Phases:** 3 | **Goal:** Mine the optimization database.
 #### Step 1: Benchmarking
 * Evaluate architectures on 20% holdout trajectories.
@@ -66,25 +66,25 @@ Develop a high-performance, distributed Neural Architecture Search (NAS) framewo
 
 ## Year 3: Spatio-Temporal Interpretability and Clinical Interface
 
-### Q3 2028: Spatio-Temporal Interpretability
+### Q3 Fall 2028: Spatio-Temporal Interpretability
 **Phases:** 4 | **Goal:** Unpack model tracking changes.
 #### Step 1: Multi-dimensional Attribution
 * Implement `captum` or `shap` for multi-dimensional attribution.
 * Extract maps identifying CpG sites and timestamps driving disease progression predictions.
 
-### Q4 2028: The Trajectory Dashboard Application
+### Q4 Winter 2028: The Trajectory Dashboard Application
 **Phases:** 4 | **Goal:** Build interactive dashboard.
 #### Step 1: Streamlit Dashboard
 * Build interactive `streamlit` interface.
 * Render health trajectories and risk forecasting curves.
 
-### Q1 2029: Thesis Synthesis and Framework Release
+### Q1 Spring 2029: Thesis Synthesis and Framework Release
 **Phases:** 4 | **Goal:** Document discovery and release.
 #### Step 1: Synthesis
 * Document structural taxonomy discovered.
 * Compare slow-progressing vs. fast-acting condition architectures.
 
-### Q2 2029: Thesis Defense
+### Q2 Summer 2029: Thesis Defense
 **Phases:** 4 | **Goal:** Finalize and release.
 #### Step 1: Defense
 * Finalize dissertation. 
