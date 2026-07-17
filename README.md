@@ -1,6 +1,6 @@
 # PhD Projects Repository
 
-This repository contains multiple projects related to PhD research. Each project is contained within its own dedicated directory.
+This repository contains the PhD research project.
 
 ## Projects
 

@@ -26,6 +26,18 @@ def main() -> int:
     title, core_objective = parse_plan_metadata(plan_path)
     plan = build_dashboard_plan(tasks, title, core_objective)
 
+    state_path = ROOT / ".bio-nas_phd-github-sync.json"
+    if state_path.exists():
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        issues_map = state.get("tasks", {})
+        for year in plan.get("years", []):
+            for quarter in year.get("quarters", []):
+                for step in quarter.get("steps", []):
+                    for task in step.get("tasks", []):
+                        if task["id"] in issues_map:
+                            task["issue_url"] = issues_map[task["id"]].get("issue_url")
+                            task["issue_number"] = issues_map[task["id"]].get("issue_number")
+
     html = dashboard_path.read_text(encoding="utf-8")
     plan_js = json.dumps(plan, indent=2, ensure_ascii=False)
 

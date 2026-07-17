@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 YEAR_RE = re.compile(r"^## Year (\d+):\s*(.+?)\s*$")
-QUARTER_RE = re.compile(r"^### (Q[1-4]) Quarter:\s*(.+?)\s*$")
+QUARTER_RE = re.compile(r"^### (Q[1-4])\s*(\d{4}):\s*(.+?)\s*$")
 PHASE_META_RE = re.compile(
     r"^\*\*Phases?:\*\*\s*([^|\n]+?)(?:\s*\|\s*\*\*Goal:\*\*\s*(.+))?\s*$"
 )
@@ -343,10 +343,11 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
         quarter_match = QUARTER_RE.match(line)
         if quarter_match:
             season = quarter_match.group(1).lower()
+            q_year = int(quarter_match.group(2))
             state.quarter = season
-            state.quarter_year = state.year
+            state.quarter_year = q_year
             state.quarter_label = season.upper()
-            state.quarter_title = quarter_match.group(2).strip()
+            state.quarter_title = quarter_match.group(3).strip()
             state.step = 0
             state.step_title = ""
             state.section_kind = SECTION_KIND_STEP
