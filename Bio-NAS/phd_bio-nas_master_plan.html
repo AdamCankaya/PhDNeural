@@ -45,94 +45,85 @@
   <p class="goal"><strong>Phase 1</strong> (Phase 1: The Anchor (BRCA PoC)) · <strong>Goal:</strong> Identify and secure multi-disease datasets with repeated molecular measurements over time.</p>
   <h4>Step 1: Data Acquisition</h4>
   <div class="task">
-    <h4>Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).</h4>
+    <h4>Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/354" target="_blank" rel="noopener noreferrer">(Issue #354)</a></h4>
     <ul class="reqs">
       <li>Deliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.</li>
       <li>Acceptance: every disease has at least one candidate cohort with ≥2 timepoints documented.</li>
       <li>Dependencies: GDC/GEO/recount3 accounts; disease registry entries in `src/config/disease_registry.yaml`.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/354" target="_blank" rel="noopener noreferrer">Open issue #354 ↗</a>
   </div>
   <div class="task">
-    <h4>Source longitudinal tracking options focusing on primary vs. recurrent match points.</h4>
+    <h4>Source longitudinal tracking options focusing on primary vs. recurrent match points. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/355" target="_blank" rel="noopener noreferrer">(Issue #355)</a></h4>
     <ul class="reqs">
       <li>Deliverables: matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.</li>
       <li>Acceptance: documented join keys and exclusion rules that preserve temporal order.</li>
       <li>Dependencies: cohort-specific clinical/metadata dictionaries.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/355" target="_blank" rel="noopener noreferrer">Open issue #355 ↗</a>
   </div>
   <h3>Q4 Winter 2026: Spatio-Temporal Data Modalities</h3>
   <p class="goal"><strong>Phase 1</strong> (Phase 1: The Anchor (BRCA PoC)) · <strong>Goal:</strong> Map spatial and temporal feature dimensions for multi-omic tensors.</p>
   <h4>Step 1: Feature Mapping</h4>
   <div class="task">
-    <h4>Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).</h4>
+    <h4>Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/356" target="_blank" rel="noopener noreferrer">(Issue #356)</a></h4>
     <ul class="reqs">
       <li>Deliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).</li>
       <li>Acceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.</li>
       <li>Dependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/356" target="_blank" rel="noopener noreferrer">Open issue #356 ↗</a>
   </div>
   <div class="task">
-    <h4>Define genomic structural spacing.</h4>
+    <h4>Define genomic structural spacing. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/357" target="_blank" rel="noopener noreferrer">(Issue #357)</a></h4>
     <ul class="reqs">
       <li>Deliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.</li>
       <li>Acceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).</li>
       <li>Dependencies: reference genome build documented (e.g., GRCh38).</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/357" target="_blank" rel="noopener noreferrer">Open issue #357 ↗</a>
   </div>
   <h3>Q1 Spring 2027: 4D Tensor Construction &amp; Irregular Time-Step Normalization</h3>
   <p class="goal"><strong>Phase 2</strong> (Phase 2: Code Abstraction &amp; Generalization) · <strong>Goal:</strong> Construct a leakage-safe ETL pipeline producing irregular-time 4D tensors.</p>
   <h4>Step 1: ETL Pipeline</h4>
   <div class="task">
-    <h4>Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).</h4>
+    <h4>Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/358" target="_blank" rel="noopener noreferrer">(Issue #358)</a></h4>
     <ul class="reqs">
       <li>Deliverables: patient-level split files + loader that never peeks at holdout during fit.</li>
       <li>Acceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).</li>
       <li>Dependencies: finalized cohort tables from Year 1 Fall/Winter.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/358" target="_blank" rel="noopener noreferrer">Open issue #358 ↗</a>
   </div>
   <div class="task">
-    <h4>Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals.</h4>
+    <h4>Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/359" target="_blank" rel="noopener noreferrer">(Issue #359)</a></h4>
     <ul class="reqs">
       <li>Deliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.</li>
       <li>Acceptance: unit tests for zero, irregular, and missing Δt; shapes match tensor contract.</li>
       <li>Dependencies: visit timestamps aligned to patient IDs.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/359" target="_blank" rel="noopener noreferrer">Open issue #359 ↗</a>
   </div>
   <div class="task">
-    <h4>Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).</h4>
+    <h4>Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/360" target="_blank" rel="noopener noreferrer">(Issue #360)</a></h4>
     <ul class="reqs">
       <li>Deliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.</li>
       <li>Acceptance: round-trip equality tests; documented channel layout per omic.</li>
       <li>Dependencies: feature map + Δt embedding from prior items.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/360" target="_blank" rel="noopener noreferrer">Open issue #360 ↗</a>
   </div>
   <h3>Q2 Summer 2027: Spatio-Temporal Software Integration &amp; Central Hub</h3>
   <p class="goal"><strong>Phase 2</strong> (Phase 2: Code Abstraction &amp; Generalization) · <strong>Goal:</strong> Provision reproducible compute and experiment orchestration.</p>
   <h4>Step 1: Infrastructure</h4>
   <div class="task">
-    <h4>Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.</h4>
+    <h4>Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/361" target="_blank" rel="noopener noreferrer">(Issue #361)</a></h4>
     <ul class="reqs">
       <li>Deliverables: environment lockfile / Docker image pin list; smoke-test script importing stack packages.</li>
       <li>Acceptance: clean install on target host(s); GPU detection logged when available.</li>
       <li>Dependencies: cloud/HPC access; Slurm or equivalent job runner path identified.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/361" target="_blank" rel="noopener noreferrer">Open issue #361 ↗</a>
   </div>
   <div class="task">
-    <h4>Set up Dockerized PostgreSQL engine for orchestration.</h4>
+    <h4>Set up Dockerized PostgreSQL engine for orchestration. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/362" target="_blank" rel="noopener noreferrer">(Issue #362)</a></h4>
     <ul class="reqs">
       <li>Deliverables: `docker-compose` (or k8s) Postgres for Optuna/study metadata; backup/restore notes.</li>
       <li>Acceptance: Optuna RDB storage connects; one trial write/read verified.</li>
       <li>Dependencies: host networking/firewall rules; credentials in `.env` (not committed).</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/362" target="_blank" rel="noopener noreferrer">Open issue #362 ↗</a>
   </div>
   <hr />
   <h2>Year 2: Spatio-Temporal NAS Execution &amp; Multi-Task Forecasting</h2>
@@ -140,76 +131,69 @@
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Code modular spatial PyTorch blocks for the NAS search space.</p>
   <h4>Step 1: Spatial Modules</h4>
   <div class="task">
-    <h4>Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.</h4>
+    <h4>Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/363" target="_blank" rel="noopener noreferrer">(Issue #363)</a></h4>
     <ul class="reqs">
       <li>Deliverables: reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.</li>
       <li>Acceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.</li>
       <li>Dependencies: genomic spacing config; Year 1 tensors.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/363" target="_blank" rel="noopener noreferrer">Open issue #363 ↗</a>
   </div>
   <h3>Q4 Winter 2027: Temporal Progression Modules</h3>
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Implement temporal progression blocks for longitudinal forecasting.</p>
   <h4>Step 1: Temporal Modules</h4>
   <div class="task">
-    <h4>Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.</h4>
+    <h4>Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/364" target="_blank" rel="noopener noreferrer">(Issue #364)</a></h4>
     <ul class="reqs">
       <li>Deliverables: temporal stack modules that consume Δt embeddings; optional attention over time.</li>
       <li>Acceptance: causal masking verified (no future visit leakage); gradient flow smoke test.</li>
       <li>Dependencies: spatial module outputs; Δt embedding layer.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/364" target="_blank" rel="noopener noreferrer">Open issue #364 ↗</a>
   </div>
   <h3>Q1 Spring 2028: Parallel Search Optimization</h3>
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Execute large-scale distributed spatio-temporal architecture search.</p>
   <h4>Step 1: Large Scale Search</h4>
   <div class="task">
-    <h4>Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.</h4>
+    <h4>Execute large-scale spatio-temporal architecture search with Causal Cross-Validation. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/365" target="_blank" rel="noopener noreferrer">(Issue #365)</a></h4>
     <ul class="reqs">
       <li>Deliverables: Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).</li>
       <li>Acceptance: ≥1 full study completes on BRCA (or primary cohort) with reproducible seed and stored best trial.</li>
       <li>Dependencies: Postgres Optuna storage; Slurm workers; train tensors.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/365" target="_blank" rel="noopener noreferrer">Open issue #365 ↗</a>
   </div>
   <div class="task">
-    <h4>Use Horizontally Scaled Workers via Slurm and HyperbandPruner.</h4>
+    <h4>Use Horizontally Scaled Workers via Slurm and HyperbandPruner. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/366" target="_blank" rel="noopener noreferrer">(Issue #366)</a></h4>
     <ul class="reqs">
       <li>Deliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.</li>
       <li>Acceptance: ≥2 concurrent workers report trials to the same study without corruption.</li>
       <li>Dependencies: cluster account; shared storage for artifacts.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/366" target="_blank" rel="noopener noreferrer">Open issue #366 ↗</a>
   </div>
   <h3>Q2 Summer 2028: Structural Taxonomy &amp; Baseline Benchmarking</h3>
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Benchmark searched architectures against baselines and ablations.</p>
   <h4>Step 1: Benchmarking</h4>
   <div class="task">
-    <h4>Evaluate architectures on 20% holdout trajectories.</h4>
+    <h4>Evaluate architectures on 20% holdout trajectories. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/367" target="_blank" rel="noopener noreferrer">(Issue #367)</a></h4>
     <ul class="reqs">
       <li>Deliverables: holdout evaluation script + metrics table for best NAS architectures.</li>
       <li>Acceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted.</li>
       <li>Dependencies: completed Optuna studies; locked holdout split.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/367" target="_blank" rel="noopener noreferrer">Open issue #367 ↗</a>
   </div>
   <div class="task">
-    <h4>Ablation study: Spatial vs. Spatio-Temporal predictive gain.</h4>
+    <h4>Ablation study: Spatial vs. Spatio-Temporal predictive gain. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/368" target="_blank" rel="noopener noreferrer">(Issue #368)</a></h4>
     <ul class="reqs">
       <li>Deliverables: controlled ablation comparing spatial-only vs full spatio-temporal models.</li>
       <li>Acceptance: same data splits/seeds; delta metrics documented with interpretation.</li>
       <li>Dependencies: spatial and temporal modules; evaluation harness.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/368" target="_blank" rel="noopener noreferrer">Open issue #368 ↗</a>
   </div>
   <div class="task">
-    <h4>Compare with longitudinal Random Forests/XGBoost.</h4>
+    <h4>Compare with longitudinal Random Forests/XGBoost. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/369" target="_blank" rel="noopener noreferrer">(Issue #369)</a></h4>
     <ul class="reqs">
       <li>Deliverables: classical baseline pipelines on comparable flattened/windowed features.</li>
       <li>Acceptance: baseline metrics on identical holdout; fair feature budget documented.</li>
       <li>Dependencies: tabular feature export from tensors/metadata.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/369" target="_blank" rel="noopener noreferrer">Open issue #369 ↗</a>
   </div>
   <hr />
   <h2>Year 3: Spatio-Temporal Interpretability and Clinical Interface</h2>
@@ -217,85 +201,77 @@
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Attribute predictions to spatial sites and timepoints.</p>
   <h4>Step 1: Multi-dimensional Attribution</h4>
   <div class="task">
-    <h4>Implement `captum` or `shap` for multi-dimensional attribution.</h4>
+    <h4>Implement `captum` or `shap` for multi-dimensional attribution. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/370" target="_blank" rel="noopener noreferrer">(Issue #370)</a></h4>
     <ul class="reqs">
       <li>Deliverables: attribution pipeline producing per-sample spatial×temporal importance tensors.</li>
       <li>Acceptance: attributions run on holdout subset without OOM; API documented.</li>
       <li>Dependencies: trained best models; captum/shap in environment.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/370" target="_blank" rel="noopener noreferrer">Open issue #370 ↗</a>
   </div>
   <div class="task">
-    <h4>Extract maps identifying CpG sites and timestamps driving disease progression predictions.</h4>
+    <h4>Extract maps identifying CpG sites and timestamps driving disease progression predictions. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/371" target="_blank" rel="noopener noreferrer">(Issue #371)</a></h4>
     <ul class="reqs">
       <li>Deliverables: ranked site/time maps + export (CSV/Parquet) and summary figures.</li>
       <li>Acceptance: top-k drivers reviewable per disease trajectory example.</li>
       <li>Dependencies: attribution pipeline; genomic annotations.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/371" target="_blank" rel="noopener noreferrer">Open issue #371 ↗</a>
   </div>
   <h3>Q4 Winter 2028: The Trajectory Dashboard Application</h3>
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Build an interactive clinical trajectory interface.</p>
   <h4>Step 1: Streamlit Dashboard</h4>
   <div class="task">
-    <h4>Build interactive `streamlit` interface.</h4>
+    <h4>Build interactive `streamlit` interface. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/372" target="_blank" rel="noopener noreferrer">(Issue #372)</a></h4>
     <ul class="reqs">
       <li>Deliverables: Streamlit app loading model outputs and patient trajectories.</li>
       <li>Acceptance: local demo runbook; auth/PII constraints documented.</li>
       <li>Dependencies: inference artifacts; holdout demo cohort.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/372" target="_blank" rel="noopener noreferrer">Open issue #372 ↗</a>
   </div>
   <div class="task">
-    <h4>Render health trajectories and risk forecasting curves.</h4>
+    <h4>Render health trajectories and risk forecasting curves. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/373" target="_blank" rel="noopener noreferrer">(Issue #373)</a></h4>
     <ul class="reqs">
       <li>Deliverables: plots for observed vs predicted risk over time with uncertainty bands if available.</li>
       <li>Acceptance: at least one end-to-end patient view from load → forecast → attribution snippet.</li>
       <li>Dependencies: Streamlit shell; attribution exports.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/373" target="_blank" rel="noopener noreferrer">Open issue #373 ↗</a>
   </div>
   <h3>Q1 Spring 2029: Thesis Synthesis and Framework Release</h3>
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Document discovery and prepare framework release notes.</p>
   <h4>Step 1: Synthesis</h4>
   <div class="task">
-    <h4>Document structural taxonomy discovered.</h4>
+    <h4>Document structural taxonomy discovered. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/374" target="_blank" rel="noopener noreferrer">(Issue #374)</a></h4>
     <ul class="reqs">
       <li>Deliverables: taxonomy chapter/section mapping architectures to disease categories and motifs.</li>
       <li>Acceptance: peer-readable draft checked into docs with figure list.</li>
       <li>Dependencies: Year 2–3 experiment logs and benchmarks.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/374" target="_blank" rel="noopener noreferrer">Open issue #374 ↗</a>
   </div>
   <div class="task">
-    <h4>Compare slow-progressing vs. fast-acting condition architectures.</h4>
+    <h4>Compare slow-progressing vs. fast-acting condition architectures. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/375" target="_blank" rel="noopener noreferrer">(Issue #375)</a></h4>
     <ul class="reqs">
       <li>Deliverables: comparative analysis contrasting architecture preferences across disease tempos.</li>
       <li>Acceptance: quantitative table + qualitative discussion ready for thesis inclusion.</li>
       <li>Dependencies: multi-disease study results (Phases 3–4).</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/375" target="_blank" rel="noopener noreferrer">Open issue #375 ↗</a>
   </div>
   <h3>Q2 Summer 2029: Thesis Defense</h3>
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Finalize dissertation and release the open-source framework.</p>
   <h4>Step 1: Defense</h4>
   <div class="task">
-    <h4>Finalize dissertation.</h4>
+    <h4>Finalize dissertation. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/376" target="_blank" rel="noopener noreferrer">(Issue #376)</a></h4>
     <ul class="reqs">
       <li>Deliverables: defense draft, slides, and response-to-committee checklist.</li>
       <li>Acceptance: committee-ready PDF; all chapters cite frozen experiment IDs.</li>
       <li>Dependencies: synthesis documents; completed experiments.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/376" target="_blank" rel="noopener noreferrer">Open issue #376 ↗</a>
   </div>
   <div class="task">
-    <h4>Release the complete open-source Python framework.</h4>
+    <h4>Release the complete open-source Python framework. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/377" target="_blank" rel="noopener noreferrer">(Issue #377)</a></h4>
     <ul class="reqs">
       <li>Deliverables: tagged release, install docs, example notebooks, license/citation.</li>
       <li>Acceptance: clean clone → install → smoke demo on public sample data.</li>
       <li>Dependencies: stable `src/` APIs; CI green on main.</li>
     </ul>
-    <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/377" target="_blank" rel="noopener noreferrer">Open issue #377 ↗</a>
   </div>
   <hr />
   <p><em>Generated from phd_bio-nas_master_plan.md — do not edit by hand.</em></p>
