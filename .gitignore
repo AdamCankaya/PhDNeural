@@ -12,6 +12,8 @@ venv/
 
 # Wiki publish cache (local clone of .wiki.git)
 docs/wiki/.publish-cache/
+Bio-NAS/docs/wiki/.publish-cache/
+**/.publish-cache/
 
 # OS
 .DS_Store
