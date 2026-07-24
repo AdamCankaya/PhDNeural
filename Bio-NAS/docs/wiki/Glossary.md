@@ -4,6 +4,7 @@
 |------|------------|
 | **Track A — Standard NAS** | Control arm: unconstrained neural architecture / hyperparameter search (layers, nodes, dropout) optimizing for mathematical performance without pathway masks |
 | **Track B — Bio-NAS** | Innovation arm: NAS constrained by biological blueprints (KEGG, Reactome) via binary adjacency masks (`MaskedLinear`) so searched synapses respect known pathways |
+| **Dual track** | Parallel experimental design with two arms (Track A control and Track B Bio-NAS) trained and evaluated under matched data, splits, and metrics |
 | **Dual-Track A/B Test** | Rigid comparison of Track A vs Track B on the same cohort, splits, and metrics to test whether biological priors help |
 | **Scaling gate** | Decision point after BRCA Track A vs B holdout (Y2 Summer): positive Track B advantage justifies dual-track work on the Other 4 pathologies |
 | **Bio-NAS** | Biologically-Informed Neural Architecture Search — the Track B method and the overall research program name |
@@ -13,6 +14,14 @@
 | **Reactome** | Curated pathway knowledgebase used alongside KEGG for Track B constraints |
 | **Biological prior** | Domain knowledge (pathways, GRNs) injected into the model to bias architecture/search toward biologically plausible structure |
 | **Gene Regulatory Network (GRN)** | Graph of regulatory relationships among genes; an example anatomical/biological constraint for Bio-NAS |
+| **Sparsity** | Preferring models that use fewer active parameters or synapses (e.g., pathway masks zeroing disallowed weights); a Track B evaluation criterion alongside accuracy and interpretability |
+| **Interpretability** | How well predictions can be traced to biological features or pathways (e.g., Captum/SHAP attribution over CpG sites and timepoints); a core Track A vs B comparison axis |
+| **PyTorch** | Primary deep-learning framework for spatial/temporal modules, `MaskedLinear`, MTL heads, and training loops |
+| **Optuna** | Hyperparameter / architecture search library used for distributed Track A and Track B studies (with Hyperband pruning and RDB storage) |
+| **Multi-omic** | Joint use of multiple molecular modalities (e.g., methylation, transcriptomics, genomics, CNV) in one fusion model |
+| **Multi-task (MTL)** | Shared backbone with multiple prediction heads; baseline solves phenotype and severity together (Static MTL) |
+| **Spatial** | Axis over genomic/feature structure (e.g., CpG sites, gene indices, pathway neighborhoods) modeled by 1D-CNNs / Spatial Transformers |
+| **Temporal** | Axis over longitudinal visits and irregular intervals (Δt); modeled by ConvLSTM/GRU / temporal attention for progression forecasting |
 | **Vertical slice** | End-to-end BRCA pipeline (data → model → Optuna → evaluation) for both tracks before generalizing to other diseases |
 | **Anchor cohort (BRCA)** | Breast Invasive Carcinoma — primary PoC disease used to validate dual-track NAS before the comparative matrix |
 | **Other 4** | Alzheimer's, Rheumatoid Arthritis (RA), Type 2 Diabetes (T2D), and Epigenetic Aging cohorts in the comparative matrix |
