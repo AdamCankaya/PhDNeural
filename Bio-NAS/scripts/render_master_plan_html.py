@@ -16,7 +16,7 @@ from phd_parser import load_tasks, parse_plan_metadata
 DASHBOARD_URL = "https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html"
 WIKI_URL = "https://github.com/AdamCankaya/PhDNeural/wiki"
 ISSUES_URL = "https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync"
-PROJECT_URL = "https://github.com/AdamCankaya/PhDNeural/projects/2"
+PROJECT_URL = "https://github.com/users/AdamCankaya/projects/2"
 
 
 def load_issue_map(state_path: Path) -> dict[str, dict]:

@@ -62,7 +62,7 @@ Copy-Item bio-nas_github_sync.config.json.example bio-nas_github_sync.config.jso
 | `GITHUB_OWNER` | `AdamCankaya` |
 | `GITHUB_REPO` | `PhDNeural` |
 | `GITHUB_PROJECT_NUMBER` | `2` |
-| `GITHUB_PROJECT_SCOPE` | `repository` |
+| `GITHUB_PROJECT_SCOPE` | `user` |
 
 Authenticate via `gh auth login` (recommended) or `GITHUB_TOKEN` env var.
 

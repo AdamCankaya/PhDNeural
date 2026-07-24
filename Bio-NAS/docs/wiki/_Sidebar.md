@@ -18,4 +18,4 @@
 * [Timeline dashboard](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html)
 * [Master plan](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html)
 * [Issues (phd-sync)](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync+is%3Aopen)
-* [Project board](https://github.com/AdamCankaya/PhDNeural/projects/2)
+* [Project board](https://github.com/users/AdamCankaya/projects/2)

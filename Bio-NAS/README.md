@@ -10,7 +10,7 @@ A three-year PhD research program that investigates whether Biologically-Informe
 |----------|------|
 | Repository | [github.com/AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural) |
 | Wiki | [github.com/AdamCankaya/PhDNeural/wiki](https://github.com/AdamCankaya/PhDNeural/wiki) |
-| Project board | [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2) |
+| Project board | [PhD Master Plan (Project #2)](https://github.com/users/AdamCankaya/projects/2) |
 | Issues (`phd-sync`) | [24 open roadmap issues](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync+is%3Aopen) |
 | Live dashboard | [adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html) |
 | Master plan (HTML) | [adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html) |
@@ -122,7 +122,7 @@ Authoritative checklist: [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.
 | Master plan (HTML) | [phd_bio-nas_master_plan.html](phd_bio-nas_master_plan.html) | Published plan with issue links ([live](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html)) |
 | Timeline dashboard | [phd_bio-nas_timeline_dashboard.html](phd_bio-nas_timeline_dashboard.html) | Interactive tracker ([live](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html)) |
 | Embed / render | `scripts/embed_dashboard_plan.py`, `scripts/render_master_plan_html.py` | Regenerate dashboard + HTML plan from markdown + sync state |
-| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2) |
+| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/users/AdamCankaya/projects/2) |
 | Tests | `tests/test_phd_parser.py` | Parser / requirements / 24-task contract |
 | Setup guide | [GITHUB_PROJECTS_BIO-NAS_SETUP.md](GITHUB_PROJECTS_BIO-NAS_SETUP.md) | GitHub Projects v2 configuration and sync workflow |
 | Changelog | [CHANGELOG.md](CHANGELOG.md) | Notable documentation and tooling changes |
