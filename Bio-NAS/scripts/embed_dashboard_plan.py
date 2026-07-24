@@ -12,10 +12,11 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from phd_parser import build_dashboard_plan, load_tasks, parse_plan_metadata
+from render_master_plan_html import main as render_master_plan_main
 
 
 BRANDING = "PhD Roadmap 2026–2029"
-STORAGE_KEY = "phd_plan_progress_v7"
+STORAGE_KEY = "phd_plan_progress_v8"
 
 
 def main() -> int:
@@ -68,6 +69,7 @@ def main() -> int:
 
     dashboard_path.write_text(html, encoding="utf-8")
     print(f"Updated {dashboard_path.name} with {len(tasks)} tasks.")
+    render_master_plan_main()
     return 0
 
 

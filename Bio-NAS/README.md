@@ -1,6 +1,6 @@
 # PhDNeural: Spatio-Temporal Bio-NAS
 
-> **Planning phase:** All roadmap tasks are tracked as open GitHub issues; none are marked done yet. Roadmap updates are **additive**—new bullets create new issues; existing issues stay open unless you explicitly pass `--close-stale` to the sync script.
+> **Planning phase:** The roadmap has **24** checklist items. Each item maps **1:1** to an open GitHub issue (`label:phd-sync`) with implementation requirements. After plan edits, run sync with `--update-existing`; use `--close-stale --prune-project` to drop issues no longer in the plan.
 
 **Spatio-Temporal Dual-Track Multi-Omic Fusion & Bio-NAS**
 
@@ -11,16 +11,19 @@ A three-year PhD research program that investigates whether Biologically-Informe
 | Repository | [github.com/AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural) |
 | Wiki | [github.com/AdamCankaya/PhDNeural/wiki](https://github.com/AdamCankaya/PhDNeural/wiki) |
 | Project board | [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2) |
-| Live dashboard | [adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html) |
-| Master plan | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) |
+| Issues (`phd-sync`) | [24 open roadmap issues](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync+is%3Aopen) |
+| Live dashboard | [adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html) |
+| Master plan (HTML) | [adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html) |
+| Master plan (source) | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) |
+| Pages landing | [adamcankaya.github.io/PhDNeural/Bio-NAS/](https://adamcankaya.github.io/PhDNeural/Bio-NAS/) |
 
-The roadmap follows a **3-year quarterly calendar**: twelve quarters grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task.
+The roadmap follows a **3-year quarterly calendar** (Fall 2026 → Summer 2029): twelve quarters grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task. Every dashboard row and master-plan HTML entry links to its GitHub issue.
 
 ---
 
 ## Executive Strategy
 
-Roadmap updates are **additive**: new work creates new GitHub issues; existing issues stay open unless you explicitly run sync with `--close-stale`. 
+Roadmap updates create or update `phd-sync` issues from [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md). Nested requirement bullets under each checklist item become the issue **Implementation requirements** section and appear on the live dashboard.
 
 To effectively test the core hypothesis, the framework executes a rigid **Dual-Track A/B Test**:
 
@@ -41,21 +44,24 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 ### Roadmap timeline (3-year calendar)
 
-| Year | Quarters | Focus |
-|------|-----------|-------|
-| **Year 1** | Q1, Q2, Q3, Q4 | BRCA anchor: TCGA sourcing, infrastructure, Track A Control, Track B Bio-NAS invention, First Validation |
-| **Year 2** | Q1, Q2, Q3, Q4 | Sourcing & Dual-Track execution across Alzheimer's, Rheumatoid Arthritis, Type 2 Diabetes, and Down Syndrome |
-| **Year 3** | Q1, Q2, Q3, Q4 | Performance audits, LLM-driven interpretability, taxonomy mapping, thesis synthesis |
+| Year | Quarters | Focus | Tasks |
+|------|----------|-------|------:|
+| **Year 1** | Fall 2026 → Summer 2027 | Longitudinal cohort sourcing, feature mapping, 4D ETL / Δt embeddings, compute + Postgres hub | 9 |
+| **Year 2** | Fall 2027 → Summer 2028 | Spatial/temporal NAS modules, distributed Optuna search, holdout benchmarks & baselines | 8 |
+| **Year 3** | Fall 2028 → Summer 2029 | Attribution maps, Streamlit trajectories, taxonomy synthesis, thesis & OSS release | 7 |
+| | | **Total** | **24** |
+
+Authoritative checklist: [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).
 
 ### Objectives
 
 | Objective | Description |
 |-----------|-------------|
-| **Track A Control** | Standard Late Fusion meta-classifier with unconstrained Optuna hyperparameter optimization. |
-| **Track B Bio-NAS** | PyTorch `MaskedLinear` layers guided by binary Adjacency Matrices built from KEGG/Reactome biological blueprints. |
-| **A/B Validation** | Direct comparative performance audit (Accuracy, ROC-AUC, C-Index) across 5 diseases (10 optimization studies). |
-| **Multi-omic ingestion** | Methylation, transcriptomics, genomics, CNVs, clinical data via automated PyTorch HDF5 ETL pipelines. |
-| **LLM Interpretability** | Extract highly-weighted pathways from the Bio-NAS models and use LLMs to summarize the mechanistic biological reasons for selection. |
+| **Spatio-temporal NAS** | Optuna-driven search over spatial (1D-CNN / Spatial Transformer) and temporal (ConvLSTM/GRU / attention) modules. |
+| **Causal evaluation** | Patient-level 80/20 holdout, causal CV, and Δt embeddings for irregular intervals. |
+| **Multi-omic ingestion** | Methylation, transcriptomics, and related modalities via HDF5 `(B, T, S, C)` tensors. |
+| **Interpretability** | Captum/SHAP attribution over CpG sites and timestamps; Streamlit trajectory UI. |
+| **Comparative matrix** | Scale from BRCA anchor toward Alzheimer's, RA, T2D, and chromosomal/epigenetic aging cohorts. |
 
 ---
 
@@ -67,7 +73,7 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 |------------|---------|----------|
 | Raw omic files | `.CSV`, `.TXT`, VCF, HDF5 | Methylation beta-value matrices, RNA-Seq FPKM/TPM tables, somatic mutation VCFs, CNV log2 ratio files |
 | Biological Blueprints | APIs / `.CSV` | KEGG pathways, Reactome networks |
-| Clinical / demographic | `.CSV`, tabular joins | Age, sex, ethnicity, staging |
+| Clinical / demographic | `.CSV`, tabular joins | Age, sex, ethnicity, staging, visit timestamps |
 
 **Preprocessing constraints:**
 - Strict **20% holdout test set** extracted before any preprocessing to prevent data leakage.
@@ -77,10 +83,10 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 | Output | Description |
 |--------|-------------|
-| **Track A Models** | 5 highly optimized unconstrained multi-omic prediction models. |
-| **Track B Models** | 5 Bio-NAS constrained multi-omic prediction models with biologically interpretable weightings. |
-| **LLM Summaries** | AI-generated mechanistic explanations for why specific biological networks were activated to predict specific diseases. |
-| **Comparative Metrics** | F1-Score, ROC-AUC, GPU Memory reduction, Parameter reduction statistics. |
+| **Searched architectures** | Best spatio-temporal networks per disease study stored via Optuna. |
+| **Benchmarks** | Holdout metrics vs spatial-only ablations and longitudinal RF/XGBoost baselines. |
+| **Attribution maps** | CpG/time drivers exported for thesis and Streamlit views. |
+| **Open-source framework** | Tagged Python release with install docs and smoke demos. |
 
 ---
 
@@ -92,29 +98,43 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 | **Neurological** | Alzheimer's Disease | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) |
 | **Autoimmune** | Rheumatoid Arthritis | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) |
 | **Metabolic** | Type 2 Diabetes | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) / [recount3](https://bioconductor.org/) |
-| **Genetic / Chromosomal** | Down Syndrome | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) |
+| **Aging / Epigenetic** | Epigenetic Aging cohorts | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) / related biobanks |
 
 ---
 
 ## 4. Software Stack
 
 | Package / tool | URL | Role |
-|----------------|-----|------|
-| **PyTorch** | [pytorch.org](https://pytorch.org/) | ETL pipelines, MaskedLinear layers, Neural architectures |
-| **Optuna** | [optuna.org](https://optuna.org/) | Standard NAS tuning and Bio-NAS pathway selection |
-| **HDF5 / h5py** | [h5py.org](https://www.h5py.org/) | High-performance multi-omic data storage |
+|----------------|------|------|
+| **PyTorch** | [pytorch.org](https://pytorch.org/) | ETL pipelines, spatial/temporal modules, MaskedLinear (Bio-NAS) |
+| **Optuna** | [optuna.org](https://optuna.org/) | Distributed architecture search + Hyperband |
+| **tsai / sktime** | | Temporal/deep learning utilities |
+| **HDF5 / h5py** | [h5py.org](https://www.h5py.org/) | High-performance multi-omic tensor storage |
+| **captum / shap** | | Multi-dimensional attribution |
+| **Streamlit** | | Trajectory dashboard |
 | **KEGG / Reactome** | [kegg.jp](https://www.kegg.jp/) | Biological blueprints for network constraints |
-| **LLM APIs (e.g. Gemini)** | | Mechanistic pathway interpretation |
 
 ### Repository tooling
 
 | Component | Location | Purpose |
 |-----------|----------|--------|
-| Master plan | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) | Authoritative Bio-NAS dual-track roadmap |
-| Timeline dashboard | [phd_bio-nas_timeline_dashboard.html](phd_bio-nas_timeline_dashboard.html) | Interactive 3-year quarterly progress tracker ([live](https://adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html)) |
-| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2); sets **Year**, **Quarter**, **Phase**, and **Step** fields |
+| Master plan (source) | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) | Authoritative 24-item roadmap |
+| Master plan (HTML) | [phd_bio-nas_master_plan.html](phd_bio-nas_master_plan.html) | Published plan with issue links ([live](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html)) |
+| Timeline dashboard | [phd_bio-nas_timeline_dashboard.html](phd_bio-nas_timeline_dashboard.html) | Interactive tracker ([live](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html)) |
+| Embed / render | `scripts/embed_dashboard_plan.py`, `scripts/render_master_plan_html.py` | Regenerate dashboard + HTML plan from markdown + sync state |
+| GitHub Projects sync | `scripts/sync_phd_to_github.py` | Sync plan tasks to [project board #2](https://github.com/AdamCankaya/PhDNeural/projects/2) |
+| Tests | `tests/test_phd_parser.py` | Parser / requirements / 24-task contract |
 | Setup guide | [GITHUB_PROJECTS_BIO-NAS_SETUP.md](GITHUB_PROJECTS_BIO-NAS_SETUP.md) | GitHub Projects v2 configuration and sync workflow |
-| CI sync workflow | `.github/workflows/sync-phd-plan.yml` | Manual GitHub Actions re-sync trigger |
+| Changelog | [CHANGELOG.md](CHANGELOG.md) | Notable documentation and tooling changes |
+
+### Sync after plan edits
+
+```powershell
+cd Bio-NAS
+python -m unittest discover -s tests -v
+python scripts/sync_phd_to_github.py --update-existing --close-stale --prune-project
+python scripts/embed_dashboard_plan.py
+```
 
 ---
 

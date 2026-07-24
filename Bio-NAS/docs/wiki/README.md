@@ -28,7 +28,10 @@ Local wiki git clone: `docs/wiki/.publish-cache/` (gitignored).
 ## Link conventions
 
 - Cross-page: `[Workflow](Workflow)` — match filename stem without `.md`
-- External: full URLs for board, dashboard, raw GitHub files
+- External: full URLs for board, dashboard, master plan HTML, and raw GitHub files
+- Prefer `https://adamcankaya.github.io/PhDNeural/Bio-NAS/…` for Pages (not the repo-root dashboard path)
+
+Keep task counts and calendars consistent with `phd_bio-nas_master_plan.md` (**24** items).
 
 ## Do not edit the live wiki directly
 

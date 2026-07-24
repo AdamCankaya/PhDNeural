@@ -1,8 +1,8 @@
 # PhDNeural Wiki
 
-Welcome to the **PhDNeural** project wiki — a published mirror of documentation under [`docs/wiki/`](https://github.com/AdamCankaya/PhDNeural/tree/main/docs/wiki) in the repository.
+Welcome to the **PhDNeural** project wiki — a published mirror of documentation under [`docs/wiki/`](https://github.com/AdamCankaya/PhDNeural/tree/main/Bio-NAS/docs/wiki) in the repository.
 
-> **Planning phase:** All roadmap tasks are tracked as open GitHub issues; none are marked done yet. Roadmap updates are **additive** — new bullets create new issues; existing issues stay open unless you explicitly pass `--close-stale` to the sync script.
+> **Planning phase:** **24** roadmap checklist items, each with a 1:1 open GitHub issue (`label:phd-sync`) containing implementation requirements. Sync with `--update-existing`; prune orphans with `--close-stale --prune-project`.
 
 ## Quick links
 
@@ -10,25 +10,30 @@ Welcome to the **PhDNeural** project wiki — a published mirror of documentatio
 |----------|------|
 | Repository | [github.com/AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural) |
 | Project board | [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2) |
-| Live dashboard | [phd_bio-nas_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/phd_bio-nas_timeline_dashboard.html) |
-| Master plan | [phd_bio-nas_master_plan.md](https://github.com/AdamCankaya/PhDNeural/blob/main/phd_bio-nas_master_plan.md) |
-| README | [README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/README.md) |
+| Issues (`phd-sync`) | [Open roadmap issues](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync+is%3Aopen) |
+| Pages landing | [adamcankaya.github.io/PhDNeural/Bio-NAS/](https://adamcankaya.github.io/PhDNeural/Bio-NAS/) |
+| Live dashboard | [phd_bio-nas_timeline_dashboard.html](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html) |
+| Master plan (HTML) | [phd_bio-nas_master_plan.html](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html) |
+| Master plan (source) | [phd_bio-nas_master_plan.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/phd_bio-nas_master_plan.md) |
+| README | [Bio-NAS/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md) |
 
 ## Research overview
 
-**Dual-Track Multi-Omic Fusion & Bio-NAS** starting with Breast Invasive Carcinoma (BRCA) as the anchor, scaling to five disease categories over a **3-year academic calendar** (Summer 2026 → Spring 2029).
+**Spatio-Temporal Dual-Track Multi-Omic Fusion & Bio-NAS** — BRCA as the anchor cohort, scaling toward five disease categories over a **3-year academic calendar** (Fall 2026 → Summer 2029).
 
 | Track | Approach | Purpose |
 |-------|----------|---------|
-| **Track A — Standard NAS (Control)** | Unconstrained hyperparameter search (layers, nodes) | Establish standard Late Fusion meta-classifier baseline |
-| **Track B — Bio-NAS (Innovation)** | `MaskedLinear` layers constrained by KEGG/Reactome matrices | Force Optuna to select and optimize true biological pathways |
+| **Track A — Standard NAS (Control)** | Unconstrained hyperparameter / architecture search | Mathematical efficiency baseline |
+| **Track B — Bio-NAS (Innovation)** | Pathway-constrained layers (KEGG/Reactome) | Biological priors for accuracy, interpretability, sparsity |
+
+Every timeline item on the dashboard and master-plan HTML links to its GitHub issue.
 
 ## Wiki navigation
 
 | Page | Description |
 |------|-------------|
-| [Workflow](Workflow) | Master plan → dashboard → GitHub sync loop |
-| [Roadmap and Tracking](Roadmap-and-Tracking) | 3-year quarter calendar, issue format, labels |
+| [Workflow](Workflow) | Master plan → dashboard / HTML → GitHub sync loop |
+| [Roadmap and Tracking](Roadmap-and-Tracking) | 3-year quarter calendar, 24 tasks, issue format, labels |
 | [Static MTL Baseline](Static-MTL-Baseline) | Multi-task prediction contract |
 | [Code Map and Status](Code-Map-and-Status) | `src/` implementation status |
 | [Glossary](Glossary) | Key terms |
