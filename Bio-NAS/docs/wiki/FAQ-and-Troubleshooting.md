@@ -1,4 +1,4 @@
-# FAQ and Troubleshooting
+﻿# FAQ and Troubleshooting
 
 ## GitHub sync
 
@@ -8,9 +8,9 @@ Ensure `bio-nas_github_sync.config.json` exists (copy from `bio-nas_github_sync.
 
 ### `Project #N not found`
 
-- Confirm project number from URL: [Project #2](https://github.com/AdamCankaya/PhDNeural/projects/2)
+- Confirm project number from URL: [Project #2](https://github.com/users/AdamCankaya/projects/2) (user-owned Projects v2)
 - Link project to repo: `gh project link 2 --owner USER --repo PhDNeural`
-- Set `GITHUB_PROJECT_SCOPE` to `repository` in config
+- Set `GITHUB_PROJECT_SCOPE` to `user` in config (not `repository`)
 
 ### `GraphQL error: Resource not accessible`
 

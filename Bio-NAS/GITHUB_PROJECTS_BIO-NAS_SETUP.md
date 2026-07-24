@@ -29,4 +29,4 @@ Live surfaces:
 - [Master plan HTML](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html)
 - [Pages landing](https://adamcankaya.github.io/PhDNeural/Bio-NAS/)
 
-Project board: [PhD Master Plan (Project #2)](https://github.com/AdamCankaya/PhDNeural/projects/2)
+Project board: [PhD Master Plan (Project #2)](https://github.com/users/AdamCankaya/projects/2)
