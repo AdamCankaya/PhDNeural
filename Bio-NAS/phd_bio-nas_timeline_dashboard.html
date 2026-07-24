@@ -1006,20 +1006,21 @@
                     `<li class="text-xs text-slate-500 leading-snug list-disc list-inside">${r}</li>`
                   ).join('')}</ul>`
                 : '';
-              const issueLink = task.issue_url
-                ? `<a href="${task.issue_url}" target="_blank" rel="noopener noreferrer"
-                     class="inline-flex items-center gap-1 text-xs font-medium text-indigo-400 hover:text-indigo-300 mt-1.5"
-                     title="Open GitHub issue with implementation requirements">Open issue #${task.issue_number} ↗</a>`
-                : `<span class="inline-block text-xs font-medium text-amber-400 mt-1.5">Missing GitHub issue</span>`;
+              const issueSuffix = task.issue_url && task.issue_number
+                ? ` <a href="${task.issue_url}" target="_blank" rel="noopener noreferrer"
+                     class="text-indigo-400 hover:text-indigo-300 font-medium whitespace-nowrap"
+                     title="Open GitHub issue #${task.issue_number}">(Issue #${task.issue_number})</a>`
+                : ` <span class="text-amber-400 font-medium whitespace-nowrap">(Missing issue)</span>`;
               html += `
                       <li class="flex items-start gap-3 group">
                         <input type="checkbox" id="${task.id}" data-task="${task.id}"
                           class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 cursor-pointer flex-shrink-0"
                           ${checked} />
                         <div class="min-w-0 flex-1">
-                          <label for="${task.id}" class="task-label text-sm text-slate-300 leading-relaxed cursor-pointer group-hover:text-slate-100 transition">${task.text}</label>
+                          <p class="text-sm text-slate-300 leading-relaxed group-hover:text-slate-100 transition">
+                            <label for="${task.id}" class="task-label cursor-pointer">${task.text}</label>${issueSuffix}
+                          </p>
                           ${reqHtml}
-                          ${issueLink}
                         </div>
                       </li>`;
             });

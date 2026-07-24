@@ -115,23 +115,25 @@ def render_html(tasks, title: str, core_objective: str, issues_map: dict[str, di
                     issue_url = info.get("issue_url")
                     issue_number = info.get("issue_number")
                     parts.append('  <div class="task">')
-                    parts.append(f"    <h4>{html.escape(task.summary())}</h4>")
+                    if issue_url and issue_number:
+                        issue_suffix = (
+                            f' <a class="issue" href="{html.escape(issue_url)}" '
+                            f'target="_blank" rel="noopener noreferrer">'
+                            f"(Issue #{issue_number})</a>"
+                        )
+                    else:
+                        issue_suffix = (
+                            ' <span class="issue missing">(Missing issue)</span>'
+                        )
+                    parts.append(
+                        f"    <h4>{html.escape(task.summary())}{issue_suffix}</h4>"
+                    )
                     reqs = task.requirements()
                     if reqs:
                         parts.append('    <ul class="reqs">')
                         for req in reqs:
                             parts.append(f"      <li>{html.escape(req)}</li>")
                         parts.append("    </ul>")
-                    if issue_url and issue_number:
-                        parts.append(
-                            f'    <a class="issue" href="{html.escape(issue_url)}" '
-                            f'target="_blank" rel="noopener noreferrer">'
-                            f"Open issue #{issue_number} ↗</a>"
-                        )
-                    else:
-                        parts.append(
-                            '    <span class="issue missing">Missing GitHub issue</span>'
-                        )
                     parts.append("  </div>")
         parts.append("  <hr />")
 
