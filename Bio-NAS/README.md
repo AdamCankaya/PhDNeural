@@ -32,6 +32,19 @@ To effectively test the core hypothesis, the framework executes a rigid **Dual-T
 | **Track A — Standard NAS (The Control)** | Unconstrained search space (layers, nodes, dropout) optimizing purely for mathematical efficiency. | Establish a robust performance baseline using state-of-the-art Late Fusion techniques and Optuna-driven hyperparameter tuning. |
 | **Track B — Bio-NAS (The Innovation)** | Constrain artificial synapses using biological blueprints (KEGG, Reactome) translated into binary Adjacency Matrices (`MaskedLinear` layers). | Force Optuna to select and optimize true biological pathways. Determine if biological priors increase predictive accuracy, interpretability, and computational sparsity. |
 
+### Track × cohort schedule
+
+Year 1–2 complete a **BRCA dual-track vertical slice**. Year 3 work on the Other 4 pathologies is justified when BRCA holdout results show a **Track B advantage** (accuracy, interpretability, and/or sparsity). See the authoritative table in [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).
+
+| Quarter | Track scope | Cohort |
+|---------|-------------|--------|
+| Y1 Fall 2026 → Summer 2027 | Shared (A+B) | BRCA-first ETL/infra; All 5 inventory in Fall |
+| Y2 Fall 2027 → Winter 2027 | Track A + Track B modules | BRCA spatial/temporal search space |
+| Y2 Spring 2028 | Track A then Track B | BRCA Optuna studies |
+| Y2 Summer 2028 | Track A vs B | BRCA holdout + ablations (**scaling gate**) |
+| Y3 Fall 2028 → Winter 2028 | Track A + Track B | BRCA attribution + dashboard |
+| Y3 Spring 2029 → Summer 2029 | Track A + Track B | Other 4 / All 5 taxonomy, thesis, OSS |
+
 ---
 
 ## 1. Project Goals
@@ -44,14 +57,14 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 ### Roadmap timeline (3-year calendar)
 
-| Year | Quarters | Focus | Tasks |
-|------|----------|-------|------:|
-| **Year 1** | Fall 2026 → Summer 2027 | Longitudinal cohort sourcing, feature mapping, 4D ETL / Δt embeddings, compute + Postgres hub | 9 |
-| **Year 2** | Fall 2027 → Summer 2028 | Spatial/temporal NAS modules, distributed Optuna search, holdout benchmarks & baselines | 8 |
-| **Year 3** | Fall 2028 → Summer 2029 | Attribution maps, Streamlit trajectories, taxonomy synthesis, thesis & OSS release | 7 |
-| | | **Total** | **24** |
+| Year | Quarters | Focus | Track / cohort | Tasks |
+|------|----------|-------|----------------|------:|
+| **Year 1** | Fall 2026 → Summer 2027 | Longitudinal cohort sourcing, feature mapping, 4D ETL / Δt embeddings, compute + Postgres hub | Shared (A+B) · BRCA-first | 9 |
+| **Year 2** | Fall 2027 → Summer 2028 | Spatial/temporal NAS modules, distributed Optuna search, holdout benchmarks & baselines | Track A+B → A vs B · BRCA | 8 |
+| **Year 3** | Fall 2028 → Summer 2029 | Attribution maps, Streamlit trajectories, taxonomy synthesis, thesis & OSS release | Track A+B · BRCA then Other 4 / All 5 | 7 |
+| | | | | **24** |
 
-Authoritative checklist: [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).
+Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).
 
 ### Objectives
 

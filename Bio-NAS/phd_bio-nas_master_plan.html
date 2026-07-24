@@ -47,6 +47,7 @@
   <div class="task">
     <h4>Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/354" target="_blank" rel="noopener noreferrer">(Issue #354)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — All 5 cohort inventory; BRCA listed first as anchor.</li>
       <li>Deliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.</li>
       <li>Acceptance: every disease has at least one candidate cohort with ≥2 timepoints documented.</li>
       <li>Dependencies: GDC/GEO/recount3 accounts; disease registry entries in `src/config/disease_registry.yaml`.</li>
@@ -55,6 +56,7 @@
   <div class="task">
     <h4>Source longitudinal tracking options focusing on primary vs. recurrent match points. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/355" target="_blank" rel="noopener noreferrer">(Issue #355)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — All 5 matching rules; BRCA primary/recurrent pairing prototyped first.</li>
       <li>Deliverables: matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.</li>
       <li>Acceptance: documented join keys and exclusion rules that preserve temporal order.</li>
       <li>Dependencies: cohort-specific clinical/metadata dictionaries.</li>
@@ -66,6 +68,7 @@
   <div class="task">
     <h4>Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/356" target="_blank" rel="noopener noreferrer">(Issue #356)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.</li>
       <li>Deliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).</li>
       <li>Acceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.</li>
       <li>Dependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing.</li>
@@ -74,6 +77,7 @@
   <div class="task">
     <h4>Define genomic structural spacing. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/357" target="_blank" rel="noopener noreferrer">(Issue #357)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — BRCA reference build; spacing config reusable across cohorts.</li>
       <li>Deliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.</li>
       <li>Acceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).</li>
       <li>Dependencies: reference genome build documented (e.g., GRCh38).</li>
@@ -85,6 +89,7 @@
   <div class="task">
     <h4>Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/358" target="_blank" rel="noopener noreferrer">(Issue #358)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).</li>
       <li>Deliverables: patient-level split files + loader that never peeks at holdout during fit.</li>
       <li>Acceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).</li>
       <li>Dependencies: finalized cohort tables from Year 1 Fall/Winter.</li>
@@ -93,6 +98,7 @@
   <div class="task">
     <h4>Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/359" target="_blank" rel="noopener noreferrer">(Issue #359)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — BRCA Δt embedding consumed by both tracks.</li>
       <li>Deliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.</li>
       <li>Acceptance: unit tests for zero, irregular, and missing Δt; shapes match tensor contract.</li>
       <li>Dependencies: visit timestamps aligned to patient IDs.</li>
@@ -101,6 +107,7 @@
   <div class="task">
     <h4>Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/360" target="_blank" rel="noopener noreferrer">(Issue #360)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — BRCA `(B, T, S, C)` tensors feed Track A and Track B search.</li>
       <li>Deliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.</li>
       <li>Acceptance: round-trip equality tests; documented channel layout per omic.</li>
       <li>Dependencies: feature map + Δt embedding from prior items.</li>
@@ -112,6 +119,7 @@
   <div class="task">
     <h4>Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/361" target="_blank" rel="noopener noreferrer">(Issue #361)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — environment supports unconstrained and pathway-masked models.</li>
       <li>Deliverables: environment lockfile / Docker image pin list; smoke-test script importing stack packages.</li>
       <li>Acceptance: clean install on target host(s); GPU detection logged when available.</li>
       <li>Dependencies: cloud/HPC access; Slurm or equivalent job runner path identified.</li>
@@ -120,6 +128,7 @@
   <div class="task">
     <h4>Set up Dockerized PostgreSQL engine for orchestration. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/362" target="_blank" rel="noopener noreferrer">(Issue #362)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — separate Optuna studies for Track A and Track B (BRCA first).</li>
       <li>Deliverables: `docker-compose` (or k8s) Postgres for Optuna/study metadata; backup/restore notes.</li>
       <li>Acceptance: Optuna RDB storage connects; one trial write/read verified.</li>
       <li>Dependencies: host networking/firewall rules; credentials in `.env` (not committed).</li>
@@ -133,6 +142,7 @@
   <div class="task">
     <h4>Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/363" target="_blank" rel="noopener noreferrer">(Issue #363)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — BRCA spatial blocks; Track A unconstrained; Track B adds pathway-masked / adjacency-constrained variants (`MaskedLinear`).</li>
       <li>Deliverables: reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.</li>
       <li>Acceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.</li>
       <li>Dependencies: genomic spacing config; Year 1 tensors.</li>
@@ -144,6 +154,7 @@
   <div class="task">
     <h4>Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/364" target="_blank" rel="noopener noreferrer">(Issue #364)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — BRCA temporal stack shared where possible; Track B may route pathway-selected features into the same temporal blocks.</li>
       <li>Deliverables: temporal stack modules that consume Δt embeddings; optional attention over time.</li>
       <li>Acceptance: causal masking verified (no future visit leakage); gradient flow smoke test.</li>
       <li>Dependencies: spatial module outputs; Δt embedding layer.</li>
@@ -155,14 +166,16 @@
   <div class="task">
     <h4>Execute large-scale spatio-temporal architecture search with Causal Cross-Validation. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/365" target="_blank" rel="noopener noreferrer">(Issue #365)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A then Track B — BRCA Optuna studies run for both tracks (control then Bio-NAS, or parallel with distinct study IDs).</li>
       <li>Deliverables: Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).</li>
-      <li>Acceptance: ≥1 full study completes on BRCA (or primary cohort) with reproducible seed and stored best trial.</li>
+      <li>Acceptance: ≥1 full Track A study and ≥1 full Track B study complete on BRCA with reproducible seeds and stored best trials.</li>
       <li>Dependencies: Postgres Optuna storage; Slurm workers; train tensors.</li>
     </ul>
   </div>
   <div class="task">
     <h4>Use Horizontally Scaled Workers via Slurm and HyperbandPruner. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/366" target="_blank" rel="noopener noreferrer">(Issue #366)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — Slurm workers serve BRCA Track A and Track B studies.</li>
       <li>Deliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.</li>
       <li>Acceptance: ≥2 concurrent workers report trials to the same study without corruption.</li>
       <li>Dependencies: cluster account; shared storage for artifacts.</li>
@@ -174,14 +187,16 @@
   <div class="task">
     <h4>Evaluate architectures on 20% holdout trajectories. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/367" target="_blank" rel="noopener noreferrer">(Issue #367)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A vs B — BRCA holdout metrics for best Track A and Track B architectures side-by-side.</li>
       <li>Deliverables: holdout evaluation script + metrics table for best NAS architectures.</li>
-      <li>Acceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted.</li>
+      <li>Acceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted; Track A vs Track B delta reported.</li>
       <li>Dependencies: completed Optuna studies; locked holdout split.</li>
     </ul>
   </div>
   <div class="task">
     <h4>Ablation study: Spatial vs. Spatio-Temporal predictive gain. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/368" target="_blank" rel="noopener noreferrer">(Issue #368)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — BRCA ablations repeated per track where applicable.</li>
       <li>Deliverables: controlled ablation comparing spatial-only vs full spatio-temporal models.</li>
       <li>Acceptance: same data splits/seeds; delta metrics documented with interpretation.</li>
       <li>Dependencies: spatial and temporal modules; evaluation harness.</li>
@@ -190,6 +205,7 @@
   <div class="task">
     <h4>Compare with longitudinal Random Forests/XGBoost. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/369" target="_blank" rel="noopener noreferrer">(Issue #369)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track-agnostic baseline — BRCA classical baselines (shared external control for both tracks).</li>
       <li>Deliverables: classical baseline pipelines on comparable flattened/windowed features.</li>
       <li>Acceptance: baseline metrics on identical holdout; fair feature budget documented.</li>
       <li>Dependencies: tabular feature export from tensors/metadata.</li>
@@ -203,6 +219,7 @@
   <div class="task">
     <h4>Implement `captum` or `shap` for multi-dimensional attribution. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/370" target="_blank" rel="noopener noreferrer">(Issue #370)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — BRCA attribution pipelines for both best models.</li>
       <li>Deliverables: attribution pipeline producing per-sample spatial×temporal importance tensors.</li>
       <li>Acceptance: attributions run on holdout subset without OOM; API documented.</li>
       <li>Dependencies: trained best models; captum/shap in environment.</li>
@@ -211,8 +228,9 @@
   <div class="task">
     <h4>Extract maps identifying CpG sites and timestamps driving disease progression predictions. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/371" target="_blank" rel="noopener noreferrer">(Issue #371)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — BRCA site/time maps; Track B maps checked against pathway priors.</li>
       <li>Deliverables: ranked site/time maps + export (CSV/Parquet) and summary figures.</li>
-      <li>Acceptance: top-k drivers reviewable per disease trajectory example.</li>
+      <li>Acceptance: top-k drivers reviewable per disease trajectory example; Track B biological plausibility note drafted.</li>
       <li>Dependencies: attribution pipeline; genomic annotations.</li>
     </ul>
   </div>
@@ -222,6 +240,7 @@
   <div class="task">
     <h4>Build interactive `streamlit` interface. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/372" target="_blank" rel="noopener noreferrer">(Issue #372)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — BRCA demo app toggles Track A vs Track B predictions.</li>
       <li>Deliverables: Streamlit app loading model outputs and patient trajectories.</li>
       <li>Acceptance: local demo runbook; auth/PII constraints documented.</li>
       <li>Dependencies: inference artifacts; holdout demo cohort.</li>
@@ -230,6 +249,7 @@
   <div class="task">
     <h4>Render health trajectories and risk forecasting curves. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/373" target="_blank" rel="noopener noreferrer">(Issue #373)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — BRCA observed vs predicted curves for both tracks.</li>
       <li>Deliverables: plots for observed vs predicted risk over time with uncertainty bands if available.</li>
       <li>Acceptance: at least one end-to-end patient view from load → forecast → attribution snippet.</li>
       <li>Dependencies: Streamlit shell; attribution exports.</li>
@@ -241,17 +261,19 @@
   <div class="task">
     <h4>Document structural taxonomy discovered. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/374" target="_blank" rel="noopener noreferrer">(Issue #374)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — taxonomy across BRCA and Other 4 after scaling gate; if gate fails, BRCA-only dual-track taxonomy.</li>
       <li>Deliverables: taxonomy chapter/section mapping architectures to disease categories and motifs.</li>
       <li>Acceptance: peer-readable draft checked into docs with figure list.</li>
-      <li>Dependencies: Year 2–3 experiment logs and benchmarks.</li>
+      <li>Dependencies: Year 2–3 experiment logs and benchmarks; documented BRCA Track A vs B outcome.</li>
     </ul>
   </div>
   <div class="task">
     <h4>Compare slow-progressing vs. fast-acting condition architectures. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/375" target="_blank" rel="noopener noreferrer">(Issue #375)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — Other 4 (Alzheimer&#x27;s, RA, T2D, Epigenetic Aging) dual-track comparisons when justified; else BRCA tempo analysis only.</li>
       <li>Deliverables: comparative analysis contrasting architecture preferences across disease tempos.</li>
       <li>Acceptance: quantitative table + qualitative discussion ready for thesis inclusion.</li>
-      <li>Dependencies: multi-disease study results (Phases 3–4).</li>
+      <li>Dependencies: multi-disease study results (Phases 3–4) or BRCA-only fallback analysis.</li>
     </ul>
   </div>
   <h3>Q2 Summer 2029: Thesis Defense</h3>
@@ -260,6 +282,7 @@
   <div class="task">
     <h4>Finalize dissertation. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/376" target="_blank" rel="noopener noreferrer">(Issue #376)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Track A + Track B — thesis reports BRCA dual-track result and any Other 4 extensions.</li>
       <li>Deliverables: defense draft, slides, and response-to-committee checklist.</li>
       <li>Acceptance: committee-ready PDF; all chapters cite frozen experiment IDs.</li>
       <li>Dependencies: synthesis documents; completed experiments.</li>
@@ -268,6 +291,7 @@
   <div class="task">
     <h4>Release the complete open-source Python framework. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/377" target="_blank" rel="noopener noreferrer">(Issue #377)</a></h4>
     <ul class="reqs">
+      <li>Track scope: Shared (A+B) — OSS release includes Track A and Track B tooling for BRCA; Other 4 configs as available.</li>
       <li>Deliverables: tagged release, install docs, example notebooks, license/citation.</li>
       <li>Acceptance: clean clone → install → smoke demo on public sample data.</li>
       <li>Dependencies: stable `src/` APIs; CI green on main.</li>

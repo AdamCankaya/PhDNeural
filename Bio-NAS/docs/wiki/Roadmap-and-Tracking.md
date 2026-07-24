@@ -16,21 +16,23 @@ All **24** roadmap tasks are tracked as **open** issues during the planning phas
 
 ## 3-year quarter calendar
 
-| Year | Quarter | Phase(s) | Focus | Tasks |
-|------|----------|----------|-------|------:|
-| **Year 1** | Fall 2026 | 1 | Longitudinal multi-omic cohort sourcing | 2 |
-| **Year 1** | Winter 2026 | 1 | Spatial/temporal feature mapping | 2 |
-| **Year 1** | Spring 2027 | 2 | 4D tensors + Δt ETL | 3 |
-| **Year 1** | Summer 2027 | 2 | Compute stack + Dockerized Postgres | 2 |
-| **Year 2** | Fall 2027 | 3 | Spatial CNN / Transformer modules | 1 |
-| **Year 2** | Winter 2027 | 3 | Temporal ConvLSTM/GRU + attention | 1 |
-| **Year 2** | Spring 2028 | 3 | Distributed Optuna + Slurm Hyperband | 2 |
-| **Year 2** | Summer 2028 | 3 | Holdout eval, ablations, RF/XGBoost | 3 |
-| **Year 3** | Fall 2028 | 4 | Captum/SHAP attribution maps | 2 |
-| **Year 3** | Winter 2028 | 4 | Streamlit trajectory dashboard | 2 |
-| **Year 3** | Spring 2029 | 4 | Taxonomy synthesis | 2 |
-| **Year 3** | Summer 2029 | 4 | Thesis defense + OSS release | 2 |
-| | | | **Total** | **24** |
+| Year | Quarter | Phase(s) | Focus | Track scope | Cohort | Tasks |
+|------|----------|----------|-------|-------------|--------|------:|
+| **Year 1** | Fall 2026 | 1 | Longitudinal multi-omic cohort sourcing | Shared (A+B) | All 5 inventory; BRCA primary | 2 |
+| **Year 1** | Winter 2026 | 1 | Spatial/temporal feature mapping | Shared (A+B) | BRCA-first (templates for Other 4) | 2 |
+| **Year 1** | Spring 2027 | 2 | 4D tensors + Δt ETL | Shared (A+B) | BRCA vertical slice | 3 |
+| **Year 1** | Summer 2027 | 2 | Compute stack + Dockerized Postgres | Shared (A+B) | Infra for both tracks | 2 |
+| **Year 2** | Fall 2027 | 3 | Spatial CNN / Transformer modules | Track A + Track B | BRCA | 1 |
+| **Year 2** | Winter 2027 | 3 | Temporal ConvLSTM/GRU + attention | Track A + Track B | BRCA | 1 |
+| **Year 2** | Spring 2028 | 3 | Distributed Optuna + Slurm Hyperband | Track A then Track B | BRCA dual-track studies | 2 |
+| **Year 2** | Summer 2028 | 3 | Holdout eval, ablations, RF/XGBoost | Track A vs B | BRCA (**scaling gate**) | 3 |
+| **Year 3** | Fall 2028 | 4 | Captum/SHAP attribution maps | Track A + Track B | BRCA | 2 |
+| **Year 3** | Winter 2028 | 4 | Streamlit trajectory dashboard | Track A + Track B | BRCA demo | 2 |
+| **Year 3** | Spring 2029 | 4 | Taxonomy synthesis | Track A + Track B | Other 4 / All 5 (post-gate) | 2 |
+| **Year 3** | Summer 2029 | 4 | Thesis defense + OSS release | Track A + Track B | All 5 synthesis | 2 |
+| | | | | | **Total** | **24** |
+
+Each checklist item also carries a nested **Track scope** line in the master plan (synced into issue Implementation requirements).
 
 ## Phase cross-reference
 
@@ -96,4 +98,6 @@ python scripts/embed_dashboard_plan.py
 
 - [Workflow](Workflow) — sync loop and configuration
 - [Static MTL Baseline](Static-MTL-Baseline) — two-task contract across all quarters
+- [FAQ and Troubleshooting](FAQ-and-Troubleshooting) — why two tracks, why BRCA, scaling gate
+- [Glossary](Glossary) — Track A/B and related terms
 - [Home](Home)

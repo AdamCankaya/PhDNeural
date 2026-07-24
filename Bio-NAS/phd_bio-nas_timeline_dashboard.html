@@ -191,8 +191,9 @@
                 {
                   "id": "year-1-q3-2026-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase",
                   "text": "Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).",
-                  "detail": "Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).\nDeliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.\nAcceptance: every disease has at least one candidate cohort with ≥2 timepoints documented.\nDependencies: GDC/GEO/recount3 accounts; disease registry entries in `src/config/disease_registry.yaml`.",
+                  "detail": "Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).\nTrack scope: Shared (A+B) — All 5 cohort inventory; BRCA listed first as anchor.\nDeliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.\nAcceptance: every disease has at least one candidate cohort with ≥2 timepoints documented.\nDependencies: GDC/GEO/recount3 accounts; disease registry entries in `src/config/disease_registry.yaml`.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — All 5 cohort inventory; BRCA listed first as anchor.",
                     "Deliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.",
                     "Acceptance: every disease has at least one candidate cohort with ≥2 timepoints documented.",
                     "Dependencies: GDC/GEO/recount3 accounts; disease registry entries in `src/config/disease_registry.yaml`."
@@ -204,8 +205,9 @@
                 {
                   "id": "year-1-q3-2026-phase-1-step-1-item-2-source-longitudinal-tracking-options-foc",
                   "text": "Source longitudinal tracking options focusing on primary vs. recurrent match points.",
-                  "detail": "Source longitudinal tracking options focusing on primary vs. recurrent match points.\nDeliverables: matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.\nAcceptance: documented join keys and exclusion rules that preserve temporal order.\nDependencies: cohort-specific clinical/metadata dictionaries.",
+                  "detail": "Source longitudinal tracking options focusing on primary vs. recurrent match points.\nTrack scope: Shared (A+B) — All 5 matching rules; BRCA primary/recurrent pairing prototyped first.\nDeliverables: matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.\nAcceptance: documented join keys and exclusion rules that preserve temporal order.\nDependencies: cohort-specific clinical/metadata dictionaries.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — All 5 matching rules; BRCA primary/recurrent pairing prototyped first.",
                     "Deliverables: matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.",
                     "Acceptance: documented join keys and exclusion rules that preserve temporal order.",
                     "Dependencies: cohort-specific clinical/metadata dictionaries."
@@ -237,8 +239,9 @@
                 {
                   "id": "year-1-q4-2026-phase-1-step-1-item-1-map-spatial-dimension-sequence-coordinat",
                   "text": "Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).",
-                  "detail": "Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).\nDeliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).\nAcceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.\nDependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing.",
+                  "detail": "Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).\nTrack scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.\nDeliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).\nAcceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.\nDependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.",
                     "Deliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).",
                     "Acceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.",
                     "Dependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing."
@@ -250,8 +253,9 @@
                 {
                   "id": "year-1-q4-2026-phase-1-step-1-item-2-define-genomic-structural-spacing",
                   "text": "Define genomic structural spacing.",
-                  "detail": "Define genomic structural spacing.\nDeliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.\nAcceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).\nDependencies: reference genome build documented (e.g., GRCh38).",
+                  "detail": "Define genomic structural spacing.\nTrack scope: Shared (A+B) — BRCA reference build; spacing config reusable across cohorts.\nDeliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.\nAcceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).\nDependencies: reference genome build documented (e.g., GRCh38).",
                   "requirements": [
+                    "Track scope: Shared (A+B) — BRCA reference build; spacing config reusable across cohorts.",
                     "Deliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.",
                     "Acceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).",
                     "Dependencies: reference genome build documented (e.g., GRCh38)."
@@ -283,8 +287,9 @@
                 {
                   "id": "year-1-q1-2027-phase-2-step-1-item-1-partition-data-by-patient-id-80-20-train",
                   "text": "Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).",
-                  "detail": "Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).\nDeliverables: patient-level split files + loader that never peeks at holdout during fit.\nAcceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).\nDependencies: finalized cohort tables from Year 1 Fall/Winter.",
+                  "detail": "Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).\nTrack scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).\nDeliverables: patient-level split files + loader that never peeks at holdout during fit.\nAcceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).\nDependencies: finalized cohort tables from Year 1 Fall/Winter.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).",
                     "Deliverables: patient-level split files + loader that never peeks at holdout during fit.",
                     "Acceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).",
                     "Dependencies: finalized cohort tables from Year 1 Fall/Winter."
@@ -296,8 +301,9 @@
                 {
                   "id": "year-1-q1-2027-phase-2-step-1-item-2-implement-time-delta-embedding-layer-del",
                   "text": "Implement Time-Delta Embedding Layer ($\\Delta t$) for irregular intervals.",
-                  "detail": "Implement Time-Delta Embedding Layer ($\\Delta t$) for irregular intervals.\nDeliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.\nAcceptance: unit tests for zero, irregular, and missing Δt; shapes match tensor contract.\nDependencies: visit timestamps aligned to patient IDs.",
+                  "detail": "Implement Time-Delta Embedding Layer ($\\Delta t$) for irregular intervals.\nTrack scope: Shared (A+B) — BRCA Δt embedding consumed by both tracks.\nDeliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.\nAcceptance: unit tests for zero, irregular, and missing Δt; shapes match tensor contract.\nDependencies: visit timestamps aligned to patient IDs.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — BRCA Δt embedding consumed by both tracks.",
                     "Deliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.",
                     "Acceptance: unit tests for zero, irregular, and missing Δt; shapes match tensor contract.",
                     "Dependencies: visit timestamps aligned to patient IDs."
@@ -309,8 +315,9 @@
                 {
                   "id": "year-1-q1-2027-phase-2-step-1-item-3-construct-4d-tensors-batch-time-steps-sp",
                   "text": "Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).",
-                  "detail": "Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).\nDeliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.\nAcceptance: round-trip equality tests; documented channel layout per omic.\nDependencies: feature map + Δt embedding from prior items.",
+                  "detail": "Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).\nTrack scope: Shared (A+B) — BRCA `(B, T, S, C)` tensors feed Track A and Track B search.\nDeliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.\nAcceptance: round-trip equality tests; documented channel layout per omic.\nDependencies: feature map + Δt embedding from prior items.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — BRCA `(B, T, S, C)` tensors feed Track A and Track B search.",
                     "Deliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.",
                     "Acceptance: round-trip equality tests; documented channel layout per omic.",
                     "Dependencies: feature map + Δt embedding from prior items."
@@ -342,8 +349,9 @@
                 {
                   "id": "year-1-q2-2027-phase-2-step-1-item-1-provision-compute-servers-with-torch-tsa",
                   "text": "Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.",
-                  "detail": "Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.\nDeliverables: environment lockfile / Docker image pin list; smoke-test script importing stack packages.\nAcceptance: clean install on target host(s); GPU detection logged when available.\nDependencies: cloud/HPC access; Slurm or equivalent job runner path identified.",
+                  "detail": "Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.\nTrack scope: Shared (A+B) — environment supports unconstrained and pathway-masked models.\nDeliverables: environment lockfile / Docker image pin list; smoke-test script importing stack packages.\nAcceptance: clean install on target host(s); GPU detection logged when available.\nDependencies: cloud/HPC access; Slurm or equivalent job runner path identified.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — environment supports unconstrained and pathway-masked models.",
                     "Deliverables: environment lockfile / Docker image pin list; smoke-test script importing stack packages.",
                     "Acceptance: clean install on target host(s); GPU detection logged when available.",
                     "Dependencies: cloud/HPC access; Slurm or equivalent job runner path identified."
@@ -355,8 +363,9 @@
                 {
                   "id": "year-1-q2-2027-phase-2-step-1-item-2-set-up-dockerized-postgresql-engine-for",
                   "text": "Set up Dockerized PostgreSQL engine for orchestration.",
-                  "detail": "Set up Dockerized PostgreSQL engine for orchestration.\nDeliverables: `docker-compose` (or k8s) Postgres for Optuna/study metadata; backup/restore notes.\nAcceptance: Optuna RDB storage connects; one trial write/read verified.\nDependencies: host networking/firewall rules; credentials in `.env` (not committed).",
+                  "detail": "Set up Dockerized PostgreSQL engine for orchestration.\nTrack scope: Shared (A+B) — separate Optuna studies for Track A and Track B (BRCA first).\nDeliverables: `docker-compose` (or k8s) Postgres for Optuna/study metadata; backup/restore notes.\nAcceptance: Optuna RDB storage connects; one trial write/read verified.\nDependencies: host networking/firewall rules; credentials in `.env` (not committed).",
                   "requirements": [
+                    "Track scope: Shared (A+B) — separate Optuna studies for Track A and Track B (BRCA first).",
                     "Deliverables: `docker-compose` (or k8s) Postgres for Optuna/study metadata; backup/restore notes.",
                     "Acceptance: Optuna RDB storage connects; one trial write/read verified.",
                     "Dependencies: host networking/firewall rules; credentials in `.env` (not committed)."
@@ -396,8 +405,9 @@
                 {
                   "id": "year-2-q3-2027-phase-3-step-1-item-1-develop-1d-cnns-for-local-clusters-of-cp",
                   "text": "Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.",
-                  "detail": "Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.\nDeliverables: reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.\nAcceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.\nDependencies: genomic spacing config; Year 1 tensors.",
+                  "detail": "Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.\nTrack scope: Track A + Track B — BRCA spatial blocks; Track A unconstrained; Track B adds pathway-masked / adjacency-constrained variants (`MaskedLinear`).\nDeliverables: reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.\nAcceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.\nDependencies: genomic spacing config; Year 1 tensors.",
                   "requirements": [
+                    "Track scope: Track A + Track B — BRCA spatial blocks; Track A unconstrained; Track B adds pathway-masked / adjacency-constrained variants (`MaskedLinear`).",
                     "Deliverables: reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.",
                     "Acceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.",
                     "Dependencies: genomic spacing config; Year 1 tensors."
@@ -429,8 +439,9 @@
                 {
                   "id": "year-2-q4-2027-phase-3-step-1-item-1-implement-convlstm-gru-blocks-and-tempor",
                   "text": "Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.",
-                  "detail": "Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.\nDeliverables: temporal stack modules that consume Δt embeddings; optional attention over time.\nAcceptance: causal masking verified (no future visit leakage); gradient flow smoke test.\nDependencies: spatial module outputs; Δt embedding layer.",
+                  "detail": "Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.\nTrack scope: Track A + Track B — BRCA temporal stack shared where possible; Track B may route pathway-selected features into the same temporal blocks.\nDeliverables: temporal stack modules that consume Δt embeddings; optional attention over time.\nAcceptance: causal masking verified (no future visit leakage); gradient flow smoke test.\nDependencies: spatial module outputs; Δt embedding layer.",
                   "requirements": [
+                    "Track scope: Track A + Track B — BRCA temporal stack shared where possible; Track B may route pathway-selected features into the same temporal blocks.",
                     "Deliverables: temporal stack modules that consume Δt embeddings; optional attention over time.",
                     "Acceptance: causal masking verified (no future visit leakage); gradient flow smoke test.",
                     "Dependencies: spatial module outputs; Δt embedding layer."
@@ -462,10 +473,11 @@
                 {
                   "id": "year-2-q1-2028-phase-3-step-1-item-1-execute-large-scale-spatio-temporal-arch",
                   "text": "Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.",
-                  "detail": "Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.\nDeliverables: Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).\nAcceptance: ≥1 full study completes on BRCA (or primary cohort) with reproducible seed and stored best trial.\nDependencies: Postgres Optuna storage; Slurm workers; train tensors.",
+                  "detail": "Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.\nTrack scope: Track A then Track B — BRCA Optuna studies run for both tracks (control then Bio-NAS, or parallel with distinct study IDs).\nDeliverables: Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).\nAcceptance: ≥1 full Track A study and ≥1 full Track B study complete on BRCA with reproducible seeds and stored best trials.\nDependencies: Postgres Optuna storage; Slurm workers; train tensors.",
                   "requirements": [
+                    "Track scope: Track A then Track B — BRCA Optuna studies run for both tracks (control then Bio-NAS, or parallel with distinct study IDs).",
                     "Deliverables: Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).",
-                    "Acceptance: ≥1 full study completes on BRCA (or primary cohort) with reproducible seed and stored best trial.",
+                    "Acceptance: ≥1 full Track A study and ≥1 full Track B study complete on BRCA with reproducible seeds and stored best trials.",
                     "Dependencies: Postgres Optuna storage; Slurm workers; train tensors."
                   ],
                   "phase": 3,
@@ -475,8 +487,9 @@
                 {
                   "id": "year-2-q1-2028-phase-3-step-1-item-2-use-horizontally-scaled-workers-via-slur",
                   "text": "Use Horizontally Scaled Workers via Slurm and HyperbandPruner.",
-                  "detail": "Use Horizontally Scaled Workers via Slurm and HyperbandPruner.\nDeliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.\nAcceptance: ≥2 concurrent workers report trials to the same study without corruption.\nDependencies: cluster account; shared storage for artifacts.",
+                  "detail": "Use Horizontally Scaled Workers via Slurm and HyperbandPruner.\nTrack scope: Shared (A+B) — Slurm workers serve BRCA Track A and Track B studies.\nDeliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.\nAcceptance: ≥2 concurrent workers report trials to the same study without corruption.\nDependencies: cluster account; shared storage for artifacts.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — Slurm workers serve BRCA Track A and Track B studies.",
                     "Deliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.",
                     "Acceptance: ≥2 concurrent workers report trials to the same study without corruption.",
                     "Dependencies: cluster account; shared storage for artifacts."
@@ -508,10 +521,11 @@
                 {
                   "id": "year-2-q2-2028-phase-3-step-1-item-1-evaluate-architectures-on-20-holdout-tra",
                   "text": "Evaluate architectures on 20% holdout trajectories.",
-                  "detail": "Evaluate architectures on 20% holdout trajectories.\nDeliverables: holdout evaluation script + metrics table for best NAS architectures.\nAcceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted.\nDependencies: completed Optuna studies; locked holdout split.",
+                  "detail": "Evaluate architectures on 20% holdout trajectories.\nTrack scope: Track A vs B — BRCA holdout metrics for best Track A and Track B architectures side-by-side.\nDeliverables: holdout evaluation script + metrics table for best NAS architectures.\nAcceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted; Track A vs Track B delta reported.\nDependencies: completed Optuna studies; locked holdout split.",
                   "requirements": [
+                    "Track scope: Track A vs B — BRCA holdout metrics for best Track A and Track B architectures side-by-side.",
                     "Deliverables: holdout evaluation script + metrics table for best NAS architectures.",
-                    "Acceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted.",
+                    "Acceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted; Track A vs Track B delta reported.",
                     "Dependencies: completed Optuna studies; locked holdout split."
                   ],
                   "phase": 3,
@@ -521,8 +535,9 @@
                 {
                   "id": "year-2-q2-2028-phase-3-step-1-item-2-ablation-study-spatial-vs-spatio-tempora",
                   "text": "Ablation study: Spatial vs. Spatio-Temporal predictive gain.",
-                  "detail": "Ablation study: Spatial vs. Spatio-Temporal predictive gain.\nDeliverables: controlled ablation comparing spatial-only vs full spatio-temporal models.\nAcceptance: same data splits/seeds; delta metrics documented with interpretation.\nDependencies: spatial and temporal modules; evaluation harness.",
+                  "detail": "Ablation study: Spatial vs. Spatio-Temporal predictive gain.\nTrack scope: Track A + Track B — BRCA ablations repeated per track where applicable.\nDeliverables: controlled ablation comparing spatial-only vs full spatio-temporal models.\nAcceptance: same data splits/seeds; delta metrics documented with interpretation.\nDependencies: spatial and temporal modules; evaluation harness.",
                   "requirements": [
+                    "Track scope: Track A + Track B — BRCA ablations repeated per track where applicable.",
                     "Deliverables: controlled ablation comparing spatial-only vs full spatio-temporal models.",
                     "Acceptance: same data splits/seeds; delta metrics documented with interpretation.",
                     "Dependencies: spatial and temporal modules; evaluation harness."
@@ -534,8 +549,9 @@
                 {
                   "id": "year-2-q2-2028-phase-3-step-1-item-3-compare-with-longitudinal-random-forests",
                   "text": "Compare with longitudinal Random Forests/XGBoost.",
-                  "detail": "Compare with longitudinal Random Forests/XGBoost.\nDeliverables: classical baseline pipelines on comparable flattened/windowed features.\nAcceptance: baseline metrics on identical holdout; fair feature budget documented.\nDependencies: tabular feature export from tensors/metadata.",
+                  "detail": "Compare with longitudinal Random Forests/XGBoost.\nTrack scope: Track-agnostic baseline — BRCA classical baselines (shared external control for both tracks).\nDeliverables: classical baseline pipelines on comparable flattened/windowed features.\nAcceptance: baseline metrics on identical holdout; fair feature budget documented.\nDependencies: tabular feature export from tensors/metadata.",
                   "requirements": [
+                    "Track scope: Track-agnostic baseline — BRCA classical baselines (shared external control for both tracks).",
                     "Deliverables: classical baseline pipelines on comparable flattened/windowed features.",
                     "Acceptance: baseline metrics on identical holdout; fair feature budget documented.",
                     "Dependencies: tabular feature export from tensors/metadata."
@@ -575,8 +591,9 @@
                 {
                   "id": "year-3-q3-2028-phase-4-step-1-item-1-implement-captum-or-shap-for-multi-dimen",
                   "text": "Implement `captum` or `shap` for multi-dimensional attribution.",
-                  "detail": "Implement `captum` or `shap` for multi-dimensional attribution.\nDeliverables: attribution pipeline producing per-sample spatial×temporal importance tensors.\nAcceptance: attributions run on holdout subset without OOM; API documented.\nDependencies: trained best models; captum/shap in environment.",
+                  "detail": "Implement `captum` or `shap` for multi-dimensional attribution.\nTrack scope: Track A + Track B — BRCA attribution pipelines for both best models.\nDeliverables: attribution pipeline producing per-sample spatial×temporal importance tensors.\nAcceptance: attributions run on holdout subset without OOM; API documented.\nDependencies: trained best models; captum/shap in environment.",
                   "requirements": [
+                    "Track scope: Track A + Track B — BRCA attribution pipelines for both best models.",
                     "Deliverables: attribution pipeline producing per-sample spatial×temporal importance tensors.",
                     "Acceptance: attributions run on holdout subset without OOM; API documented.",
                     "Dependencies: trained best models; captum/shap in environment."
@@ -588,10 +605,11 @@
                 {
                   "id": "year-3-q3-2028-phase-4-step-1-item-2-extract-maps-identifying-cpg-sites-and-t",
                   "text": "Extract maps identifying CpG sites and timestamps driving disease progression predictions.",
-                  "detail": "Extract maps identifying CpG sites and timestamps driving disease progression predictions.\nDeliverables: ranked site/time maps + export (CSV/Parquet) and summary figures.\nAcceptance: top-k drivers reviewable per disease trajectory example.\nDependencies: attribution pipeline; genomic annotations.",
+                  "detail": "Extract maps identifying CpG sites and timestamps driving disease progression predictions.\nTrack scope: Track A + Track B — BRCA site/time maps; Track B maps checked against pathway priors.\nDeliverables: ranked site/time maps + export (CSV/Parquet) and summary figures.\nAcceptance: top-k drivers reviewable per disease trajectory example; Track B biological plausibility note drafted.\nDependencies: attribution pipeline; genomic annotations.",
                   "requirements": [
+                    "Track scope: Track A + Track B — BRCA site/time maps; Track B maps checked against pathway priors.",
                     "Deliverables: ranked site/time maps + export (CSV/Parquet) and summary figures.",
-                    "Acceptance: top-k drivers reviewable per disease trajectory example.",
+                    "Acceptance: top-k drivers reviewable per disease trajectory example; Track B biological plausibility note drafted.",
                     "Dependencies: attribution pipeline; genomic annotations."
                   ],
                   "phase": 4,
@@ -621,8 +639,9 @@
                 {
                   "id": "year-3-q4-2028-phase-4-step-1-item-1-build-interactive-streamlit-interface",
                   "text": "Build interactive `streamlit` interface.",
-                  "detail": "Build interactive `streamlit` interface.\nDeliverables: Streamlit app loading model outputs and patient trajectories.\nAcceptance: local demo runbook; auth/PII constraints documented.\nDependencies: inference artifacts; holdout demo cohort.",
+                  "detail": "Build interactive `streamlit` interface.\nTrack scope: Track A + Track B — BRCA demo app toggles Track A vs Track B predictions.\nDeliverables: Streamlit app loading model outputs and patient trajectories.\nAcceptance: local demo runbook; auth/PII constraints documented.\nDependencies: inference artifacts; holdout demo cohort.",
                   "requirements": [
+                    "Track scope: Track A + Track B — BRCA demo app toggles Track A vs Track B predictions.",
                     "Deliverables: Streamlit app loading model outputs and patient trajectories.",
                     "Acceptance: local demo runbook; auth/PII constraints documented.",
                     "Dependencies: inference artifacts; holdout demo cohort."
@@ -634,8 +653,9 @@
                 {
                   "id": "year-3-q4-2028-phase-4-step-1-item-2-render-health-trajectories-and-risk-fore",
                   "text": "Render health trajectories and risk forecasting curves.",
-                  "detail": "Render health trajectories and risk forecasting curves.\nDeliverables: plots for observed vs predicted risk over time with uncertainty bands if available.\nAcceptance: at least one end-to-end patient view from load → forecast → attribution snippet.\nDependencies: Streamlit shell; attribution exports.",
+                  "detail": "Render health trajectories and risk forecasting curves.\nTrack scope: Track A + Track B — BRCA observed vs predicted curves for both tracks.\nDeliverables: plots for observed vs predicted risk over time with uncertainty bands if available.\nAcceptance: at least one end-to-end patient view from load → forecast → attribution snippet.\nDependencies: Streamlit shell; attribution exports.",
                   "requirements": [
+                    "Track scope: Track A + Track B — BRCA observed vs predicted curves for both tracks.",
                     "Deliverables: plots for observed vs predicted risk over time with uncertainty bands if available.",
                     "Acceptance: at least one end-to-end patient view from load → forecast → attribution snippet.",
                     "Dependencies: Streamlit shell; attribution exports."
@@ -667,11 +687,12 @@
                 {
                   "id": "year-3-q1-2029-phase-4-step-1-item-1-document-structural-taxonomy-discovered",
                   "text": "Document structural taxonomy discovered.",
-                  "detail": "Document structural taxonomy discovered.\nDeliverables: taxonomy chapter/section mapping architectures to disease categories and motifs.\nAcceptance: peer-readable draft checked into docs with figure list.\nDependencies: Year 2–3 experiment logs and benchmarks.",
+                  "detail": "Document structural taxonomy discovered.\nTrack scope: Track A + Track B — taxonomy across BRCA and Other 4 after scaling gate; if gate fails, BRCA-only dual-track taxonomy.\nDeliverables: taxonomy chapter/section mapping architectures to disease categories and motifs.\nAcceptance: peer-readable draft checked into docs with figure list.\nDependencies: Year 2–3 experiment logs and benchmarks; documented BRCA Track A vs B outcome.",
                   "requirements": [
+                    "Track scope: Track A + Track B — taxonomy across BRCA and Other 4 after scaling gate; if gate fails, BRCA-only dual-track taxonomy.",
                     "Deliverables: taxonomy chapter/section mapping architectures to disease categories and motifs.",
                     "Acceptance: peer-readable draft checked into docs with figure list.",
-                    "Dependencies: Year 2–3 experiment logs and benchmarks."
+                    "Dependencies: Year 2–3 experiment logs and benchmarks; documented BRCA Track A vs B outcome."
                   ],
                   "phase": 4,
                   "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/374",
@@ -680,11 +701,12 @@
                 {
                   "id": "year-3-q1-2029-phase-4-step-1-item-2-compare-slow-progressing-vs-fast-acting",
                   "text": "Compare slow-progressing vs. fast-acting condition architectures.",
-                  "detail": "Compare slow-progressing vs. fast-acting condition architectures.\nDeliverables: comparative analysis contrasting architecture preferences across disease tempos.\nAcceptance: quantitative table + qualitative discussion ready for thesis inclusion.\nDependencies: multi-disease study results (Phases 3–4).",
+                  "detail": "Compare slow-progressing vs. fast-acting condition architectures.\nTrack scope: Track A + Track B — Other 4 (Alzheimer's, RA, T2D, Epigenetic Aging) dual-track comparisons when justified; else BRCA tempo analysis only.\nDeliverables: comparative analysis contrasting architecture preferences across disease tempos.\nAcceptance: quantitative table + qualitative discussion ready for thesis inclusion.\nDependencies: multi-disease study results (Phases 3–4) or BRCA-only fallback analysis.",
                   "requirements": [
+                    "Track scope: Track A + Track B — Other 4 (Alzheimer's, RA, T2D, Epigenetic Aging) dual-track comparisons when justified; else BRCA tempo analysis only.",
                     "Deliverables: comparative analysis contrasting architecture preferences across disease tempos.",
                     "Acceptance: quantitative table + qualitative discussion ready for thesis inclusion.",
-                    "Dependencies: multi-disease study results (Phases 3–4)."
+                    "Dependencies: multi-disease study results (Phases 3–4) or BRCA-only fallback analysis."
                   ],
                   "phase": 4,
                   "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/375",
@@ -713,8 +735,9 @@
                 {
                   "id": "year-3-q2-2029-phase-4-step-1-item-1-finalize-dissertation",
                   "text": "Finalize dissertation.",
-                  "detail": "Finalize dissertation.\nDeliverables: defense draft, slides, and response-to-committee checklist.\nAcceptance: committee-ready PDF; all chapters cite frozen experiment IDs.\nDependencies: synthesis documents; completed experiments.",
+                  "detail": "Finalize dissertation.\nTrack scope: Track A + Track B — thesis reports BRCA dual-track result and any Other 4 extensions.\nDeliverables: defense draft, slides, and response-to-committee checklist.\nAcceptance: committee-ready PDF; all chapters cite frozen experiment IDs.\nDependencies: synthesis documents; completed experiments.",
                   "requirements": [
+                    "Track scope: Track A + Track B — thesis reports BRCA dual-track result and any Other 4 extensions.",
                     "Deliverables: defense draft, slides, and response-to-committee checklist.",
                     "Acceptance: committee-ready PDF; all chapters cite frozen experiment IDs.",
                     "Dependencies: synthesis documents; completed experiments."
@@ -726,8 +749,9 @@
                 {
                   "id": "year-3-q2-2029-phase-4-step-1-item-2-release-the-complete-open-source-python",
                   "text": "Release the complete open-source Python framework.",
-                  "detail": "Release the complete open-source Python framework.\nDeliverables: tagged release, install docs, example notebooks, license/citation.\nAcceptance: clean clone → install → smoke demo on public sample data.\nDependencies: stable `src/` APIs; CI green on main.",
+                  "detail": "Release the complete open-source Python framework.\nTrack scope: Shared (A+B) — OSS release includes Track A and Track B tooling for BRCA; Other 4 configs as available.\nDeliverables: tagged release, install docs, example notebooks, license/citation.\nAcceptance: clean clone → install → smoke demo on public sample data.\nDependencies: stable `src/` APIs; CI green on main.",
                   "requirements": [
+                    "Track scope: Shared (A+B) — OSS release includes Track A and Track B tooling for BRCA; Other 4 configs as available.",
                     "Deliverables: tagged release, install docs, example notebooks, license/citation.",
                     "Acceptance: clean clone → install → smoke demo on public sample data.",
                     "Dependencies: stable `src/` APIs; CI green on main."

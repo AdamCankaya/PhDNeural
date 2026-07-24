@@ -4,6 +4,14 @@ All notable changes to the Bio-NAS project documentation and roadmap tooling are
 
 ## 2026-07-24
 
+### Dual-Track schedule in roadmap docs
+
+- Annotated every quarter and all **24** checklist items in `phd_bio-nas_master_plan.md` with **Track scope** (A / B / Shared / A vs B) and **Cohort** (BRCA, Other 4, All 5).
+- Documented the BRCA **scaling gate**: Year 3 Other 4 dual-track work is justified by a Track B advantage on BRCA holdout.
+- Expanded README, wiki Home, and Roadmap tables with Track × cohort columns.
+- Expanded [FAQ](docs/wiki/FAQ-and-Troubleshooting.md) (why Bio-NAS, why two tracks, why BRCA, why five diseases, when to scale).
+- Expanded [Glossary](docs/wiki/Glossary.md) with Track A/B, MaskedLinear, KEGG/Reactome, comparative matrix, and related terms.
+
 ### Timeline ↔ GitHub issues (1:1)
 
 - Expanded all **24** checklist items in `phd_bio-nas_master_plan.md` with nested **Deliverables / Acceptance / Dependencies** requirements.
