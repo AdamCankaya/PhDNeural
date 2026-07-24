@@ -24,43 +24,52 @@ The sync script pauses between API calls. If you hit limits:
 2. Re-run the command
 3. Use `--dry-run` locally while waiting
 
-During wiki bootstrap (Jun 2026), `gh issue list` returned rate-limit errors — verify issue count manually on GitHub.
-
 ### Duplicate issues
 
-Should not happen if issues retain `<!-- phd-sync-id: ... -->` markers. Close duplicates manually and re-run sync.
+Should not happen if issues retain `<!-- phd-sync-id: ... -->` markers. Close duplicates manually and re-run sync with `--prune-project`.
 
 ## Quarter roadmap rewrite
 
 ### Stale sync-ids on Project #2
 
-After migrating from phase-first (`phase-1-step-1-...`) to quarter-first (`year-1-summer-2026-...`) IDs:
+After structural rewrites that change sync-ids:
 
 ```powershell
-python scripts/sync_phd_to_github.py --prune-project --update-existing --reset-status-todo
+python scripts/sync_phd_to_github.py --update-existing --close-stale --prune-project
+python scripts/embed_dashboard_plan.py
 ```
 
-This creates ~43 new issues, closes stale phase-based issues, dedupes board items, and resets Status to Todo.
+This recreates/updates the **24** plan issues, closes orphans, regenerates the dashboard and master-plan HTML with issue links.
 
 ### Reordering checklist items changes task IDs
 
-Editing the master plan may regenerate sync-ids for reordered bullets — treated as **new tasks**. Use `--update-existing` for text changes on stable IDs; use `--prune-project` after structural rewrites.
+Editing the master plan may regenerate sync-ids for reordered bullets — treated as **new tasks**. Use `--update-existing` for text changes on stable IDs; use `--close-stale --prune-project` after structural rewrites.
 
-### Issue count ≠ 43
+### Issue count ≠ 24
 
-Run `--parse-only` locally (expects 43). If GitHub has a different count, run the clean sync above when API quota allows.
+Run `--parse-only` locally (expects **24**). Open GitHub filter: [`label:phd-sync is:open`](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync+is%3Aopen). If counts differ, run the clean sync above.
 
-## Dashboard
+## Dashboard & Pages
 
-### Board looks out of date after plan edit
+### Board / Pages look out of date after plan edit
 
-1. Regenerate: `python scripts/embed_dashboard_plan.py`
-2. Commit and push `phd_bio-nas_timeline_dashboard.html`
-3. Hard-refresh browser
+1. Sync issues, then regenerate: `python scripts/embed_dashboard_plan.py`
+2. Commit and push `phd_bio-nas_timeline_dashboard.html` and `phd_bio-nas_master_plan.html`
+3. Hard-refresh browser (Pages may take a minute)
 
-### Dashboard v7 localStorage stale
+Canonical live URLs:
 
-After major quarter rewrite, clear browser `localStorage` for the dashboard page (version key: `phd_plan_progress_v7`).
+- https://adamcankaya.github.io/PhDNeural/Bio-NAS/
+- https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html
+- https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html
+
+### Dashboard localStorage stale
+
+After major rewrites, clear browser `localStorage` for the dashboard page (version key: `phd_plan_progress_v8`).
+
+### Missing GitHub issue warning on a task
+
+Re-run sync + embed. If the sync-id changed, the old issue was closed and a new one created — embed must run after sync so URLs refresh.
 
 ## Wiki publish
 
@@ -73,7 +82,7 @@ python scripts/publish_wiki.py --dry-run
 python scripts/publish_wiki.py
 ```
 
-Or push to `main` with changes under `docs/wiki/` — triggers `.github/workflows/publish-wiki.yml`.
+Or push to `main` with changes under `Bio-NAS/docs/wiki/` — triggers `.github/workflows/publish-wiki.yml`.
 
 ### `README.md` not on wiki
 

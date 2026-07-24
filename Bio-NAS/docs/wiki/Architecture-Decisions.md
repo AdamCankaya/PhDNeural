@@ -74,7 +74,7 @@ See [Static MTL Baseline](Static-MTL-Baseline).
 
 **Context:** 3-year academic calendar maps better to planning than legacy phase-only grouping.
 
-**Decision:** GitHub issues titled `[Y1 Summer 2026] ...` with sync-ids like `year-1-summer-2026-phase-1-step-1-item-1-...`.
+**Decision:** GitHub issues titled `[Y1 Q3 Fall 2026] ...` with sync-ids like `year-1-q3-2026-phase-1-step-1-item-1-...`. Bodies include Summary + Implementation requirements nested under each master-plan checklist item.
 
 **Consequences:** Requires one-time `--prune-project` if stale phase-based issues remain on Project #2.
 

@@ -98,6 +98,15 @@ class PhdTask:
         prefix = f"[Y{self.year} {self.quarter_label}]"
         return f"{prefix} {self.title}"
 
+    def summary(self) -> str:
+        """First line of the checklist item (short task summary)."""
+        return self.detail.split("\n", 1)[0].strip()
+
+    def requirements(self) -> list[str]:
+        """Nested requirement lines under the top-level checklist item."""
+        parts = self.detail.split("\n")
+        return [p.strip() for p in parts[1:] if p.strip()]
+
     def issue_body(self) -> str:
         sync_marker = f"<!-- phd-sync-id: {self.task_id} -->"
         section_name = "Stage" if self.section_kind == SECTION_KIND_STAGE else "Step"
@@ -112,13 +121,26 @@ class PhdTask:
             f"- **{section_name}:** {self.step} — {self.step_title}",
             f"- **Goal:** {self.goal}",
             "",
-            "## Task",
+            "## Summary",
             "",
-            self.detail,
+            self.summary(),
             "",
-            "---",
-            "_Auto-synced from phd_bio-nas_master_plan.md_",
         ]
+        reqs = self.requirements()
+        if reqs:
+            lines.extend(["## Implementation requirements", ""])
+            for req in reqs:
+                lines.append(f"- {req}")
+            lines.append("")
+        lines.extend(
+            [
+                "---",
+                "_Auto-synced from phd_bio-nas_master_plan.md_",
+                "",
+                f"**Dashboard:** https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html",
+                f"**Master plan:** https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html",
+            ]
+        )
         return "\n".join(lines)
 
 
@@ -381,7 +403,6 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
             state.step = int(stage_match.group(1))
             state.step_title = stage_match.group(2).strip()
             state.section_kind = SECTION_KIND_STAGE
-            state.goal = ""
             item_counter = 0
             base_indent = None
             continue
@@ -391,7 +412,6 @@ def parse_master_plan(path: Path) -> list[PhdTask]:
             state.step = int(step_match.group(1))
             state.step_title = step_match.group(2).strip()
             state.section_kind = SECTION_KIND_STEP
-            state.goal = ""
             item_counter = 0
             base_indent = None
             continue
@@ -516,7 +536,13 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
             }
 
         quarter_entry["steps"][step_key]["tasks"].append(
-            {"id": task.task_id, "text": task.detail, "phase": task.phase}
+            {
+                "id": task.task_id,
+                "text": task.summary(),
+                "detail": task.detail,
+                "requirements": task.requirements(),
+                "phase": task.phase,
+            }
         )
 
         if task.phase not in phases_map:
@@ -547,7 +573,10 @@ def build_dashboard_plan(tasks: list[PhdTask], title: str, core_objective: str) 
             quarter_entry = year_entry["quarters"][quarter_key]
             steps_list = [
                 quarter_entry["steps"][k]
-                for k in sorted(quarter_entry["steps"], key=lambda x: (0 if x[0] == SECTION_KIND_STAGE else 1, x[1]))
+                for k in sorted(
+                    quarter_entry["steps"],
+                    key=lambda x: (0 if x[1] == SECTION_KIND_STAGE else 1, x[2]),
+                )
             ]
             quarters_list.append(
                 {
