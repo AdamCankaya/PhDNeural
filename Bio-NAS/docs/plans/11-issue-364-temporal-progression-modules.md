@@ -42,7 +42,8 @@ Gradient-flow smoke tests. Place under `src/models/temporal/`.
 ## Out of scope / owned by other plans
 
 - Δt embedding → plan 06 (#359)
-- Spatial modules → plan 10 (#363)
+- Spatial modules **and Track B adjacency build/freeze** → plan 10 (#363)
+- Optuna search under frozen mask → plan 12 (#365)
 - Ablation spatial vs spatio-temporal → plan 15 (#368)
 
 ## Acceptance criteria
