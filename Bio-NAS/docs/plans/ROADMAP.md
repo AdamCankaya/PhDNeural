@@ -69,7 +69,7 @@ flowchart TD
   P23 --> P24
 ```
 
-**Non-duplication rule:** Foundational work lives in the earliest plan that needs it. Later plans reference earlier ones instead of restating setup (e.g. holdout locking is only in plan 05; Postgres only in plan 09; attribution API only in plan 17).
+**Non-duplication rule:** Foundational work lives in the earliest plan that needs it. Later plans reference earlier ones instead of restating setup (e.g. holdout locking is only in plan 05; Postgres only in plan 09; attribution API only in plan 17; **Track B adjacency build/freeze only in plan 10** — plan 12 consumes the frozen mask in dual-track Optuna search).
 
 ## Implementation order
 
@@ -84,9 +84,9 @@ flowchart TD
 | 07 | [#360](https://github.com/AdamCankaya/PhDNeural/issues/360) | [07-issue-360-four-d-tensor-hdf5.md](07-issue-360-four-d-tensor-hdf5.md) | #356, #357, #358, #359 |
 | 08 | [#361](https://github.com/AdamCankaya/PhDNeural/issues/361) | [08-issue-361-compute-stack-provisioning.md](08-issue-361-compute-stack-provisioning.md) | — |
 | 09 | [#362](https://github.com/AdamCankaya/PhDNeural/issues/362) | [09-issue-362-dockerized-postgres-optuna.md](09-issue-362-dockerized-postgres-optuna.md) | #361 |
-| 10 | [#363](https://github.com/AdamCankaya/PhDNeural/issues/363) | [10-issue-363-spatial-cnn-transformer-modules.md](10-issue-363-spatial-cnn-transformer-modules.md) | #357, #360, #361 |
+| 10 | [#363](https://github.com/AdamCankaya/PhDNeural/issues/363) | [10-issue-363-spatial-cnn-transformer-modules.md](10-issue-363-spatial-cnn-transformer-modules.md) | #357, #360, #361 (+ owns Track B adjacency freeze) |
 | 11 | [#364](https://github.com/AdamCankaya/PhDNeural/issues/364) | [11-issue-364-temporal-progression-modules.md](11-issue-364-temporal-progression-modules.md) | #359, #363 |
-| 12 | [#365](https://github.com/AdamCankaya/PhDNeural/issues/365) | [12-issue-365-causal-cv-architecture-search.md](12-issue-365-causal-cv-architecture-search.md) | #360, #362, #363, #364 |
+| 12 | [#365](https://github.com/AdamCankaya/PhDNeural/issues/365) | [12-issue-365-causal-cv-architecture-search.md](12-issue-365-causal-cv-architecture-search.md) | #360, #362, #363, #364 (consumes frozen adjacency from #363) |
 | 13 | [#366](https://github.com/AdamCankaya/PhDNeural/issues/366) | [13-issue-366-slurm-hyperband-workers.md](13-issue-366-slurm-hyperband-workers.md) | #361, #362 |
 | 14 | [#367](https://github.com/AdamCankaya/PhDNeural/issues/367) | [14-issue-367-holdout-trajectory-evaluation.md](14-issue-367-holdout-trajectory-evaluation.md) | #358, #365 |
 | 15 | [#368](https://github.com/AdamCankaya/PhDNeural/issues/368) | [15-issue-368-spatial-vs-spatiotemporal-ablation.md](15-issue-368-spatial-vs-spatiotemporal-ablation.md) | #363, #364, #367 |
