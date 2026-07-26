@@ -1,0 +1,31 @@
+# Local secrets / sync config with tokens
+.env
+bio-nas_github_sync.config.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Raw / large data (never commit GDC downloads)
+data/raw/
+data/tcga/
+data/processed/
+*.h5
+*.hdf5
+*.bam
+*.bai
+*.vcf.gz
+*.partial
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
