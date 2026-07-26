@@ -151,10 +151,19 @@ python scripts/embed_dashboard_plan.py
 
 ### Docker smoke: TCGA-BRCA sample + toy NAS
 
-On first `docker compose up --build`, the container downloads an open-access TCGA-BRCA slice (~5–10 patients: demographics + RNA-seq, optional small methylation) from GDC into `/data/tcga/BRCA` inside the container (no data volume mounts, no GDC login), then runs a tiny MLP NAS demo. Details: [`docker/README.md`](docker/README.md).
+On first `docker compose up --build`, the container downloads an open-access TCGA-BRCA slice (~5–10 patients: demographics + RNA-seq, optional small methylation) from GDC into `/data/tcga/BRCA` (bind-mounted to host `data/tcga/BRCA`, no GDC login), then runs a tiny MLP NAS demo. Browse results on Windows under `Bio-NAS\data\tcga\BRCA`. After compose changes, recreate with `docker compose up --build` (existing in-container-only data does not auto-migrate). Details: [`docker/README.md`](docker/README.md).
+
+Compose file: [`docker-compose.yml`](docker-compose.yml) at the **Bio-NAS** directory (not the parent `PhD/` repo root). Run from there:
 
 ```bash
+cd Bio-NAS
 docker compose up --build
+```
+
+From the parent `PhD/` checkout instead:
+
+```bash
+docker compose -f Bio-NAS/docker-compose.yml up --build
 ```
 
 ---
