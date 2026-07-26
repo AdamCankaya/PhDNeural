@@ -10,24 +10,71 @@ Minimal harness that builds a slim Python image, downloads a **tiny open-access*
    - RNA-seq gene expression (STAR counts) for those cases
    - Small methylation files when they fit the size budget
 3. **Then** runs `scripts/train_nas_demo.py` (toy NAS over a few MLP widths with leave-one-out CV).
-4. Re-runs skip download when `/data/tcga/BRCA/.ready` exists (idempotent within the same container filesystem).
+4. Re-runs skip download when `/data/tcga/BRCA/.ready` exists (idempotent; with Compose this marker lives on the host mount).
 
 ## Build & run
 
-From the Bio-NAS directory:
+Compose lives at **`Bio-NAS/docker-compose.yml`** (repo subdirectory). Running `docker compose` from the parent `PhD/` tree fails with `no configuration file provided: not found`.
+
+From `Bio-NAS/` (required for the short form):
 
 ```bash
+cd Bio-NAS          # if your shell is in PhD/
 docker compose up --build
 ```
 
-Or without Compose:
+From the parent `PhD/` checkout:
+
+```bash
+docker compose -f Bio-NAS/docker-compose.yml up --build
+```
+
+After changing `docker-compose.yml` (including the data volume), recreate the container with the same command: `docker compose up --build`. Compose does not migrate data that already exists only inside a previous container filesystem — copy it out with `docker cp` first if you need it, or let the next run re-download into the host mount.
+
+Or without Compose (still from `Bio-NAS/`), bind-mount the same host path:
 
 ```bash
 docker build -f docker/Dockerfile -t bio-nas-demo:local .
-docker run --rm bio-nas-demo:local
+docker run --rm -v "%cd%/data/tcga:/data/tcga" bio-nas-demo:local
 ```
 
-No data volume mounts are used — files live only inside the container.
+## Data volume (host ↔ container)
+
+Compose bind-mounts host `./data/tcga` to container `/data/tcga`, matching `$TCGA_SAMPLE_OUT` (`/data/tcga/BRCA`):
+
+```yaml
+volumes:
+  - ./data/tcga:/data/tcga
+```
+
+| Side | Path |
+|------|------|
+| Host (Windows) | `Bio-NAS\data\tcga\BRCA` (e.g. `C:\PhD\Bio-NAS\data\tcga\BRCA`) |
+| Container | `/data/tcga/BRCA` (`$TCGA_SAMPLE_OUT`) |
+
+Browse downloads and `nas_demo_results.json` directly in Explorer under the host folder. `data/tcga/` is gitignored so GDC downloads are not committed.
+
+## Viewing results
+
+**Primary:** container stdout (per-arch LOO scores, best MLP, “Wrote …”). Streams during `docker compose up`; afterward:
+
+```bash
+cd Bio-NAS   # if needed
+docker compose logs bio-nas-demo
+# or: docker logs <container-id>   # from `docker ps -a`
+```
+
+**On the host (Compose mount):** open `data/tcga/BRCA/nas_demo_results.json` (also `manifest.json`, `demographics.json`, `files/`).
+
+**Inside the container** (same tree via the mount): `/data/tcga/BRCA/…`
+
+```bash
+docker compose ps -a
+# Optional: copy or peek if you are not using the bind mount
+docker cp <container-name-or-id>:/data/tcga/BRCA/nas_demo_results.json .
+docker start <container-name-or-id>
+docker exec <container-name-or-id> cat /data/tcga/BRCA/nas_demo_results.json
+```
 
 ## Data path (inside container)
 
