@@ -149,6 +149,14 @@ python scripts/sync_phd_to_github.py --update-existing --close-stale --prune-pro
 python scripts/embed_dashboard_plan.py
 ```
 
+### Docker smoke: TCGA-BRCA sample + toy NAS
+
+On first `docker compose up --build`, the container downloads an open-access TCGA-BRCA slice (~5–10 patients: demographics + RNA-seq, optional small methylation) from GDC into `/data/tcga/BRCA` inside the container (no data volume mounts, no GDC login), then runs a tiny MLP NAS demo. Details: [`docker/README.md`](docker/README.md).
+
+```bash
+docker compose up --build
+```
+
 ---
 
 ## License & citation

@@ -1,0 +1,19 @@
+# Bio-NAS smoke: first-run GDC BRCA download (open-access) + toy NAS.
+# Usage (from Bio-NAS/): docker compose up --build
+# Data stays inside the container at /data/tcga/BRCA (no data volume mounts).
+# No GDC login / token required for open-access files.
+
+services:
+  bio-nas-demo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: bio-nas-demo:local
+    environment:
+      TCGA_SAMPLE_OUT: /data/tcga/BRCA
+      # ~5–10 patients (clamped in download script).
+      TCGA_SAMPLE_N_CASES: "8"
+      # Soft cap (~80 MB); clinical + expression (+ small meth if available).
+      TCGA_SAMPLE_MAX_BYTES: "83886080"
+    # One-shot job: download-if-needed → train/NAS → exit.
+    restart: "no"

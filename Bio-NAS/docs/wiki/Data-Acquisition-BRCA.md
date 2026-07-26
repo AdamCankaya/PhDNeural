@@ -9,8 +9,11 @@ Plan reference: Year 1 Fall 2026 cohort sourcing in [`phd_bio-nas_master_plan.md
 | Item | Value |
 |------|-------|
 | Cohort | TCGA Breast Invasive Carcinoma (BRCA) |
-| Access | [GDC Portal](https://portal.gdc.cancer.gov/) — Level 3 Open Access |
+| Plan 01 selection | **LOCKED primary** — see [`docs/data/cohort_inventory.md`](../data/cohort_inventory.md) |
+| Access | [GDC Portal](https://portal.gdc.cancer.gov/projects/TCGA-BRCA) — Level 3 Open Access (dbGaP phs000178 only if controlled BAM/raw needed) |
+| Account | GDC Portal account + download token **recommended** (user has none yet); not required for browsing open files |
 | Modalities | Methylation (beta-values), RNA-Seq, somatic mutations, CNVs, clinical demographics |
+| Longitudinal note | True serial molecular repeats are sparse on TCGA; inventory keeps AURORA US as alternate when Plan 02 needs primary↔metastasis pairs |
 
 ## Strict 80/20 split
 
@@ -60,6 +63,16 @@ Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 for me
 - Variance-based top 10,000 CpG sites — computed on **80% train partition only**
 - Continuous demographics: Z-score (train stats)
 - Categorical demographics: one-hot encoding
+
+## Docker smoke (tiny open-access sample)
+
+For a first-run container demo (not full ETL): `docker compose up --build` from `Bio-NAS/`.
+
+- Downloads ~5–10 open-access BRCA cases (demographics + RNA-seq; small methylation when budget allows) via the GDC API — **no login**
+- Stores data **inside** the container at `/data/tcga/BRCA` (no data volume mounts)
+- Runs a toy MLP NAS script after download
+
+See [`docker/README.md`](../../docker/README.md).
 
 ## Related pages
 

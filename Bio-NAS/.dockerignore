@@ -1,0 +1,11 @@
+.git
+.gitignore
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+data/
+docs/
+*.html
+.env
+bio-nas_github_sync.config.json
+.bio-nas_*.json
