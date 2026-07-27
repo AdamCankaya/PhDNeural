@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Minimal NAS / training demo on the tiny TCGA-BRCA Docker sample.
+"""Minimal NAS / training smoke on the tiny TCGA-BRCA Docker sample.
 
-Loads open-access demographics + RNA-seq gene expression from
+Loads open-access **methylation beta** features + AJCC stage labels from
 ``/data/tcga/BRCA`` (or ``$TCGA_SAMPLE_OUT``), builds a small feature matrix,
 and searches a handful of MLP architectures with sklearn.
+
+RNA-seq may be present on disk (PoC-minimum download completeness) but is
+**not** required for this smoke train path.
 
 Designed for 5–10 patients only — a smoke test, not a research result.
 """
@@ -24,7 +27,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 DEFAULT_DATA = Path("data/tcga/BRCA")
-N_GENES = 200
+N_CPGS = 200
 RANDOM_STATE = 42
 
 # Tiny architecture search space (hidden-layer configs).
@@ -50,48 +53,79 @@ def _stage_to_label(stage: str | None) -> int:
     return 0
 
 
-def _parse_star_counts(path: Path, n_genes: int) -> dict[str, float]:
-    """Parse a GDC STAR gene-counts TSV into gene_id -> tpm (or unstranded)."""
+def _parse_methylation_betas(path: Path, max_rows: int = 5000) -> dict[str, float]:
+    """Parse a GDC Methylation Beta Value TSV into probe_id -> beta."""
     values: dict[str, float] = {}
     with path.open(encoding="utf-8", errors="replace") as fh:
-        header = fh.readline().rstrip("\n").split("\t")
-        # Prefer TPM if present; else unstranded / counts column.
+        header = None
+        for line in fh:
+            if not line.strip() or line.startswith("#"):
+                continue
+            header = line.rstrip("\n").split("\t")
+            break
+        if not header:
+            return values
+
         col_names = [h.lower() for h in header]
-        prefer = ("tpm_unstranded", "fpkm_unstranded", "unstranded", "tpm", "fpkm")
-        value_col = 1
-        for name in prefer:
-            if name in col_names:
-                value_col = col_names.index(name)
-                break
-        gene_col = 0
+        probe_col = 0
         for i, name in enumerate(col_names):
-            if name in ("gene_id", "geneid", "ensembl_gene_id"):
-                gene_col = i
+            if name in (
+                "composite element ref",
+                "composite_element_ref",
+                "probe",
+                "id",
+                "illumina_id",
+            ):
+                probe_col = i
+                break
+
+        beta_col = 1 if len(header) > 1 else 0
+        for name in ("beta_value", "beta", "value"):
+            if name in col_names:
+                beta_col = col_names.index(name)
                 break
 
         for line in fh:
-            if not line.strip() or line.startswith("N_"):
+            if not line.strip() or line.startswith("#"):
                 continue
             parts = line.rstrip("\n").split("\t")
-            if len(parts) <= max(gene_col, value_col):
+            if len(parts) <= max(probe_col, beta_col):
                 continue
-            gene = parts[gene_col]
-            # Skip PAR_Y / non-gene rows if present.
-            if gene.startswith("_") or gene in {"N_unmapped", "N_multimapping"}:
+            probe = parts[probe_col]
+            if not probe or probe.lower().startswith("composite"):
                 continue
             try:
-                values[gene] = float(parts[value_col])
+                beta = float(parts[beta_col])
             except ValueError:
                 continue
-            if len(values) >= n_genes * 20:
-                # Read enough rows to pick high-variance genes later.
-                # Keep going until we have a large pool; cap for speed.
-                if len(values) >= 5000:
-                    break
+            if not np.isfinite(beta):
+                continue
+            # Betas are [0, 1]; keep out-of-range as-is for smoke (clip later).
+            values[probe] = beta
+            if len(values) >= max_rows:
+                break
     return values
 
 
-def load_cohort(data_dir: Path, n_genes: int) -> tuple[np.ndarray, np.ndarray, list[str]]:
+def _resolve_meth_path(entry: dict[str, Any], files_dir: Path, manifest: dict) -> Path:
+    fname = entry.get("methylation_file_name")
+    if fname:
+        path = files_dir / fname
+        if path.exists():
+            return path
+    case_id = entry.get("case_id")
+    for f in manifest.get("files") or []:
+        if f.get("label") == "methylation" and f.get("case_id") == case_id:
+            path = files_dir / f["file_name"]
+            if path.exists():
+                return path
+    raise FileNotFoundError(
+        f"Methylation file missing for case {case_id}; "
+        "re-run download (delete .ready if schema changed)."
+    )
+
+
+def load_cohort(data_dir: Path, n_cpgs: int) -> tuple[np.ndarray, np.ndarray, list[str]]:
     manifest_path = data_dir / "manifest.json"
     demo_path = data_dir / "demographics.json"
     if not manifest_path.exists():
@@ -108,72 +142,56 @@ def load_cohort(data_dir: Path, n_genes: int) -> tuple[np.ndarray, np.ndarray, l
     if len(cohort) < 5:
         raise RuntimeError(f"Expected >=5 cases in manifest, found {len(cohort)}")
 
-    expr_by_case: dict[str, dict[str, float]] = {}
+    meth_by_case: dict[str, dict[str, float]] = {}
     files_dir = data_dir / "files"
     for entry in cohort:
         case_id = entry["case_id"]
-        fname = entry["expression_file_name"]
-        path = files_dir / fname
-        if not path.exists():
-            raise FileNotFoundError(f"Expression file missing: {path}")
-        expr_by_case[case_id] = _parse_star_counts(path, n_genes=n_genes)
+        path = _resolve_meth_path(entry, files_dir, manifest)
+        meth_by_case[case_id] = _parse_methylation_betas(
+            path, max_rows=max(5000, n_cpgs * 25)
+        )
 
-    # Gene universe: intersection, then top-variance genes.
-    gene_sets = [set(v.keys()) for v in expr_by_case.values()]
-    common = set.intersection(*gene_sets) if gene_sets else set()
+    probe_sets = [set(v.keys()) for v in meth_by_case.values()]
+    common = set.intersection(*probe_sets) if probe_sets else set()
     if len(common) < 10:
-        # Fallback: union of first n_genes keys per file.
         common = set()
-        for vals in expr_by_case.values():
-            common.update(list(vals.keys())[:n_genes])
-    genes = sorted(common)
+        for vals in meth_by_case.values():
+            common.update(list(vals.keys())[:n_cpgs])
+    probes = sorted(common)
     mat = np.array(
-        [[expr_by_case[c["case_id"]].get(g, 0.0) for g in genes] for c in cohort],
+        [[meth_by_case[c["case_id"]].get(p, np.nan) for p in probes] for c in cohort],
         dtype=np.float64,
     )
-    if mat.shape[1] > n_genes:
+    # Mean-impute NaNs per column (smoke; Plan 07 will do train-only properly).
+    col_means = np.nanmean(mat, axis=0)
+    inds = np.where(np.isnan(mat))
+    mat[inds] = np.take(col_means, inds[1])
+    mat = np.clip(mat, 0.0, 1.0)
+
+    if mat.shape[1] > n_cpgs:
         var = mat.var(axis=0)
-        keep = np.argsort(var)[-n_genes:]
-        genes = [genes[i] for i in keep]
+        keep = np.argsort(var)[-n_cpgs:]
+        probes = [probes[i] for i in keep]
         mat = mat[:, keep]
 
-    # Demographic features: age + gender one-hot.
-    ages: list[float] = []
-    gender_codes: list[float] = []
     labels: list[int] = []
     case_ids: list[str] = []
     for entry in cohort:
         case_id = entry["case_id"]
         demo: dict[str, Any] = demographics.get(case_id, {})
-        age = demo.get("age_at_diagnosis")
-        ages.append(float(age) if age is not None else float(np.nan))
-        gender = (demo.get("gender") or "").lower()
-        gender_codes.append(1.0 if gender == "female" else 0.0)
         labels.append(_stage_to_label(demo.get("ajcc_pathologic_stage")))
         case_ids.append(demo.get("submitter_id") or case_id)
 
-    age_arr = np.array(ages, dtype=np.float64)
-    if np.isnan(age_arr).all():
-        age_arr = np.zeros_like(age_arr)
-    else:
-        med = float(np.nanmedian(age_arr))
-        age_arr = np.where(np.isnan(age_arr), med, age_arr)
-
-    demo_mat = np.column_stack(
-        [age_arr, np.array(gender_codes, dtype=np.float64)]
-    )
-    x = np.hstack([mat, demo_mat])
+    x = mat
     y = np.array(labels, dtype=np.int64)
 
-    # With tiny n, ensure both classes exist for CV.
     if len(np.unique(y)) < 2:
-        # Synthetic split by median expression of first gene (demo only).
         _log("Note: stage labels are single-class; using median-split proxy label.")
         y = (x[:, 0] >= np.median(x[:, 0])).astype(np.int64)
 
     _log(
-        f"Loaded {x.shape[0]} patients × {x.shape[1]} features "
-        f"({len(genes)} genes + demographics); label counts={np.bincount(y)}"
+        f"Loaded {x.shape[0]} patients × {x.shape[1]} methylation features "
+        f"({len(probes)} CpGs); label counts={np.bincount(y)}"
     )
     return x, y, case_ids
 
@@ -210,7 +228,6 @@ def run_nas(x: np.ndarray, y: np.ndarray) -> dict[str, Any]:
         _log(f"  arch={arch}: LOO accuracy={mean_acc:.3f}")
 
     best = max(results, key=lambda r: r["loo_accuracy"])
-    # Refit best on all samples (demo artifact).
     best_arch = tuple(best["hidden_layer_sizes"])
     final = Pipeline(
         [
@@ -228,11 +245,13 @@ def run_nas(x: np.ndarray, y: np.ndarray) -> dict[str, Any]:
     final.fit(x, y)
     train_acc = float(final.score(x, y))
     return {
+        "modality": "methylation_beta",
         "best_architecture": best,
         "all_results": results,
         "train_accuracy_refit": train_acc,
         "n_samples": int(x.shape[0]),
         "n_features": int(x.shape[1]),
+        "note": "Smoke test only — methylation features + stage labels; not Intermediate Fusion NAS.",
     }
 
 
@@ -245,10 +264,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help=f"Sample directory (default: {DEFAULT_DATA} or $TCGA_SAMPLE_OUT)",
     )
     p.add_argument(
-        "--n-genes",
+        "--n-cpgs",
         type=int,
-        default=N_GENES,
-        help=f"Top-variance genes to keep (default: {N_GENES})",
+        default=N_CPGS,
+        help=f"Top-variance CpG probes to keep (default: {N_CPGS})",
     )
     return p.parse_args(argv)
 
@@ -258,9 +277,9 @@ def main(argv: list[str] | None = None) -> int:
     data_dir = args.data_dir.resolve()
     _log(f"NAS demo data dir: {data_dir}")
 
-    x, y, case_ids = load_cohort(data_dir, n_genes=args.n_genes)
+    x, y, case_ids = load_cohort(data_dir, n_cpgs=args.n_cpgs)
     _log(f"Cases: {', '.join(case_ids)}")
-    _log("Running tiny architecture search (MLP LOO-CV)...")
+    _log("Running tiny architecture search (MLP LOO-CV on methylation)...")
     summary = run_nas(x, y)
 
     out_path = data_dir / "nas_demo_results.json"

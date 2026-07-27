@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Download a tiny open-access TCGA-BRCA cohort from the GDC API.
 
-Selects ~5–10 cases with clinical/demographics + gene expression (and a small
-methylation file when budget allows). No GDC token / dbGaP required.
+Selects ~5–10 cases that have **both** open methylation beta values and
+RNA-seq (STAR counts), plus clinical/labels (biotab + cases API demographics).
+PoC-minimum open Level-3 modalities only — no controlled/dbGaP files, no token.
 
 Idempotent: skips work when ``.ready`` marker exists (or files match catalog).
+If selection schema changes (e.g. meth required), delete ``.ready`` (and
+optionally ``files/``) for a fresh pull.
 
 Usage:
   python scripts/download_tcga_brca_sample.py
@@ -29,10 +32,14 @@ GDC_CASES = "https://api.gdc.cancer.gov/cases"
 PROJECT = "TCGA-BRCA"
 DEFAULT_OUT = Path("data/tcga/BRCA")
 DEFAULT_N_CASES = 8
-# Soft cap: keep the demo well under a couple hundred MB.
-DEFAULT_MAX_BYTES = 80 * 1024 * 1024
+# Sample-scale budget: ~N Illumina 450K SeSAMe meth betas (~12–14 MB each) + STAR RNA + clinical.
+# Not the full ~1098-case cohort (that is Plan 07). Soft cap leaves headroom if file sizes grow.
+DEFAULT_MAX_BYTES = 1500 * 1024 * 1024
 READY_MARKER = ".ready"
-USER_AGENT = "Bio-NAS-tcga-brca-sample/0.2 (+https://github.com/AdamCankaya/PhDNeural)"
+USER_AGENT = "Bio-NAS-tcga-brca-sample/0.3 (+https://github.com/AdamCankaya/PhDNeural)"
+# Prefer Illumina 450K SeSAMe betas (~12–14 MB); HM27 is a last-resort fallback.
+METH_PLATFORM_450 = "Illumina Human Methylation 450"
+METH_PLATFORM_27 = "Illumina Human Methylation 27"
 
 
 def _log(msg: str) -> None:
@@ -91,101 +98,12 @@ def _case_ids_from_hit(hit: dict[str, Any]) -> tuple[str | None, str | None]:
     return case.get("case_id"), case.get("submitter_id")
 
 
-def select_expression_by_case(
-    *,
-    n_cases: int,
-    budget: int,
-) -> tuple[list[dict[str, Any]], list[dict[str, str]], int]:
-    """Pick the smallest open RNA-seq file per case for ``n_cases`` patients."""
-    fields = (
-        "file_id,file_name,file_size,data_type,data_format,data_category,"
-        "cases.case_id,cases.submitter_id"
-    )
-    hits = gdc_query(
-        GDC_FILES,
-        and_filters(
-            *project_open(),
-            {
-                "op": "in",
-                "content": {
-                    "field": "data_type",
-                    "value": ["Gene Expression Quantification"],
-                },
-            },
-            {
-                "op": "in",
-                "content": {
-                    "field": "analysis.workflow_type",
-                    "value": ["STAR - Counts"],
-                },
-            },
-        ),
-        fields=fields,
-        size=80,
-        sort="file_size:asc",
-    )
-    if not hits:
-        # Fallback without workflow filter.
-        hits = gdc_query(
-            GDC_FILES,
-            and_filters(
-                *project_open(),
-                {
-                    "op": "in",
-                    "content": {
-                        "field": "data_type",
-                        "value": ["Gene Expression Quantification"],
-                    },
-                },
-            ),
-            fields=fields,
-            size=80,
-            sort="file_size:asc",
-        )
-
-    selected: list[dict[str, Any]] = []
-    cohort: list[dict[str, str]] = []
-    seen: set[str] = set()
-    remaining = budget
-
-    for hit in hits:
-        case_id, submitter_id = _case_ids_from_hit(hit)
-        if not case_id or case_id in seen:
-            continue
-        size = int(hit["file_size"])
-        if size > remaining:
-            _log(
-                f"  skip expression (budget): {hit['file_name']} "
-                f"({size / 1e6:.2f} MB)"
-            )
-            continue
-        seen.add(case_id)
-        hit["_case_id"] = case_id
-        hit["_submitter_id"] = submitter_id or case_id
-        hit["_label"] = "gene_expression"
-        selected.append(hit)
-        remaining -= size
-        cohort.append(
-            {
-                "case_id": case_id,
-                "submitter_id": submitter_id or case_id,
-                "expression_file_id": hit["file_id"],
-                "expression_file_name": hit["file_name"],
-            }
-        )
-        _log(
-            f"  select [gene_expression] case={submitter_id or case_id} "
-            f"{hit['file_name']} ({size / 1e6:.2f} MB)"
-        )
-        if len(cohort) >= n_cases:
-            break
-
-    if len(cohort) < 5:
-        raise RuntimeError(
-            f"Could only select {len(cohort)} BRCA cases with open expression; "
-            "need at least 5."
-        )
-    return selected, cohort, remaining
+def _annotate(hit: dict[str, Any], label: str) -> dict[str, Any]:
+    case_id, submitter_id = _case_ids_from_hit(hit)
+    hit["_label"] = label
+    hit["_case_id"] = case_id
+    hit["_submitter_id"] = submitter_id or case_id
+    return hit
 
 
 def select_clinical(*, budget: int) -> tuple[list[dict[str, Any]], int]:
@@ -242,15 +160,8 @@ def select_clinical(*, budget: int) -> tuple[list[dict[str, Any]], int]:
     return selected, remaining
 
 
-def select_methylation_for_cases(
-    case_ids: list[str],
-    *,
-    budget: int,
-    max_files: int = 2,
-) -> tuple[list[dict[str, Any]], int]:
-    """Optional small methylation files for cohort cases only."""
-    if not case_ids or budget <= 0:
-        return [], budget
+def _index_expression_by_case() -> dict[str, dict[str, Any]]:
+    """Map case_id -> smallest open STAR Counts expression file."""
     fields = (
         "file_id,file_name,file_size,data_type,data_format,data_category,"
         "cases.case_id,cases.submitter_id"
@@ -263,45 +174,194 @@ def select_methylation_for_cases(
                 "op": "in",
                 "content": {
                     "field": "data_type",
+                    "value": ["Gene Expression Quantification"],
+                },
+            },
+            {
+                "op": "in",
+                "content": {
+                    "field": "analysis.workflow_type",
+                    "value": ["STAR - Counts"],
+                },
+            },
+        ),
+        fields=fields,
+        size=200,
+        sort="file_size:asc",
+    )
+    if not hits:
+        hits = gdc_query(
+            GDC_FILES,
+            and_filters(
+                *project_open(),
+                {
+                    "op": "in",
+                    "content": {
+                        "field": "data_type",
+                        "value": ["Gene Expression Quantification"],
+                    },
+                },
+            ),
+            fields=fields,
+            size=200,
+            sort="file_size:asc",
+        )
+
+    by_case: dict[str, dict[str, Any]] = {}
+    for hit in hits:
+        case_id, submitter_id = _case_ids_from_hit(hit)
+        if not case_id:
+            continue
+        size = int(hit["file_size"])
+        prev = by_case.get(case_id)
+        if prev is None or size < int(prev["file_size"]):
+            by_case[case_id] = _annotate(hit, "gene_expression")
+            by_case[case_id]["_submitter_id"] = submitter_id or case_id
+    return by_case
+
+
+def _meth_rank(hit: dict[str, Any]) -> tuple[int, int]:
+    """Lower is better: prefer 450K, then HM27, then other; then smaller files."""
+    platform = hit.get("platform") or ""
+    if platform == METH_PLATFORM_450:
+        pref = 0
+    elif platform == METH_PLATFORM_27:
+        pref = 1
+    else:
+        pref = 2
+    return pref, int(hit["file_size"])
+
+
+def _index_methylation_by_case() -> dict[str, dict[str, Any]]:
+    """Map case_id -> preferred open Methylation Beta Value file (450K first)."""
+    fields = (
+        "file_id,file_name,file_size,data_type,data_format,data_category,"
+        "platform,cases.case_id,cases.submitter_id"
+    )
+
+    def _ingest(hits: list[dict[str, Any]], by_case: dict[str, dict[str, Any]]) -> None:
+        for hit in hits:
+            case_id, submitter_id = _case_ids_from_hit(hit)
+            if not case_id:
+                continue
+            annotated = _annotate(hit, "methylation")
+            annotated["_submitter_id"] = submitter_id or case_id
+            prev = by_case.get(case_id)
+            if prev is None or _meth_rank(annotated) < _meth_rank(prev):
+                by_case[case_id] = annotated
+
+    by_case: dict[str, dict[str, Any]] = {}
+    # Query 450K explicitly — sorting all meth by size:asc only returns tiny HM27.
+    hits_450 = gdc_query(
+        GDC_FILES,
+        and_filters(
+            *project_open(),
+            {
+                "op": "in",
+                "content": {
+                    "field": "data_type",
                     "value": ["Methylation Beta Value"],
                 },
             },
             {
                 "op": "in",
-                "content": {"field": "cases.case_id", "value": case_ids},
+                "content": {"field": "platform", "value": [METH_PLATFORM_450]},
             },
         ),
         fields=fields,
-        size=20,
-        sort="file_size:asc",
+        size=400,
+        sort="cases.submitter_id:asc",
     )
+    _ingest(hits_450, by_case)
+
+    if len(by_case) < 20:
+        hits_any = gdc_query(
+            GDC_FILES,
+            and_filters(
+                *project_open(),
+                {
+                    "op": "in",
+                    "content": {
+                        "field": "data_type",
+                        "value": ["Methylation Beta Value"],
+                    },
+                },
+            ),
+            fields=fields,
+            size=400,
+            sort="file_size:desc",
+        )
+        _ingest(hits_any, by_case)
+
+    return by_case
+
+
+def select_joint_meth_rna_cases(
+    *,
+    n_cases: int,
+    budget: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, str]], int]:
+    """Pick cases with both open meth betas and STAR RNA; pin via submitter_id sort."""
+    _log("Indexing open STAR expression and Methylation Beta Value files...")
+    expr_by_case = _index_expression_by_case()
+    meth_by_case = _index_methylation_by_case()
+    joint = sorted(
+        set(expr_by_case) & set(meth_by_case),
+        key=lambda cid: (
+            str(expr_by_case[cid].get("_submitter_id") or cid),
+            cid,
+        ),
+    )
+    _log(
+        f"  joint open meth+RNA cases available in query window: {len(joint)} "
+        f"(expr={len(expr_by_case)}, meth={len(meth_by_case)})"
+    )
+
     selected: list[dict[str, Any]] = []
+    cohort: list[dict[str, str]] = []
     remaining = budget
-    seen_cases: set[str] = set()
-    for hit in hits:
-        case_id, _ = _case_ids_from_hit(hit)
-        if not case_id or case_id in seen_cases:
-            continue
-        size = int(hit["file_size"])
-        # Skip large Illumina450k matrices; keep only small files.
-        if size > min(remaining, 15 * 1024 * 1024):
+
+    for case_id in joint:
+        meth = meth_by_case[case_id]
+        expr = expr_by_case[case_id]
+        pair_size = int(meth["file_size"]) + int(expr["file_size"])
+        if pair_size > remaining:
             _log(
-                f"  skip methylation (too large for demo): "
-                f"{hit['file_name']} ({size / 1e6:.2f} MB)"
+                f"  skip case (budget): "
+                f"{meth.get('_submitter_id') or case_id} "
+                f"(meth+RNA {pair_size / 1e6:.1f} MB > remaining "
+                f"{remaining / 1e6:.1f} MB)"
             )
             continue
-        hit["_label"] = "methylation"
-        hit["_case_id"] = case_id
-        selected.append(hit)
-        seen_cases.add(case_id)
-        remaining -= size
-        _log(
-            f"  select [methylation] {hit['file_name']} "
-            f"({size / 1e6:.2f} MB)"
+
+        selected.append(meth)
+        selected.append(expr)
+        remaining -= pair_size
+        submitter = str(meth.get("_submitter_id") or expr.get("_submitter_id") or case_id)
+        cohort.append(
+            {
+                "case_id": case_id,
+                "submitter_id": submitter,
+                "methylation_file_id": meth["file_id"],
+                "methylation_file_name": meth["file_name"],
+                "expression_file_id": expr["file_id"],
+                "expression_file_name": expr["file_name"],
+            }
         )
-        if len(selected) >= max_files:
+        _log(
+            f"  select [meth+rna] case={submitter} "
+            f"meth={meth['file_name']} ({int(meth['file_size']) / 1e6:.2f} MB) "
+            f"rna={expr['file_name']} ({int(expr['file_size']) / 1e6:.2f} MB)"
+        )
+        if len(cohort) >= n_cases:
             break
-    return selected, remaining
+
+    if len(cohort) < 5:
+        raise RuntimeError(
+            f"Could only select {len(cohort)} BRCA cases with open meth+RNA; "
+            "need at least 5. Raise TCGA_SAMPLE_MAX_BYTES or check GDC API."
+        )
+    return selected, cohort, remaining
 
 
 def fetch_case_demographics(case_ids: list[str]) -> list[dict[str, Any]]:
@@ -325,7 +385,6 @@ def fetch_case_demographics(case_ids: list[str]) -> list[dict[str, Any]]:
         size=len(case_ids),
         sort="submitter_id:asc",
     )
-    # Normalize for training convenience.
     rows: list[dict[str, Any]] = []
     for hit in hits:
         demo = hit.get("demographic") or {}
@@ -402,10 +461,19 @@ def write_manifest(
         "project": PROJECT,
         "source": "https://api.gdc.cancer.gov",
         "access": "open",
+        "schema_version": 2,
         "n_cases": len(cohort),
+        "poc_modalities": [
+            "methylation_beta",
+            "rna_star_counts",
+            "clinical_labels",
+        ],
         "note": (
-            "Tiny open-access BRCA cohort for Docker smoke / NAS demo; "
-            "not the full TCGA-BRCA cohort."
+            "Tiny open-access BRCA cohort for Docker smoke / NAS demo "
+            "(PoC-minimum: meth + RNA + clinical). Controlled/dbGaP deferred. "
+            "Not the full TCGA-BRCA cohort (Plan 07). Selection prefers cases "
+            "with both meth and RNA; ordered by submitter_id for stability. "
+            "Toy NAS uses methylation features only."
         ),
         "cohort": cohort,
         "demographics": demographics,
@@ -417,6 +485,7 @@ def write_manifest(
                 "data_type": f.get("data_type"),
                 "data_format": f.get("data_format"),
                 "data_category": f.get("data_category"),
+                "platform": f.get("platform"),
                 "label": f.get("_label"),
                 "case_id": f.get("_case_id"),
                 "submitter_id": f.get("_submitter_id"),
@@ -443,20 +512,17 @@ def select_sample_files(
 ) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
     _log(
         f"Querying GDC for open {PROJECT} cohort "
-        f"(~{n_cases} cases, budget <= {max_bytes / 1e6:.1f} MB)..."
+        f"(~{n_cases} cases with meth+RNA+clinical, "
+        f"budget <= {max_bytes / 1e6:.1f} MB)..."
     )
     selected: list[dict[str, Any]] = []
     clinical, budget = select_clinical(budget=max_bytes)
     selected.extend(clinical)
 
-    expr, cohort, budget = select_expression_by_case(
+    joint, cohort, _budget = select_joint_meth_rna_cases(
         n_cases=n_cases, budget=budget
     )
-    selected.extend(expr)
-
-    case_ids = [c["case_id"] for c in cohort]
-    meth, _budget = select_methylation_for_cases(case_ids, budget=budget)
-    selected.extend(meth)
+    selected.extend(joint)
 
     if not selected:
         raise RuntimeError("GDC returned no selectable open TCGA-BRCA files.")
@@ -504,7 +570,11 @@ def main(argv: list[str] | None = None) -> int:
     files_dir.mkdir(parents=True, exist_ok=True)
 
     if marker.exists() and not args.force:
-        _log(f"Data already present ({marker}); skipping download.")
+        _log(
+            f"Data already present ({marker}); skipping download. "
+            "If you need the meth+RNA schema (v2), delete .ready "
+            "(and optionally files/) then re-run."
+        )
         return 0
 
     files, cohort = select_sample_files(n_cases=n_cases, max_bytes=max_bytes)
@@ -535,9 +605,15 @@ def main(argv: list[str] | None = None) -> int:
         json.dumps(
             {
                 "project": PROJECT,
+                "schema_version": 2,
                 "n_cases": len(cohort),
                 "n_files": len(files),
                 "catalog_bytes": total_catalog,
+                "poc_modalities": [
+                    "methylation_beta",
+                    "rna_star_counts",
+                    "clinical_labels",
+                ],
             },
             indent=2,
         )
