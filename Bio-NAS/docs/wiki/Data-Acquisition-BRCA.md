@@ -69,13 +69,17 @@ Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 for me
 
 ## Docker smoke (tiny open-access sample)
 
-For a first-run container demo (not full ETL): `docker compose up --build` from `Bio-NAS/`.
+Bio-NAS is **Docker-first**. On Windows, install and start [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/), then from `Bio-NAS/` load the Dockerfile and run the image:
+
+```powershell
+docker compose up --build
+```
 
 - Downloads ~5–10 open-access BRCA cases (demographics + RNA-seq; small methylation when budget allows) via the GDC API — **no login**
 - Stores data on the host bind mount `./data/tcga` → `/data/tcga/BRCA`
 - Runs a toy MLP NAS script after download (smoke only — not Intermediate Fusion NAS)
 
-See [`docker/README.md`](../../docker/README.md). Plan 1 inventory repro target: [plan 01](../plans/01-issue-354-multi-disease-dataset-inventory.md).
+Windows walkthrough (Desktop install → build Dockerfile → run): [README § Deploy with Docker](../../README.md#5-deploy-with-docker-windows). Contract details: [`docker/README.md`](../../docker/README.md). Plan 1 inventory repro target: [plan 01](../plans/01-issue-354-multi-disease-dataset-inventory.md).
 
 ## Related pages
 

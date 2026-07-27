@@ -79,6 +79,24 @@ Editing the master plan may regenerate sync-ids for reordered bullets — treate
 
 Run `--parse-only` locally (expects **24**). Open GitHub filter: [`label:phd-sync is:open`](https://github.com/AdamCankaya/PhDNeural/issues?q=label%3Aphd-sync+is%3Aopen). If counts differ, run the clean sync above.
 
+## Docker
+
+### Do I need Docker Desktop on Windows?
+
+Yes for the supported path. Install [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/), start it, wait until the engine is **Running**, then from `Bio-NAS/` run `docker compose up --build`. That builds [`docker/Dockerfile`](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/Dockerfile) and runs the image. Full steps: [README § Deploy with Docker](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md#5-deploy-with-docker-windows).
+
+### `error during connect` / cannot find Docker daemon
+
+Docker Desktop is not running (or still starting). Open Docker Desktop and retry `docker version` until the server section succeeds.
+
+### `no configuration file provided: not found`
+
+Run Compose from `Bio-NAS/` (where `docker-compose.yml` lives), or pass `-f Bio-NAS/docker-compose.yml` from the parent checkout.
+
+### Can I run without Docker?
+
+Host `pip install -r docker/requirements.txt` is documented as a fallback in [docker/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/README.md), but new work should stay Docker-first for reproducibility.
+
 ## Dashboard & Pages
 
 ### Board / Pages look out of date after plan edit

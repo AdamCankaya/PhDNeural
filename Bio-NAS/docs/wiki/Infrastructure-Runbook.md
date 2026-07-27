@@ -24,10 +24,18 @@ flowchart TB
 | Deployment | Dockerized PostgreSQL (persistent volume) |
 | Purpose | Central Optuna study store for all NAS trials |
 
-### Docker deployment checklist
+### Local Docker (Bio-NAS smoke / Windows)
+
+Developer machines (including Windows) should run Bio-NAS demos via **Docker Desktop**:
+
+1. Install [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/) (WSL 2 recommended) and start it.
+2. From `Bio-NAS/`, load [`docker/Dockerfile`](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/Dockerfile) and run: `docker compose up --build`.
+3. See [README § Deploy with Docker](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md#5-deploy-with-docker-windows) and [docker/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/README.md).
+
+### Docker deployment checklist (Optuna Postgres hub)
 
 - [ ] Provision Hetzner Linux VM
-- [ ] Install Docker + docker-compose
+- [ ] Install Docker Engine + Docker Compose (or Docker Desktop on Windows admin hosts)
 - [ ] Deploy PostgreSQL with persistent volume mount
 - [ ] Restrict firewall to Slurm subnet + admin IP
 - [ ] Store credentials in local `.env` (see [`.env.example`](https://github.com/AdamCankaya/PhDNeural/blob/main/.env.example)) — **never commit secrets**

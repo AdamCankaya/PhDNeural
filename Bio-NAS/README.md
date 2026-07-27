@@ -126,6 +126,9 @@ Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](p
 | **captum / shap** | | Multi-dimensional attribution |
 | **Streamlit** | | Trajectory dashboard |
 | **KEGG / Reactome** | [kegg.jp](https://www.kegg.jp/) | Biological blueprints for network constraints |
+| **Docker** | [docker.com](https://www.docker.com/) | Primary runtime for demos, ETL smoke tests, and reproducible experiments |
+
+**Docker-first:** Prefer running Bio-NAS workloads inside the project container (`docker/Dockerfile`, `docker-compose.yml`) rather than a host-only Python venv. Details: [`docker/README.md`](docker/README.md).
 
 ### Repository tooling
 
@@ -149,22 +152,84 @@ python scripts/sync_phd_to_github.py --update-existing --close-stale --prune-pro
 python scripts/embed_dashboard_plan.py
 ```
 
-### Docker smoke: TCGA-BRCA sample + toy NAS
+## 5. Deploy with Docker (Windows)
 
-On first `docker compose up --build`, the container downloads an open-access TCGA-BRCA slice (~5–10 patients: demographics + RNA-seq, optional small methylation) from GDC into `/data/tcga/BRCA` (bind-mounted to host `data/tcga/BRCA`, no GDC login), then runs a tiny MLP NAS demo. Browse results on Windows under `Bio-NAS\data\tcga\BRCA`. After compose changes, recreate with `docker compose up --build` (existing in-container-only data does not auto-migrate). Details: [`docker/README.md`](docker/README.md).
+Bio-NAS is meant to run **inside Docker**. On Windows, install and start **Docker Desktop**, then build the image from [`docker/Dockerfile`](docker/Dockerfile) and run it (Compose is the recommended path).
 
-Compose file: [`docker-compose.yml`](docker-compose.yml) at the **Bio-NAS** directory (not the parent `PhD/` repo root). Run from there:
+### Step 1 — Install Docker Desktop
 
-```bash
-cd Bio-NAS
+1. Download **Docker Desktop for Windows** from [https://docs.docker.com/desktop/setup/install/windows-install/](https://docs.docker.com/desktop/setup/install/windows-install/).
+2. Run the installer. Enable the **WSL 2** backend when prompted (recommended).
+3. Finish setup and **reboot** if the installer asks you to.
+4. Launch **Docker Desktop** from the Start menu and wait until the engine shows **Running** (whale icon steady in the system tray).
+5. Confirm in PowerShell or Windows Terminal:
+
+```powershell
+docker version
+docker compose version
+```
+
+Both commands should print client/server (or Compose) version info without connection errors.
+
+### Step 2 — Clone the repository
+
+```powershell
+git clone https://github.com/AdamCankaya/PhDNeural.git
+cd PhDNeural\Bio-NAS
+```
+
+Compose and the Dockerfile live under **`Bio-NAS/`** (not the parent `PhDNeural/` / `PhD/` root).
+
+### Step 3 — Load the Dockerfile and build the image
+
+The image is defined by [`docker/Dockerfile`](docker/Dockerfile). Compose wires that file via [`docker-compose.yml`](docker-compose.yml).
+
+**Recommended (Compose — builds from the Dockerfile automatically):**
+
+```powershell
+cd PhDNeural\Bio-NAS   # if you are not already here
 docker compose up --build
 ```
 
-From the parent `PhD/` checkout instead:
+**Manual equivalent (build the Dockerfile, then run the image):**
 
-```bash
+```powershell
+cd PhDNeural\Bio-NAS
+docker build -f docker\Dockerfile -t bio-nas-demo:local .
+docker run --rm -v "${PWD}/data/tcga:/data/tcga" bio-nas-demo:local
+```
+
+From a parent checkout that contains `Bio-NAS/`:
+
+```powershell
 docker compose -f Bio-NAS/docker-compose.yml up --build
 ```
+
+### Step 4 — What the container does
+
+On first run, the entrypoint:
+
+1. Downloads a tiny **open-access** TCGA-BRCA sample from the GDC API (~5–10 cases; no login / token).
+2. Writes data under the host bind mount `Bio-NAS\data\tcga\BRCA` (container path `/data/tcga/BRCA`).
+3. Runs a toy MLP NAS demo and writes `nas_demo_results.json`.
+
+Re-runs skip the download when `data\tcga\BRCA\.ready` already exists.
+
+### Step 5 — View results on Windows
+
+| Location | Path |
+|----------|------|
+| Host (Explorer) | `Bio-NAS\data\tcga\BRCA\` |
+| Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\` |
+| Logs | `docker compose logs bio-nas-demo` (from `Bio-NAS\`) |
+
+Full contract, volumes, and troubleshooting: [`docker/README.md`](docker/README.md).
+
+### Notes
+
+- Keep **Docker Desktop running** whenever you build or run containers.
+- After changing `docker-compose.yml` or the Dockerfile, recreate with `docker compose up --build`.
+- Host-only `pip install` is a fallback for development; see “Without Docker” in [`docker/README.md`](docker/README.md). Prefer the container for reproducible demos.
 
 ---
 
