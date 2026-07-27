@@ -19,3 +19,13 @@ services:
       - ./data/tcga:/data/tcga
     # One-shot job: download-if-needed → train/NAS → exit.
     restart: "no"
+
+  # Live container logs UI: http://localhost:8080
+  # Reads the Docker socket (Docker Desktop on Windows); stays up after bio-nas-demo exits.
+  dozzle:
+    image: amir20/dozzle:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
