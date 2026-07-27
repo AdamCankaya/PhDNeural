@@ -6,16 +6,17 @@ Architecture Decision Records (ADRs) for the PhDNeural two-stage fusion framewor
 
 ## ADR-001: Two-stage fusion evolution
 
-**Status:** Accepted
+**Status:** Accepted (amended — Intermediate Fusion supersedes Stage 1 for NAS)
 
-**Context:** BRCA anchor must validate ingestion and MTL heads before algorithmic complexity.
+**Context:** BRCA anchor must validate ingestion and MTL heads before algorithmic complexity. Raw early concat also risks curse of dimensionality and modality dominance under Optuna.
 
 **Decision:**
 
-1. **Stage 1** — Early fusion via `torch.cat` through an MLP trunk (software baseline)
-2. **Stage 2** — Stacked late fusion with 4 modality experts + ElasticNet on OOF predictions
+1. **Stage 1 (legacy baseline)** — Early fusion via `torch.cat` of raw modalities through an MLP trunk — **software smoke/baseline only**; not the default NAS architecture
+2. **Intermediate Fusion (NAS default)** — Multi-branch: `MethEncoder` + `RNAEncoder` → latent concat → `FusionDecoder`; Optuna phases branch HPs before post-fusion dense (plans 07 / 10 / 12; see [`docs/plans/ROADMAP.md`](../plans/ROADMAP.md) § Intermediate Fusion)
+3. **Stage 2** — Stacked late fusion with 4 modality experts + ElasticNet on OOF predictions (unchanged)
 
-**Consequences:** Stage 1 de-risks PyTorch/HDF5/Optuna; Stage 2 eliminates concatenation leakage and yields interpretable expert weights.
+**Consequences:** Legacy Stage 1 still de-risks PyTorch/HDF5 wiring; Intermediate Fusion is the searchable multi-omic path; Stage 2 yields interpretable expert weights on OOF predictions.
 
 ---
 

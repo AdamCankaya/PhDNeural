@@ -10,7 +10,7 @@ Use this template to record reproducible experiments. Copy the table into a lab 
 | **Linked issue** | [#NNN](https://github.com/AdamCankaya/PhDNeural/issues/NNN) or sync-id |
 | **Commit** | `abc1234` (short SHA) |
 | **Split version** | e.g. `brca-80-20-v1`, seed, holdout patient IDs hash |
-| **Stage** | Stage 1 early fusion / Stage 2 OOF / baseline |
+| **Stage** | Intermediate Fusion (branch / post-fusion phase) / Stage 1 early fusion (legacy) / Stage 2 OOF / baseline |
 | **Optuna study** | Study name + storage URL (PostgreSQL) |
 | **Model config** | Architecture, hyperparameters, loss weights |
 

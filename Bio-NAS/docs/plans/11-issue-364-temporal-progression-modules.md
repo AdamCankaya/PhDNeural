@@ -43,7 +43,8 @@ Gradient-flow smoke tests. Place under `src/models/temporal/`.
 
 - Δt embedding → plan 06 (#359)
 - Spatial modules **and Track B adjacency build/freeze** → plan 10 (#363)
-- Optuna search under frozen mask → plan 12 (#365)
+- Optuna search under frozen mask + Intermediate Fusion phasing → plan 12 (#365)
+- Intermediate Fusion branch/decoder modules → plan 10 (#363); temporal stack may consume fused latents after concat
 - Ablation spatial vs spatio-temporal → plan 15 (#368)
 
 ## Acceptance criteria

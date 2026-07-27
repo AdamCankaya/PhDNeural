@@ -14,13 +14,15 @@
 
 ## Goals / requirements checklist
 
-Maps 1:1 to the issue **Implementation requirements**, plus Track B adjacency ownership (this plan is the earliest consumer; see [`ROADMAP.md`](ROADMAP.md) non-duplication rule):
+Maps 1:1 to the issue **Implementation requirements**, plus Track B adjacency ownership (this plan is the earliest consumer; see [`ROADMAP.md`](ROADMAP.md) non-duplication rule) and Intermediate Fusion branch modules (see [`ROADMAP.md`](ROADMAP.md) § Intermediate Fusion):
 
 - [ ] **Deliverables:** reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.
+- [ ] **Deliverables (Intermediate Fusion):** standalone `MethEncoder`, `RNAEncoder`, and `FusionDecoder` (post-fusion dense) `nn.Module`s consuming plan-07 separate modality tensors — **not** early raw-concat into one trunk.
 - [ ] **Deliverables (Track B):** versioned frozen binary adjacency artifact + `MaskedLinear` (or equivalent) that applies it; load adapters for KEGG/Reactome blueprints.
 - [ ] **Acceptance:** forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.
+- [ ] **Acceptance (Intermediate Fusion):** forward on `(meth_batch, rna_batch)` → branch latents → `torch.cat` → `FusionDecoder` → MTL heads; each branch exposes searchable depth/width/dropout/latent-dim.
 - [ ] **Acceptance (Track B):** masked forward pass zeros disallowed synapses; frozen mask hash/version recorded in config.
-- [ ] **Upstream deps satisfied:** genomic spacing config; Year 1 tensors.
+- [ ] **Upstream deps satisfied:** genomic spacing config; Year 1 tensors; plan-07 Intermediate Fusion loaders.
 
 
 ## Approach
@@ -33,6 +35,19 @@ for Optuna. Forward-pass tests on synthetic `(B,T,S,C)` batches; log parameter c
 
 **Ownership:** this plan **builds and freezes** the Track B adjacency pipeline. Plan 12 **consumes** the
 frozen mask in dual-track Optuna search and does not re-derive graph construction.
+
+### Intermediate Fusion multi-branch modules (owned here)
+
+**Supersedes for the NAS model path:** Stage 1 early fusion (`src/models/brca_early_fusion.py` / single MLP on raw `X_fused`). Keep that module only as a legacy baseline; new work implements multi-branch Intermediate Fusion (user’s `model.py` maps to these modules):
+
+| Step | Module | Role |
+|------|--------|------|
+| 1 | `MethEncoder` | Standalone branch: methylation betas → latent; NAS tunes layers, dropout, output latent dims |
+| 2 | `RNAEncoder` | Standalone branch: preprocessed RNA → latent; NAS tunes independently so RNA does not overpower methylation gradients |
+| 3 | Concat | `torch.cat((meth_latent, rna_latent), dim=1)` after finalized branch embeddings |
+| 4 | `FusionDecoder` | Post-fusion FC stack → classification / predicted epigenetic state (Static MTL heads) |
+
+Spatial CNN / Transformer blocks may implement or wrap the branch encoders (CpG-local CNN inside `MethEncoder`, gene-axis modules inside `RNAEncoder`). Phased Optuna sequencing (tune branches before post-fusion dense) is **plan 12** — this plan only registers searchable HPs per module.
 
 ### Track B adjacency pipeline (build & freeze)
 
@@ -126,26 +141,30 @@ version string. Do not silently overwrite `v1` after Track B search starts.
 ## Key files / areas to touch
 
 - `src/models/spatial/` (new packages — CNN / Spatial Transformer)
+- `src/models/` Intermediate Fusion: `MethEncoder`, `RNAEncoder`, `FusionDecoder` (new; may live under `spatial/` or `fusion/`)
+- `src/models/brca_early_fusion.py` — **legacy only**; do not grow NAS search around raw-concat
 - `src/models/spatial/masked_linear.py` (or `src/models/layers/masked_linear.py`)
 - `src/pipelines/adjacency/` or `src/data/adjacency/` (graph build, feature→gene map, freeze writer)
 - `src/config/adjacency_track_b.yaml` (sources, edge rule, pathway allow-list, paths)
 - `src/config/genomic_spacing.yaml`
 - `artifacts/adjacency/` (versioned \(A\) + metadata; git-lfs or local-only large binaries as appropriate)
 - `src/models/static_mtl_model.py` (head attachment patterns)
-- `tests/` forward-pass tests; mask sparsity / freeze round-trip tests (new)
+- `tests/` forward-pass tests; mask sparsity / freeze round-trip tests; Intermediate Fusion smoke (new)
+- Docker: module unit/forward tests via compose/entrypoint when added (`docker/requirements.txt` already pins torch)
 
 ## Dependencies on other plans
 
 - `03-issue-356-spatial-temporal-feature-map.md` (#356) — feature IDs for gene mapping
 - `04-issue-357-genomic-structural-spacing.md` (#357)
-- `07-issue-360-four-d-tensor-hdf5.md` (#360)
+- `07-issue-360-four-d-tensor-hdf5.md` (#360) — **Intermediate Fusion loaders + scalings**
 - `08-issue-361-compute-stack-provisioning.md` (#361)
 
 ## Out of scope / owned by other plans
 
 - Genomic spacing config → plan 04 (#357)
-- Temporal modules → plan 11 (#364); may *consume* pathway-selected features but does not own adjacency freeze
-- **Optuna dual-track search under the frozen mask** → plan 12 (#365)
+- Dataset scalings / `(meth, rna, labels)` batches → plan 07 (#360)
+- Temporal modules → plan 11 (#364); may *consume* pathway-selected features / fused latents but does not own adjacency freeze
+- **Optuna dual-track search, phased branch-then-fusion studies, train.py forward orchestration** → plan 12 (#365)
 - Holdout Track A vs B metrics → plan 14 (#367)
 - Attribution vs pathway priors → plan 17–18 (#370–#371)
 
@@ -159,12 +178,17 @@ Plus Track B adjacency:
 
 > frozen adjacency artifact version + hash exist; `MaskedLinear` respects \(A\); builder config records KEGG/Reactome releases, edge rule, and feature→gene mapping rules.
 
+Plus Intermediate Fusion modules:
+
+> `MethEncoder`, `RNAEncoder`, and `FusionDecoder` forward on separate modality tensors; early raw-concat is not the default NAS architecture.
+
 Plus: linked PR(s) reference this plan path and issue #363; experiments (if any) record IDs per `docs/wiki/Experiment-Log-Template.md`.
 
 ## Rough sequencing notes
 
-Start of Year 2 search space; needs tensors + spacing + torch env. Build Track A spatial modules and the
-adjacency freeze in parallel where possible; **freeze \(A\) before** any Track B study in plan 12.
+Start of Year 2 search space; needs tensors + spacing + torch env. Build Track A spatial modules,
+Intermediate Fusion branches, and the adjacency freeze in parallel where possible; **freeze \(A\) before**
+any Track B study in plan 12. Branch modules before plan-12 phased Optuna.
 
 Recommended roadmap position: **10 / 24** (see [`ROADMAP.md`](ROADMAP.md)).
 
@@ -172,6 +196,6 @@ Recommended roadmap position: **10 / 24** (see [`ROADMAP.md`](ROADMAP.md)).
 
 Follow Track scope and cohort focus declared for this quarter in [`phd_bio-nas_master_plan.md`](../../phd_bio-nas_master_plan.md). BRCA remains the vertical-slice anchor through Year 2; Other 4 work after the Year 2 Summer scaling gate unless this plan explicitly inventories or templates them.
 
-- **Track A:** spatial CNN / Transformer blocks without pathway masks.
+- **Track A:** spatial CNN / Transformer + Intermediate Fusion branches without pathway masks.
 - **Track B:** same block families with `MaskedLinear` (or equivalent) wired to the **frozen** BRCA adjacency from this plan.
-- Glossary: [Track A](../wiki/Glossary.md), [Track B](../wiki/Glossary.md), [MaskedLinear](../wiki/Glossary.md), [Adjacency matrix](../wiki/Glossary.md).
+- Glossary: [Track A](../wiki/Glossary.md), [Track B](../wiki/Glossary.md), [MaskedLinear](../wiki/Glossary.md), [Adjacency matrix](../wiki/Glossary.md), [Intermediate Fusion](../wiki/Glossary.md).

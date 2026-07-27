@@ -1,0 +1,35 @@
+---
+description: All Bio-NAS coding/plans must run inside Docker (Dockerfile/compose)
+alwaysApply: true
+---
+
+# Docker-first implementation (all plans)
+
+All new coding and plan implementation for Bio-NAS must be designed to run **inside the Docker container** (`docker/Dockerfile`, `docker-compose.yml`), not as host-only workflows.
+
+## Do this
+
+- Prefer extending `scripts/docker_entrypoint.py`, `docker/requirements.txt`, compose env/volumes, and scripts the container already invokes.
+- Add Python deps to `docker/requirements.txt` (and ensure `Dockerfile` `COPY`s new scripts) instead of assuming host `pip install`.
+- When a plan adds executable work, include Docker run/repro steps (`docker compose up --build` or equivalent) and expected outputs on the mounted volume (e.g. `./data/tcga` → `/data/tcga`).
+- Point newcomers at [`docker/README.md`](../../docker/README.md) for the current compose contract.
+
+## Do not do this
+
+```text
+# ❌ BAD — host-only path with no container story
+python scripts/my_new_etl.py   # documented only for local venv
+
+# ✅ GOOD — same script, wired for the container
+# - add/invoke from scripts/docker_entrypoint.py (or compose command)
+# - pin deps in docker/requirements.txt
+# - document: docker compose up --build  → outputs on host mount
+```
+
+## Exceptions (document as out-of-container)
+
+Only when impossible in-container (interactive DUA/browser account setup, ethics approvals, controlled-access downloads requiring human credentials). Mark those steps explicitly **outside Docker** in the plan/inventory; keep open/reproducible pieces in Compose.
+
+## Plans
+
+Roadmap-wide note: [`docs/plans/ROADMAP.md`](../../docs/plans/ROADMAP.md) § Docker-first. Plan 01 already has Docker repro sections — extend that pattern for later plans.
