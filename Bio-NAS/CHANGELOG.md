@@ -2,6 +2,14 @@
 
 All notable changes to the Bio-NAS project documentation and roadmap tooling are recorded here.
 
+## 2026-07-26
+
+### Docker-first deploy docs (Windows)
+
+- Added **§ 5 Deploy with Docker (Windows)** to `README.md`: install Docker Desktop, start the engine, load `docker/Dockerfile`, build/run the image via Compose or `docker build` / `docker run`.
+- Expanded `docker/README.md` with Windows Docker Desktop prerequisites and explicit Dockerfile → image steps.
+- Updated root `PhD/README.md`, wiki Home / FAQ / Data Acquisition BRCA / Infrastructure Runbook / sidebar to point at the Docker Desktop workflow.
+
 ## 2026-07-24
 
 ### Dual-Track schedule in roadmap docs

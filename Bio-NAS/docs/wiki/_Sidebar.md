@@ -1,4 +1,5 @@
 * [Home](Home)
+* [Deploy (Docker)](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md#5-deploy-with-docker-windows)
 * [Workflow](Workflow)
 * [Roadmap and Tracking](Roadmap-and-Tracking)
 * [Static MTL Baseline](Static-MTL-Baseline)

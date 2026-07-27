@@ -16,6 +16,24 @@ Welcome to the **PhDNeural** project wiki — a published mirror of documentatio
 | Master plan (HTML) | [phd_bio-nas_master_plan.html](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html) |
 | Master plan (source) | [phd_bio-nas_master_plan.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/phd_bio-nas_master_plan.md) |
 | README | [Bio-NAS/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md) |
+| Deploy (Docker) | [README § Deploy with Docker (Windows)](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md#5-deploy-with-docker-windows) · [docker/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/README.md) |
+
+## Deploy with Docker (quick start)
+
+Bio-NAS runs **inside Docker**. On Windows:
+
+1. Install and start [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/) (WSL 2 backend recommended). Wait until the engine is **Running**.
+2. Clone the repo and open a terminal in `Bio-NAS/`.
+3. Load the Dockerfile and run the image via Compose:
+
+```powershell
+cd Bio-NAS
+docker compose up --build
+```
+
+Or build/run manually: `docker build -f docker\Dockerfile -t bio-nas-demo:local .` then `docker run --rm -v "${PWD}/data/tcga:/data/tcga" bio-nas-demo:local`.
+
+First run downloads a tiny open-access TCGA-BRCA sample and runs the toy NAS demo; results appear under `Bio-NAS\data\tcga\BRCA` on the host. Full steps and troubleshooting: [Bio-NAS README § 5](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md#5-deploy-with-docker-windows) and [docker/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/README.md).
 
 ## Research overview
 
@@ -47,8 +65,8 @@ Every timeline item on the dashboard and master-plan HTML links to its GitHub is
 | [Static MTL Baseline](Static-MTL-Baseline) | Multi-task prediction contract |
 | [Code Map and Status](Code-Map-and-Status) | `src/` implementation status |
 | [Glossary](Glossary) | Track A/B, scaling gate, Bio-NAS keywords |
-| [Infrastructure Runbook](Infrastructure-Runbook) | Hetzner PostgreSQL, Docker, Slurm CI/CD |
-| [Data Acquisition BRCA](Data-Acquisition-BRCA) | TCGA sourcing, HDF5, disease registry |
+| [Infrastructure Runbook](Infrastructure-Runbook) | Hetzner PostgreSQL, Docker Desktop / Compose, Slurm CI/CD |
+| [Data Acquisition BRCA](Data-Acquisition-BRCA) | TCGA sourcing, HDF5, disease registry, Docker smoke |
 | [Architecture Decisions](Architecture-Decisions) | ADRs for Bio-NAS and MTL design |
 | [Experiment Log Template](Experiment-Log-Template) | Reproducible experiment records |
 | [FAQ and Troubleshooting](FAQ-and-Troubleshooting) | Research design + sync/dashboard FAQs |
