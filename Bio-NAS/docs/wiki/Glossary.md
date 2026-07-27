@@ -28,8 +28,12 @@
 | **Comparative matrix** | Cross-disease Track A vs Track B evaluation spanning five functional categories (oncological, neurological, autoimmune, metabolic, chromosomal/aging) |
 | **All 5** | BRCA + Other 4 |
 | **Shared (A+B)** | Work that serves both tracks (ETL, infra, classical baselines, OSS packaging) without preferring one search space |
-| **Stage 1** | Early fusion: concatenate all modalities through a single MLP trunk |
-| **Stage 2** | Stacked late fusion: 4 modality experts + ElasticNet meta-classifier on OOF predictions |
+| **Stage 1 (legacy)** | Early fusion: concatenate raw modalities through a single MLP trunk — **superseded for NAS** by Intermediate Fusion; keep only as a software baseline |
+| **Stage 2** | Stacked late fusion: 4 modality experts + ElasticNet meta-classifier on OOF predictions (unchanged; separate from Intermediate Fusion) |
+| **Intermediate Fusion** | Multi-branch fusion: modality-specific encoders (`MethEncoder`, `RNAEncoder`) → concat latents → `FusionDecoder` / post-fusion dense; Optuna tunes branches before post-fusion (plans 07/10/12) |
+| **MethEncoder** | Standalone methylation branch `nn.Module`; NAS-tunable layers/dropout/latent dims; betas mean-imputed, no Z-score/log |
+| **RNAEncoder** | Standalone transcriptome branch `nn.Module`; input `log2(TPM+1)` then Z-score; tuned independently to avoid modality dominance |
+| **FusionDecoder** | Post-fusion dense network after `torch.cat` of branch latents; final Optuna phase tunes these layers only |
 | **Static MTL** | Multi-task learning with fixed two heads (phenotype + severity); no temporal sequence modeling |
 | **Phenotype** | Binary task: Healthy (`0`) vs. Diseased (`1`) |
 | **Severity** | Ordinal task: ordered classes `0..K-1` (K varies by disease) |

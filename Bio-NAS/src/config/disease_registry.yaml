@@ -3,11 +3,19 @@
 #
 # phenotype: 0 = Healthy, 1 = Diseased
 # severity:  0..K-1 ordinal (missing → mask loss with severity = -1)
+#
+# Plan 01 inventory (docs/data/cohort_inventory.md): fifth comparative category is
+# Epigenetic Aging, while this registry still has placeholder key `down_syndrome`.
+# Do not invent severity maps here — resolve naming after cohort lock.
 
 diseases:
   brca:
     id: brca
     name: Breast Invasive Carcinoma (TCGA-BRCA)
+    # Plan 01 LOCKED primary: GDC project TCGA-BRCA (open Level-3).
+    # Accession/source: portal.gdc.cancer.gov/projects/TCGA-BRCA; controlled BAM/raw → dbGaP phs000178 (optional).
+    # Longitudinal alternate (not primary): AURORA US GSE209998/GSE212375; dbGaP phs002622.
+    # See docs/data/cohort_inventory.md — do not invent severity maps beyond the TCGA stage map below.
     n_severity_classes: 4
     phenotype:
       source_columns:
@@ -37,6 +45,7 @@ diseases:
   alzheimers:
     id: alzheimers
     name: Alzheimer's Disease
+    # inventory candidates: ADNI (LONI); ROSMAP syn3219045; GEO GSE282742 (exploratory)
     n_severity_classes: 4  # placeholder: CDR/MMSE severity bands TBD
     phenotype:
       source_columns:
@@ -51,6 +60,7 @@ diseases:
   rheumatoid_arthritis:
     id: rheumatoid_arthritis
     name: Rheumatoid Arthritis
+    # inventory candidates: GEO GSE138747 (primary); GSE176168; GSE129705
     n_severity_classes: 4  # placeholder: DAS28 tiers TBD
     phenotype:
       source_columns:
@@ -65,6 +75,7 @@ diseases:
   type2_diabetes:
     id: type2_diabetes
     name: Type 2 Diabetes
+    # inventory candidates: KORA F4/FF4 (PASST); GEO GSE184050; recount3 (ETL layer)
     n_severity_classes: 4  # placeholder: HbA1c brackets TBD
     phenotype:
       source_columns:
@@ -79,6 +90,8 @@ diseases:
   down_syndrome:
     id: down_syndrome
     name: Down Syndrome
+    # NOTE (Plan 01): inventory fifth category is Epigenetic Aging (LBC1936 EGAS00001000910;
+    # SATSA E-MTAB-7309), not Down syndrome — naming mismatch deferred; no severity invent.
     n_severity_classes: 3  # placeholder: severity proxy TBD
     phenotype:
       source_columns:

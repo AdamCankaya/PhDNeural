@@ -56,9 +56,9 @@ Workers connect via environment variables (template in `.env.example`):
 OPTUNA_STORAGE=postgresql://USER:PASSWORD@HOST:5432/DATABASE
 ```
 
-## Verification (Y1 Spring Stage 1)
+## Verification (Y1 Spring / Optuna hub)
 
-After early fusion model exists, run a **small Optuna search** against the Hetzner PostgreSQL hub to confirm:
+After Intermediate Fusion modules + loaders exist (plans 07/10; early fusion is legacy only), run a **small Optuna search** (prefer a branch-phase dry run) against the Hetzner PostgreSQL hub to confirm:
 
 1. Workers can read HDF5 shards
 2. Metrics log to the shared study

@@ -6,6 +6,29 @@ Live tracker: [PhD Master Plan (Project #2)](https://github.com/users/AdamCankay
 
 **Plans folder:** `Bio-NAS/docs/plans/`
 
+## Docker-first (all plans)
+
+All implementation work for these plans must be designed to run **inside the Bio-NAS Docker container** (`docker/Dockerfile`, `docker-compose.yml`). Prefer extending the entrypoint, `docker/requirements.txt`, compose env/volumes, and container-invoked scripts over host-only workflows. When a plan adds executable work, include Docker run/repro steps and expected mount outputs. Exceptions (e.g. interactive DUA/browser account setup) must be documented as **out-of-container**.
+
+Agent rule (always apply): [`.cursor/rules/docker-first-implementation.mdc`](../../.cursor/rules/docker-first-implementation.mdc). Compose contract: [`docker/README.md`](../../docker/README.md).
+
+## Intermediate Fusion NAS (multi-omic; supersedes early raw-concat)
+
+The multi-omic PyTorch NAS path upgrades from **Stage 1 early fusion** (raw modality concat into one trunk) to **Intermediate Fusion** (multi-branch) to reduce curse-of-dimensionality and modality dominance. Optuna must tune distinct branches before post-fusion dense layers.
+
+| Step | What | Plan ownership |
+|------|------|----------------|
+| 1 | Methylation branch — betas, mean-impute NaNs, **no** Z-score/log; `MethEncoder` | Data prep → [07](07-issue-360-four-d-tensor-hdf5.md); module → [10](10-issue-363-spatial-cnn-transformer-modules.md) |
+| 2 | RNA branch — `log2(TPM+1)` then Z-score; `RNAEncoder` | Data prep → [07](07-issue-360-four-d-tensor-hdf5.md); module → [10](10-issue-363-spatial-cnn-transformer-modules.md) |
+| 3 | `torch.cat((meth_latent, rna_latent), dim=1)` | Train objective → [12](12-issue-365-causal-cv-architecture-search.md) |
+| 4 | Post-fusion dense (`FusionDecoder`) → MTL / epigenetic state | Module → [10](10-issue-363-spatial-cnn-transformer-modules.md); **phased Optuna** → [12](12-issue-365-causal-cv-architecture-search.md) |
+
+**Superseded for NAS:** early fusion / flat raw-concat as the default search architecture (`FusionMode.EARLY`, `brca_early_fusion.py`). Keep only as a legacy software baseline. Stage 2 stacked late fusion (OOF experts + ElasticNet) remains a separate ADR-001 path and is not replaced by Intermediate Fusion.
+
+**Phased Optuna (plan 12):** Phase A — independent branch HPs; Phase B — post-fusion dense only (branches frozen / fixed from A). Dual-track A/B (pathway mask) still applies on top.
+
+Storage / workers: [09](09-issue-362-dockerized-postgres-optuna.md) (Postgres), [13](13-issue-366-slurm-hyperband-workers.md) (Slurm/Hyperband). All executable steps remain Docker-first.
+
 ## Scope
 
 | Included | Skipped |
@@ -69,7 +92,7 @@ flowchart TD
   P23 --> P24
 ```
 
-**Non-duplication rule:** Foundational work lives in the earliest plan that needs it. Later plans reference earlier ones instead of restating setup (e.g. holdout locking is only in plan 05; Postgres only in plan 09; attribution API only in plan 17; **Track B adjacency build/freeze only in plan 10** — plan 12 consumes the frozen mask in dual-track Optuna search).
+**Non-duplication rule:** Foundational work lives in the earliest plan that needs it. Later plans reference earlier ones instead of restating setup (e.g. holdout locking is only in plan 05; Postgres only in plan 09; attribution API only in plan 17; **Track B adjacency build/freeze only in plan 10** — plan 12 consumes the frozen mask in dual-track Optuna search; **Intermediate Fusion loaders/scalings only in plan 07**; **branch/decoder modules only in plan 10**; **phased Optuna + train forward only in plan 12**).
 
 ## Implementation order
 
@@ -106,7 +129,7 @@ flowchart TD
 |-------|-------|-------|
 | Year 1 Fall–Winter | 01–04 | Cohort inventory, matching, feature map, spacing |
 | Year 1 Spring–Summer | 05–09 | Leakage-safe ETL, Δt, 4D HDF5, compute, Postgres |
-| Year 2 Fall–Spring | 10–13 | Spatial/temporal modules, Optuna search, Slurm workers |
+| Year 2 Fall–Spring | 10–13 | Spatial/temporal + Intermediate Fusion modules, phased Optuna search, Slurm workers |
 | Year 2 Summer | 14–16 | Holdout eval, ablations, classical baselines (**scaling gate**) |
 | Year 3 Fall–Winter | 17–20 | Attribution, driver maps, Streamlit trajectories |
 | Year 3 Spring–Summer | 21–24 | Taxonomy, tempo compare, dissertation, OSS release |
@@ -116,7 +139,8 @@ flowchart TD
 Already present and referenced by early plans rather than re-scoped as new issues:
 
 - Static MTL contract: `src/models/static_mtl_model.py`, `src/models/losses.py`
-- BRCA dataset scaffold: `src/data/brca_dataset.py`, `src/data/clinical_time.py`
+- BRCA dataset scaffold: `src/data/brca_dataset.py`, `src/data/clinical_time.py` (extend for Intermediate Fusion batch fields in plan 07)
+- Legacy early fusion: `src/models/brca_early_fusion.py` (**superseded for NAS** by Intermediate Fusion in plans 10/12)
 - Disease registry placeholders: `src/config/disease_registry.yaml`
 - Wiki runbooks: `docs/wiki/*`
 

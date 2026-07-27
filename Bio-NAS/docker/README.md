@@ -1,6 +1,6 @@
 # Docker — TCGA-BRCA sample + toy NAS
 
-Minimal harness that builds a slim Python image, downloads a **tiny open-access** TCGA-BRCA cohort from the [GDC API](https://api.gdc.cancer.gov) on **first container start**, then runs a simple MLP architecture-search demo. No GDC login / dbGaP token. Not full-cohort ETL (see Plan 07 / [Data Acquisition BRCA](../docs/wiki/Data-Acquisition-BRCA.md)).
+Minimal harness that builds a slim Python image, downloads a **tiny open-access** TCGA-BRCA cohort from the [GDC API](https://api.gdc.cancer.gov) on **first container start**, then runs a simple MLP architecture-search demo. No GDC login / dbGaP token. Not full-cohort ETL (see Plan 07 / [Data Acquisition BRCA](../docs/wiki/Data-Acquisition-BRCA.md)). Plan 1 inventory + open-artifact reproducibility target: [docs/plans/01-issue-354-multi-disease-dataset-inventory.md](../docs/plans/01-issue-354-multi-disease-dataset-inventory.md) (this image is the smoke baseline; Plan 1 extends it beyond toy NAS). Multi-omic **Intermediate Fusion NAS** (branch→concat→post-fusion; phased Optuna) is planned in [ROADMAP § Intermediate Fusion](../docs/plans/ROADMAP.md#intermediate-fusion-nas-multi-omic-supersedes-early-raw-concat) (plans 07/10/12) — not this toy demo.
 
 ## What it does
 

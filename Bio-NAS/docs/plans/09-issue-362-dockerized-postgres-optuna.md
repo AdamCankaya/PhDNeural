@@ -25,8 +25,11 @@ Maps 1:1 to the issue **Implementation requirements**:
 
 Deploy Dockerized PostgreSQL for Optuna RDB storage (Hetzner per runbook). Add `docker-compose`
 (or k8s manifests), backup/restore notes, and `.env` wiring from `.env.example`. Verify one trial
-write/read via Optuna storage URL. Document separate study IDs for Track A vs Track B (BRCA first).
-Do not implement full search objectives here — that is plan 12.
+write/read via Optuna storage URL. Document separate study IDs for Track A vs Track B (BRCA first),
+and allow additional study-name namespaces for **phased Intermediate Fusion** (branch studies vs
+post-fusion studies — owned by plan 12; this plan only ensures RDB can host many named studies).
+Do not implement full search objectives or fusion architecture here — that is plan 12
+([`ROADMAP.md`](ROADMAP.md) § Intermediate Fusion).
 
 ## Key files / areas to touch
 
@@ -43,7 +46,7 @@ Do not implement full search objectives here — that is plan 12.
 
 - Environment / Docker image pins → plan 08 (#361)
 - Slurm multi-worker scale-out → plan 13 (#366)
-- Full Optuna study configs / causal CV → plan 12 (#365)
+- Full Optuna study configs / causal CV / Intermediate Fusion phased objectives → plan 12 (#365)
 
 ## Acceptance criteria
 

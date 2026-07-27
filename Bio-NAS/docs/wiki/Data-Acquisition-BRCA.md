@@ -53,14 +53,17 @@ Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 for me
 |-------------|--------|
 | Alignment | Sample IDs consistent across modalities |
 | Partition tags | Train vs. holdout shards clearly separated |
-| Stage 1 mode | Flat concatenated tensor per sample |
-| Stage 2 mode | Modality dict per sample (see `brca_dataset.py`) |
+| Intermediate Fusion mode (NAS default) | Separate `methylation_tensor` + `rna_tensor` (+ labels); see plan 07 |
+| Stage 1 mode (legacy) | Flat concatenated tensor per sample — **superseded for NAS** |
+| Stage 2 mode | Modality dict per sample for OOF experts (see `brca_dataset.py`) |
 
-**Status:** HDF5 loading in [`src/data/brca_dataset.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/brca_dataset.py) — **TODO** (clinical time + label guardrails wired).
+**Status:** HDF5 loading in [`src/data/brca_dataset.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/brca_dataset.py) — **TODO** (clinical time + label guardrails wired). Intermediate Fusion contract: [plan 07](../plans/07-issue-360-four-d-tensor-hdf5.md); roadmap § [Intermediate Fusion](../plans/ROADMAP.md#intermediate-fusion-nas-multi-omic-supersedes-early-raw-concat).
 
 ## Preprocessing constraints (train only)
 
 - Variance-based top 10,000 CpG sites — computed on **80% train partition only**
+- **Methylation (Intermediate Fusion):** betas bounded 0–1; mean-impute NaNs; **do not** Z-score or log
+- **RNA-Seq (Intermediate Fusion):** `log2(TPM+1)` then Z-score (train stats)
 - Continuous demographics: Z-score (train stats)
 - Categorical demographics: one-hot encoding
 
@@ -69,10 +72,10 @@ Serialize aligned, preprocessed multi-modal tensors into partitioned HDF5 for me
 For a first-run container demo (not full ETL): `docker compose up --build` from `Bio-NAS/`.
 
 - Downloads ~5–10 open-access BRCA cases (demographics + RNA-seq; small methylation when budget allows) via the GDC API — **no login**
-- Stores data **inside** the container at `/data/tcga/BRCA` (no data volume mounts)
-- Runs a toy MLP NAS script after download
+- Stores data on the host bind mount `./data/tcga` → `/data/tcga/BRCA`
+- Runs a toy MLP NAS script after download (smoke only — not Intermediate Fusion NAS)
 
-See [`docker/README.md`](../../docker/README.md).
+See [`docker/README.md`](../../docker/README.md). Plan 1 inventory repro target: [plan 01](../plans/01-issue-354-multi-disease-dataset-inventory.md).
 
 ## Related pages
 
