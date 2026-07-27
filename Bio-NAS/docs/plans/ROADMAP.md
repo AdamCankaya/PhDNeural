@@ -10,6 +10,8 @@ Live tracker: [PhD Master Plan (Project #2)](https://github.com/users/AdamCankay
 
 All implementation work for these plans must be designed to run **inside the Bio-NAS Docker container** (`docker/Dockerfile`, `docker-compose.yml`). Prefer extending the entrypoint, `docker/requirements.txt`, compose env/volumes, and container-invoked scripts over host-only workflows. When a plan adds executable work, include Docker run/repro steps and expected mount outputs. Exceptions (e.g. interactive DUA/browser account setup) must be documented as **out-of-container**.
 
+**Plan 01 note (2026-07-27):** Alzheimer's primary is locked to **ADNI (LONI)**; Compose includes an ADNI scaffold that skips without credentials while account+DUA are in progress. BRCA open path unchanged.
+
 Agent rule (always apply): [`.cursor/rules/docker-first-implementation.mdc`](../../.cursor/rules/docker-first-implementation.mdc). Compose contract: [`docker/README.md`](../../docker/README.md).
 
 ## Intermediate Fusion NAS (multi-omic; supersedes early raw-concat)
@@ -113,7 +115,7 @@ flowchart TD
 
 | Order | Issue | Plan file | Depends on |
 |------:|-------|-----------|------------|
-| 01 | [#354](https://github.com/AdamCankaya/PhDNeural/issues/354) | [01-issue-354-multi-disease-dataset-inventory.md](01-issue-354-multi-disease-dataset-inventory.md) — **BRCA open slice complete** (GDC verify + Docker); Other-4 locks remaining | — |
+| 01 | [#354](https://github.com/AdamCankaya/PhDNeural/issues/354) | [01-issue-354-multi-disease-dataset-inventory.md](01-issue-354-multi-disease-dataset-inventory.md) — **BRCA open slice complete**; **ADNI primary locked** + Docker scaffold (DUA in progress); RA/T2D/aging locks remaining | — |
 | 02 | [#355](https://github.com/AdamCankaya/PhDNeural/issues/355) | [02-issue-355-longitudinal-matching-strategy.md](02-issue-355-longitudinal-matching-strategy.md) | #354 |
 | 03 | [#356](https://github.com/AdamCankaya/PhDNeural/issues/356) | [03-issue-356-spatial-temporal-feature-map.md](03-issue-356-spatial-temporal-feature-map.md) | #354, #355 |
 | 04 | [#357](https://github.com/AdamCankaya/PhDNeural/issues/357) | [04-issue-357-genomic-structural-spacing.md](04-issue-357-genomic-structural-spacing.md) | #356 |

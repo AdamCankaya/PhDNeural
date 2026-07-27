@@ -17,9 +17,9 @@
 Maps 1:1 to the issue **Implementation requirements**, plus Intermediate Fusion dataset contract (this plan owns data prep / loaders; branches + Optuna phases live in plans 10 and 12 — see [`ROADMAP.md`](ROADMAP.md) § Intermediate Fusion):
 
 - [ ] **Deliverables:** HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.
-- [ ] **Deliverables (Intermediate Fusion loaders):** Dataset/DataLoader returns separate `methylation_tensor`, `rna_tensor`, and `labels` (not a single raw-concat `X_fused` for the NAS path); modality scalings applied in-dataset per Steps 1–2 below.
+- [ ] **Deliverables (Intermediate Fusion loaders):** Dataset/DataLoader returns `(meth_tensor, rna_tensor, clinical_input, target_label)` (not a single raw-concat `X_fused` for the NAS path); modality scalings + clinical Driver prep applied in-dataset per Steps 1–3 below.
 - [ ] **Acceptance:** round-trip equality tests; documented channel layout per omic.
-- [ ] **Acceptance (Intermediate Fusion):** batch yields `(meth, rna, labels)` with methylation bounded/mean-imputed (no Z-score/log) and RNA `log2(TPM+1)` then train-fit Z-score; leakage tests confirm scalers fit on train only.
+- [ ] **Acceptance (Intermediate Fusion):** batch yields `(meth, rna, clinical_input, target_label)` with methylation bounded/mean-imputed (no Z-score/log), RNA `log2(TPM+1)` then train-fit Z-score, Drivers One-Hot / Min-Max (no Results leakage into `clinical_input`); leakage tests confirm scalers fit on train only.
 - [ ] **Upstream deps satisfied:** feature map + Δt embedding from prior items.
 
 
@@ -32,15 +32,23 @@ and align with `docs/wiki/Data-Acquisition-BRCA.md`. Round-trip equality tests r
 
 ### Intermediate Fusion dataset contract (owned here)
 
-**Supersedes for the multi-omic NAS path:** Stage 1 early fusion / flat raw-concat (`torch.cat` of raw modalities into one MLP trunk). That path is a **legacy software baseline only** (`FusionMode.EARLY` / `brca_early_fusion.py`) — do not extend it as the Optuna search default. Prefer a dedicated intermediate (or modality-dict) mode that keeps methylation and RNA as separate tensors through the loader.
+**Supersedes for the multi-omic NAS path:** Stage 1 early fusion / flat raw-concat (`torch.cat` of raw modalities into one MLP trunk). That path is a **legacy software baseline only** (`FusionMode.EARLY` / `brca_early_fusion.py`) — do not extend it as the Optuna search default. Prefer a dedicated intermediate (or modality-dict) mode that keeps methylation and RNA as separate tensors through the loader; clinical **Drivers** join only as a bottleneck vector (not a third encoder branch).
+
+**Clinical roles** (see [`ROADMAP.md`](ROADMAP.md) § Intermediate Fusion; align with Static MTL / `LABEL_SOURCE_COLUMNS` in `clinical_time.py` — **do not invent** new severity maps):
+
+| Role | Content | Tensor field |
+|------|---------|--------------|
+| **Drivers** | Age, Sex, and other non-label clinical/time tabular inputs already wired in `clinical_time.py` | `clinical_input` / `clinical_vector` |
+| **Results** | Phenotype / subtype and stage / severity as mapped in `disease_registry.yaml` | `target_label` (Static MTL `{phenotype, severity}`) |
 
 Refactor `brca_dataset.py` / `base_multiomic_dataset.py` (names may evolve; user’s `dataset.py` maps here) so DataLoader batches expose:
 
 | Field | Content |
 |-------|---------|
-| `methylation_tensor` | DNA methylation beta values |
-| `rna_tensor` | RNA-Seq counts / TPM |
-| `labels` | Static MTL `{phenotype, severity}` (unchanged contract) |
+| `meth_tensor` | DNA methylation beta values (Step 1) |
+| `rna_tensor` | RNA-Seq counts / TPM (Step 2) |
+| `clinical_input` | Processed clinical **Drivers** only (Step 3) — never Results / `LABEL_SOURCE_COLUMNS` |
+| `target_label` | Clinical **Results** — Static MTL `{phenotype, severity}` for the loss |
 
 **Step 1 — Methylation preprocessing (in Dataset, train-fit where stats apply):**
 
@@ -53,7 +61,14 @@ Refactor `brca_dataset.py` / `base_multiomic_dataset.py` (names may evolve; user
 - Input: raw counts / TPM
 - `log2(TPM + 1)` then Z-score (train-fit mean/std; apply to val/test)
 
-Clinical / other modalities may remain in HDF5 sidecars or late-fusion dicts for Stage 2 stacking (ADR-001 Stage 2); they are **not** raw-concatenated into the Intermediate Fusion NAS trunk. Branch modules + concat + post-fusion dense → plans 10 / 12.
+**Step 3 — Clinical Drivers preprocessing (in Dataset; Intermediate Fusion contract):**
+
+- Categorical Drivers (e.g. Sex) → One-Hot
+- Continuous Drivers (e.g. Age) → **Min-Max** scale (train-fit min/max; apply to val/test)
+- **Supersedes** train-only Z-score for continuous demographics **for Intermediate Fusion Drivers** (legacy Static MTL / Stage 1 Z-score remains documented for non-IF paths)
+- Results stay out of `clinical_input` (same exclusion spirit as `LABEL_SOURCE_COLUMNS`)
+
+Branch modules + bottleneck Late Fusion concat + post-fusion dense → plans 10 / 12. ADR-001 Stage 2 stacked late fusion (OOF experts) remains a separate path and may still use modality dicts / sidecars.
 
 ### Docker-first (executable work)
 
@@ -61,8 +76,9 @@ HDF5 writers, round-trip tests, and loader smoke tests must run **inside** the B
 
 ## Key files / areas to touch
 
-- `src/data/brca_dataset.py` (HDF5 TODO; Intermediate Fusion batch fields + Steps 1–2 scalings)
+- `src/data/brca_dataset.py` (HDF5 TODO; Intermediate Fusion batch fields + Steps 1–3; return `(meth, rna, clinical_input, target_label)`)
 - `src/data/base_multiomic_dataset.py` (`FusionMode`: mark `EARLY` legacy; add/prefer intermediate / modality-tensor return)
+- `src/data/clinical_time.py` (Driver vs Result exclusion; reuse `LABEL_SOURCE_COLUMNS` — no new severity maps)
 - `docs/wiki/Data-Acquisition-BRCA.md`
 - HDF5 writer utilities under `src/data/` (new)
 - `tests/` round-trip + leakage-safe scaler tests (new)
@@ -92,7 +108,7 @@ Satisfied when the issue acceptance text is met:
 
 Plus Intermediate Fusion loaders:
 
-> Dataset/DataLoader returns `(methylation_tensor, rna_tensor, labels)` with Step 1/2 scalings; early raw-concat is not the NAS default path.
+> Dataset/DataLoader returns `(meth_tensor, rna_tensor, clinical_input, target_label)` with Steps 1–3 prep (Drivers One-Hot/Min-Max; Results as labels only); early raw-concat is not the NAS default path.
 
 Plus: linked PR(s) reference this plan path and issue #360; experiments (if any) record IDs per `docs/wiki/Experiment-Log-Template.md`.
 

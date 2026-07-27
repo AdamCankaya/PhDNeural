@@ -108,7 +108,7 @@ Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](p
 | Category | Disease | Primary source |
 |----------|---------|----------------|
 | **Oncological (Anchor)** | Breast Invasive Carcinoma (BRCA) | [TCGA / GDC Portal](https://portal.gdc.cancer.gov/) |
-| **Neurological** | Alzheimer's Disease | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) |
+| **Neurological** | Alzheimer's Disease | [ADNI / LONI](https://adni.loni.usc.edu/data-samples/adni-data/) (primary **locked**; account+DUA in progress) |
 | **Autoimmune** | Rheumatoid Arthritis | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) |
 | **Metabolic** | Type 2 Diabetes | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) / [recount3](https://bioconductor.org/) |
 | **Aging / Epigenetic** | Epigenetic Aging cohorts | [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) / related biobanks |
@@ -196,7 +196,7 @@ docker compose up --build
 ```powershell
 cd PhDNeural\Bio-NAS
 docker build -f docker\Dockerfile -t bio-nas-demo:local .
-docker run --rm -v "${PWD}/data/tcga:/data/tcga" bio-nas-demo:local
+docker run --rm -v "${PWD}/data/tcga:/data/tcga" -v "${PWD}/data/adni:/data/adni" bio-nas-demo:local
 ```
 
 From a parent checkout that contains `Bio-NAS/`:
@@ -213,19 +213,21 @@ On first run, the entrypoint:
 2. Writes data under the host bind mount `Bio-NAS\data\tcga\BRCA` (container path `/data/tcga/BRCA`).
 3. Verifies open TCGA-BRCA inventory counts via the public GDC API → `data\tcga\inventory_verification\`.
 4. Runs a toy MLP NAS demo on **methylation features only** and writes `nas_demo_results.json`.
+5. Runs the **ADNI scaffold** → `data\adni\` (skips with a clear status file while account+DUA are in progress; no secrets in the image).
+6. Optionally runs an AD meth NAS only if an ADNI sample `.ready` is present.
 
-Re-runs skip the download when `data\tcga\BRCA\.ready` already exists.
+Re-runs skip the BRCA download when `data\tcga\BRCA\.ready` already exists.
 
 ### Step 5 — View results on Windows
 
 | Location | Path |
 |----------|------|
-| Host (Explorer) | `Bio-NAS\data\tcga\BRCA\` and `Bio-NAS\data\tcga\inventory_verification\` |
-| Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\`, `verification.json` |
+| Host (Explorer) BRCA | `Bio-NAS\data\tcga\BRCA\` and `Bio-NAS\data\tcga\inventory_verification\` |
+| Host (Explorer) ADNI | `Bio-NAS\data\adni\` (`adni_access_status.json` while DUA pending) |
+| Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\`, `verification.json`, `adni_access_status.json` |
 | Logs | Dozzle UI at [http://localhost:8080](http://localhost:8080), or `docker compose logs bio-nas-demo` |
 
-Full contract, volumes, and troubleshooting: [`docker/README.md`](docker/README.md).
-
+Full contract, volumes, and troubleshooting: [`docker/README.md`](docker/README.md). Alzheimer's acquisition: [`docs/wiki/Data-Acquisition-Alzheimer's.md`](docs/wiki/Data-Acquisition-Alzheimer's.md).
 ### Notes
 
 - Keep **Docker Desktop running** whenever you build or run containers.

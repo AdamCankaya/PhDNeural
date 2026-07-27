@@ -1,10 +1,14 @@
-# Bio-NAS Plan-1: open GDC BRCA download → inventory verify → optional toy NAS.
+# Bio-NAS Plan-1: open GDC BRCA download → inventory verify → optional toy NAS
+# → ADNI (LONI) scaffold (skip without credentials) → optional AD NAS.
 # Usage (from Bio-NAS/): docker compose up --build
 # TCGA data/results persist on the host via ./data/tcga → /data/tcga.
+# ADNI scaffold status / future sample: ./data/adni → /data/adni.
 # No GDC login / token required for open-access files.
-# PoC-minimum: meth betas + STAR RNA + clinical for ~5–10 joint cases;
+# ADNI: set ADNI_USER / ADNI_PASSWORD in host .env after DUA (never bake secrets).
+# PoC-minimum BRCA: meth betas + STAR RNA + clinical for ~5–10 joint cases;
 # toy NAS uses methylation features only. Full cohort → Plan 07.
-# Env: SKIP_NAS_DEMO=1 to skip toy NAS; INVENTORY_VERIFY_DRY_RUN=1 to skip GDC net.
+# Env: SKIP_NAS_DEMO=1 to skip BRCA toy NAS; SKIP_AD_NAS_DEMO=1 to skip AD NAS;
+# INVENTORY_VERIFY_DRY_RUN=1 to skip GDC net; ADNI_SKIP=1 to force ADNI skip.
 
 services:
   bio-nas-demo:
@@ -12,17 +16,22 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     image: bio-nas-demo:local
+    env_file:
+      - path: .env
+        required: false
     environment:
       TCGA_SAMPLE_OUT: /data/tcga/BRCA
       INVENTORY_VERIFY_OUT: /data/tcga/inventory_verification
       SMOKE_EXPECTED_JSON: /app/docs/data/smoke_expected.json
+      ADNI_SAMPLE_OUT: /data/adni
       # ~5–10 patients (clamped in download script).
       TCGA_SAMPLE_N_CASES: "8"
       # Sample-scale budget (~1.5 GB): N Illumina meth betas + STAR RNA + clinical.
       TCGA_SAMPLE_MAX_BYTES: "1572864000"
     volumes:
       - ./data/tcga:/data/tcga
-    # One-shot: download → inventory verify → toy NAS → exit.
+      - ./data/adni:/data/adni
+    # One-shot: BRCA chain → ADNI scaffold → exit.
     restart: "no"
 
   # Live container logs UI: http://localhost:8080

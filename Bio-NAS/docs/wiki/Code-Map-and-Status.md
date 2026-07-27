@@ -10,7 +10,7 @@ Repository: [`src/`](https://github.com/AdamCankaya/PhDNeural/tree/main/src)
 |--------|--------|-------|
 | [`src/config/disease_registry.yaml`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/config/disease_registry.yaml) | **Implemented** | BRCA phenotype/severity mappings complete; 4 other diseases are placeholders |
 | [`src/data/clinical_time.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/clinical_time.py) | **Implemented** | Canonical time features, TCGA column map, Z-score helpers, `LABEL_SOURCE_COLUMNS` exclusion |
-| [`src/data/base_multiomic_dataset.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/base_multiomic_dataset.py) | **Implemented** | Abstract contract: uniform `{features, labels{phenotype, severity}}` dict; `FusionMode.EARLY` is **legacy** — plan 07 adds Intermediate Fusion `(meth, rna, labels)` |
+| [`src/data/base_multiomic_dataset.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/base_multiomic_dataset.py) | **Implemented** | Abstract contract: uniform `{features, labels{phenotype, severity}}` dict; `FusionMode.EARLY` is **legacy** — plan 07 adds Intermediate Fusion `(meth, rna, clinical_input, target_label)` |
 | [`src/data/brca_dataset.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/brca_dataset.py) | **Partial** | Clinical time + label guardrails wired; **HDF5 loading + Intermediate Fusion scalings TODO** (plan 07) |
 | [`src/models/static_mtl_model.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/models/static_mtl_model.py) | **Implemented** | Shared trunk + phenotype/severity heads |
 | [`src/models/brca_early_fusion.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/models/brca_early_fusion.py) | **Legacy / partial** | Early raw-concat baseline — **superseded for NAS** by Intermediate Fusion modules (plan 10) + phased Optuna (plan 12) |
@@ -25,7 +25,7 @@ Repository: [`src/`](https://github.com/AdamCankaya/PhDNeural/tree/main/src)
 | Disease registry | `src/config/disease_registry.yaml` | Per-disease phenotype/severity mappings and `n_severity_classes` |
 | Clinical time features | `src/data/clinical_time.py` | Canonical time tabular extraction and train-only Z-scoring |
 | Base dataset | `src/data/base_multiomic_dataset.py` | Abstract multi-omic `Dataset` with uniform label dict |
-| BRCA dataset | `src/data/brca_dataset.py` | Legacy Stage 1/2 modes; plan 07 → Intermediate Fusion `(meth, rna, labels)` + scalings |
+| BRCA dataset | `src/data/brca_dataset.py` | Legacy Stage 1/2 modes; plan 07 → Intermediate Fusion `(meth, rna, clinical_input, target_label)` + Driver/Result prep |
 | Static MTL model | `src/models/static_mtl_model.py` | Shared trunk + phenotype/severity heads |
 | Early fusion model | `src/models/brca_early_fusion.py` | Legacy Stage 1 `torch.cat` baseline (not NAS default) |
 | Intermediate Fusion (planned) | `src/models/` (`MethEncoder`, `RNAEncoder`, `FusionDecoder`) | Multi-branch NAS path — plan 10 |
@@ -35,7 +35,7 @@ Repository: [`src/`](https://github.com/AdamCankaya/PhDNeural/tree/main/src)
 
 ## Next implementation priorities
 
-1. **HDF5 loader + Intermediate Fusion batch** in `brca_dataset.py` — `(meth, rna, labels)` + Step 1/2 scalings (plan 07)
+1. **HDF5 loader + Intermediate Fusion batch** in `brca_dataset.py` — `(meth, rna, clinical_input, target_label)` + Steps 1–3 prep (plan 07)
 2. **`MethEncoder` / `RNAEncoder` / `FusionDecoder`** — multi-branch modules (plan 10); do not grow NAS around early fusion
 3. **Phased Optuna** — branch HPs then post-fusion dense; Postgres via plan 09/12
 4. **Expert training** in `train_stacking.py` — complete Stage 2 OOF matrix generation (separate path)
