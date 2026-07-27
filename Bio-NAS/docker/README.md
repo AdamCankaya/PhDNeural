@@ -81,7 +81,9 @@ Browse downloads and `nas_demo_results.json` directly in Explorer under the host
 
 ## Viewing results
 
-**Primary:** container stdout (per-arch LOO scores, best MLP, “Wrote …”). Streams during `docker compose up`; afterward:
+**Primary (UI):** [Dozzle](https://dozzle.dev/) at [http://localhost:8080](http://localhost:8080) — live logs for `bio-nas-demo` and other Compose containers. Starts with `docker compose up`; keeps running after the one-shot demo exits (`restart: unless-stopped`). Open the `bio-nas-demo` container in the UI to follow download + toy NAS stdout.
+
+**CLI:** container stdout also streams during `docker compose up`; afterward:
 
 ```bash
 cd Bio-NAS   # if needed

@@ -221,7 +221,7 @@ Re-runs skip the download when `data\tcga\BRCA\.ready` already exists.
 |----------|------|
 | Host (Explorer) | `Bio-NAS\data\tcga\BRCA\` |
 | Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\` |
-| Logs | `docker compose logs bio-nas-demo` (from `Bio-NAS\`) |
+| Logs | Dozzle UI at [http://localhost:8080](http://localhost:8080), or `docker compose logs bio-nas-demo` |
 
 Full contract, volumes, and troubleshooting: [`docker/README.md`](docker/README.md).
 
