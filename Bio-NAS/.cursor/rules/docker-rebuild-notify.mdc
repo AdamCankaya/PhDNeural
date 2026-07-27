@@ -1,0 +1,41 @@
+---
+description: Tell the user when Docker image rebuild is required after agent changes
+alwaysApply: true
+---
+
+# Docker rebuild notify
+
+When you change files that affect the **built image**, you MUST tell the user they need to rebuild (e.g. `docker compose up --build` or `docker compose build`). Do **not** tell them to rebuild for bind-mount-only host edits.
+
+## Requires rebuild (image bake / build context)
+
+- `docker/Dockerfile`, `docker/requirements.txt`
+- Any path the Dockerfile `COPY`s into the image (today: `scripts/download_tcga_brca_sample.py`, `scripts/train_nas_demo.py`, `scripts/docker_entrypoint.py`, and other `COPY`d scripts)
+- Compose `build:` context / dockerfile path changes that alter the image
+
+```text
+# ❌ BAD — silently change a COPY'd entrypoint and omit rebuild notice
+# ✅ GOOD — after editing scripts/docker_entrypoint.py (COPY'd):
+#    "Rebuild required: docker compose up --build (entrypoint is baked into the image)."
+```
+
+## Does NOT require rebuild
+
+- Docs, plans, inventory markdown/CSV, Cursor rules
+- Host bind-mount data under `./data/tcga` (runtime mount, not in image)
+- `docker-compose.yml` **environment / volume / ports only** — recreate container (`docker compose up`) may be enough; rebuild only if `build:` / Dockerfile inputs changed
+
+```text
+# ❌ BAD — "please rebuild" after editing only docker/README.md
+# ✅ GOOD — "No image rebuild needed; docs-only change."
+```
+
+## How to decide
+
+1. Read `docker/Dockerfile` + `docker-compose.yml` volumes.
+2. If the changed file is `COPY`'d or is a build dependency → **rebuild yes**.
+3. If it only lives on the host / mount and is not baked in → **rebuild no**.
+
+Current image `COPY`s (rebuild if any of these change): `docker/requirements.txt`, `scripts/download_tcga_brca_sample.py`, `scripts/train_nas_demo.py`, `scripts/verify_cohort_inventory_open.py`, `scripts/docker_entrypoint.py`, `docs/data/smoke_expected.json`.
+
+State rebuild **yes/no** and a one-line why in your final response whenever Docker-related files changed.

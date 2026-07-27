@@ -1,0 +1,24 @@
+{
+  "description": "Pinned expectations for Bio-NAS Docker TCGA-BRCA smoke (Plan 01). Content hashes of GDC files are not pinned (live portal); schema and structure are.",
+  "schema_version": 2,
+  "project": "TCGA-BRCA",
+  "access": "open",
+  "n_cases_min": 5,
+  "n_cases_max": 10,
+  "n_files_min": 11,
+  "poc_modalities": [
+    "methylation_beta",
+    "rna_star_counts",
+    "clinical_labels"
+  ],
+  "required_file_labels": [
+    "clinical",
+    "methylation",
+    "gene_expression"
+  ],
+  "notes": [
+    "Validated by scripts/verify_cohort_inventory_open.py against data/tcga/BRCA/manifest.json.",
+    "Delete .ready and re-download if schema_version changes.",
+    "Full-cohort ETL is Plan 07 — not covered here."
+  ]
+}

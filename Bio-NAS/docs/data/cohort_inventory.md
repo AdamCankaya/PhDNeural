@@ -9,7 +9,7 @@ Inventory of candidate cohorts with **repeated molecular measurements over time*
 | Companion CSV | [`cohort_inventory.csv`](cohort_inventory.csv) |
 | BRCA template | [`docs/wiki/Data-Acquisition-BRCA.md`](../wiki/Data-Acquisition-BRCA.md) |
 | Draft date | 2026-07-24 |
-| Last updated | 2026-07-24 — BRCA primary **locked** to TCGA-BRCA (GDC) |
+| Last updated | 2026-07-27 — TCGA-BRCA **verified_gdc_api** (Plan 01 BRCA slice); Other-4 still unlocked |
 
 ## How to read this table
 
@@ -39,7 +39,7 @@ User decisions recorded here. Unlock/change only by explicit decision (do not si
 
 | Disease | Status | Selected / recommended primary | Notes |
 |---------|--------|--------------------------------|-------|
-| BRCA | **LOCKED** | **TCGA-BRCA** (GDC) | Year-1/2 multi-omic anchor. Open Level-3 is sufficient for PoC; dbGaP only if controlled BAM/raw needed. True serial molecular repeats are **weak** on TCGA — keep AURORA US as the longitudinal-molecular alternate for Plan 02 pairing work. |
+| BRCA | **LOCKED** | **TCGA-BRCA** (GDC) | Year-1/2 multi-omic anchor. Open Level-3 **PoC minimum** = meth betas + RNA + clinical/labels; controlled/dbGaP **deferred**. GDC token **not required** for open Plan 1/2 API smoke/metadata. True serial molecular repeats are **weak** on TCGA — keep AURORA US as the longitudinal-molecular alternate for Plan 02 pairing work. |
 | Alzheimer's | Recommended (unlocked) | ADNI (LONI) | Requires ADNI/LONI DUA before download. |
 | Rheumatoid Arthritis | Recommended (unlocked) | GEO GSE138747 | Open multi-omic; optional NCBI login. |
 | Type 2 Diabetes | Recommended (unlocked) | KORA F4/FF4 | Requires KORA.PASST + project agreement. |
@@ -51,7 +51,7 @@ User decisions recorded here. Unlock/change only by explicit decision (do not si
 
 | Disease | Primary | Selection | Access | Multi-omic? | ≥2 molecular timepoints? |
 |---------|---------|-----------|--------|-------------|--------------------------|
-| BRCA | **TCGA-BRCA** (GDC) | **LOCKED** | Open Level-3; controlled BAM/raw optional | Yes | **Weak** on TCGA; use **AURORA US** when true molecular repeats matter |
+| BRCA | **TCGA-BRCA** (GDC) | **LOCKED** | Open Level-3 PoC (meth+RNA+clinical); controlled deferred; token not required for Plan 1/2 | Yes | **Weak** on TCGA; use **AURORA US** when true molecular repeats matter |
 | Alzheimer's | ADNI (LONI) | recommended | Controlled (DUA) | Methylation + genotype + clinical (± imaging) | **Yes** (~annual visits, up to ~4y) |
 | RA | GSE138747 (GEO) | recommended | Open | RNA-seq + methylation | **Yes** (baseline + 3 mo) |
 | T2D | KORA F4/FF4 | recommended | Controlled (project agreement) | Methylation (2 waves) + RNA-seq (FF4) | **Yes** (~7y between F4 and FF4) |
@@ -67,7 +67,7 @@ Columns match [`cohort_inventory.csv`](cohort_inventory.csv).
 
 | cohort_name | source_portal | accession_or_id | access_method | license_ethics_notes | modalities | n_subjects_approx | n_samples_approx | timepoints_or_visits | longitudinal_notes | recommended_priority | selection_status | url | verification_status | needs_account_or_api_key |
 |-------------|---------------|-----------------|---------------|----------------------|------------|-------------------|------------------|----------------------|--------------------|----------------------|------------------|-----|---------------------|--------------------------|
-| TCGA-BRCA | GDC | TCGA-BRCA (dbGaP phs000178 for controlled) | open (Level-3 open); controlled (BAM/raw) | TCGA open clinical/molecular Level-3; controlled requires dbGaP | methylation, RNA-seq, miRNA, CNV, mutations, RPPA, clinical | ~1,098 cases | methylation/RNA ~1,097 cases; files tens of thousands | mostly 1 molecular visit; rare TM/NT co-samples | **SELECTED primary.** Year-1/2 multi-omic PoC anchor. True serial molecular repeats are sparse (~7 metastatic TM in older Firehose snapshots). Clinical follow-up ≠ repeated omics. | primary (locked) | locked | https://portal.gdc.cancer.gov/projects/TCGA-BRCA | unverified_public_metadata | yes — **GDC account recommended** for bulk download tooling; dbGaP only if controlled files needed (optional for Level-3 open) |
+| TCGA-BRCA | GDC | TCGA-BRCA (dbGaP phs000178 for controlled — **deferred**) | open (Level-3 open); controlled (BAM/raw) deferred | TCGA open clinical/molecular Level-3; controlled requires dbGaP (not Plan 1/2) | **PoC minimum:** methylation, RNA-seq, clinical (+ inventory lists miRNA/CNV/mutations/RPPA) | **1,098** cases (GDC summary 2026-07-27) | open meth beta cases **1,097**; STAR RNA cases **1,095**; project files **70,774** | mostly 1 molecular visit; rare TM/NT co-samples | **SELECTED primary.** Year-1/2 multi-omic PoC anchor. True serial molecular repeats are sparse (~7 metastatic TM in older Firehose snapshots). Clinical follow-up ≠ repeated omics. Regenerable verify: `scripts/verify_cohort_inventory_open.py` → `/data/tcga/inventory_verification/`. | primary (locked) | locked | https://portal.gdc.cancer.gov/projects/TCGA-BRCA | **verified_gdc_api** (2026-07-27; live counts may drift) | **no for Plan 1/2 open API smoke** — GDC token optional (portal bulk UX later); dbGaP only if controlled files needed later |
 | AURORA US Metastatic Breast Multiomics | GEO + dbGaP (+ TCIA imaging) | GSE209998 / GSE212375; dbGaP phs002622 | open (processed GEO subsets); controlled (dbGaP raw/full) | Publication consortia DUAs for controlled; GEO processed often open | RNA-seq, WES/WGS, DNA methylation, clinical | ~55 patients (retrospective phase) | ~51 primaries + ~102 metastases | ≥2 tissue timepoints (primary + metastasis; some multi-met) | **Alternate** for true paired molecular timepoints (primary↔met). Prefer when Plan 02 needs genuine molecular repeats that TCGA lacks. Counts TBD — verify on GEO/dbGaP. | alternate (longitudinal molecular) | unlocked_alternate | https://www.cancerimagingarchive.net/collection/aurora-metastatic-breast-multiomics/ | unverified_public_metadata | yes — **dbGaP** for full multi-omic; NCBI/GEO optional for open matrices |
 | AURORA BIG (EU) | Program / controlled repositories | BIG AURORA MBC (see Cancer Discovery 2022) | controlled / account+DUA | Consortia access; not a single open GEO dump | targeted DNA, RNA-seq subsets, clinical | ~381 profiled; paired RNA-seq ~152 | TBD — verify on program portal | primary + early metastasis pairs | Large paired primary–met resource; access path TBD. | exploratory | unlocked_exploratory | https://pubmed.ncbi.nlm.nih.gov/35850122/ | needs_dua | yes — program/DAC credentials (TBD) |
 | I-SPY2 transcriptomic (+ serial MRI) | GEO + TCIA | GSE194040 (mRNA); TCIA ISPY2 | open (GEO expression; TCIA imaging CC-BY) | Trial data; check GEO/TCIA terms | gene expression (often pre-treatment); serial MRI | ~987 with pretreatment expression | ~987 expression; MRI multi-visit subset larger | imaging: multiple NAC visits; **molecular often single pre-treatment** | Strong imaging Δt; weak molecular repeats in public release. | exploratory | unlocked_exploratory | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE194040 | unverified_public_metadata | no for GEO matrices; TCIA optional |
@@ -118,28 +118,34 @@ Drafting this inventory **does not** require any credentials. With **BRCA primar
 
 | Priority | Account / agreement | Needed for | Needed vs optional |
 |----------|---------------------|------------|--------------------|
-| **1 (now)** | **GDC Portal account** (+ download token) | TCGA-BRCA open Level-3 bulk / API-friendly download | **Recommended first** — open data; no dbGaP required for Level-3 PoC |
+| **1** | **GDC Portal account** (+ download token) | Optional portal bulk UX later; **not** required for Plan 1/2 open API smoke / metadata | **Optional for Plan 1/2** — open Level-3 needs no token; no dbGaP for PoC |
 | 2 | **ADNI / LONI IDA + DUA** | ADNI primary (if locked) | **Required** only after AD primary lock |
 | 3 | **KORA.PASST + project agreement** | KORA F4/FF4 (if locked) | **Required** only after T2D primary lock |
 | 4 | **Lothian Birth Cohorts / EGA DAC** | LBC1936 (if locked) | **Required** only after Epigenetic Aging primary lock |
 | 5 | **Synapse + AD Knowledge Portal DUC** | ROSMAP (AD alternate) | **Required** only if ROSMAP chosen |
-| 6 | **dbGaP authorized access** (eRA / institutional PI) | AURORA US full multi-omic; NAS/FHS aging; TCGA controlled BAMs | **Not needed** for TCGA Level-3 open; required later if AURORA controlled or TCGA BAM/raw |
+| 6 | **dbGaP authorized access** (eRA / institutional PI) | AURORA US full multi-omic; NAS/FHS aging; TCGA controlled BAMs | **Deferred** — not needed for TCGA Level-3 open Plan 1/2 |
 | 7 | **NCBI account** | GEO / SRA convenience (RA GSE138747, open T2D/aging) | **Optional** for open GEO series |
 | 8 | **NCBI E-utils API key** | Higher GEO/SRA query rate limits | **Optional** |
 
-**TCGA-BRCA access split:** Open Level-3 (clinical + processed molecular) is the locked PoC path and does **not** need dbGaP. Controlled BAM/raw (phs000178) stays optional/out of scope until explicitly requested.
+**TCGA-BRCA access split:** Open Level-3 (clinical + processed molecular; PoC minimum meth+RNA+clinical) is the locked Plan 1/2 path and does **not** need a GDC token or dbGaP. Controlled BAM/raw (phs000178) stays deferred until explicitly requested.
 
 ---
 
-## Next concrete Plan 01 steps (BRCA locked)
+## Plan 01 status split (BRCA vs Other-4)
 
-1. **Create GDC account** and generate a download token (first account; enables TCGA-BRCA Level-3 bulk pulls per [`Data-Acquisition-BRCA.md`](../wiki/Data-Acquisition-BRCA.md)).
-2. **Spot-verify TCGA-BRCA** on the GDC portal: case counts, available Level-3 modalities, and how many cases have >1 molecular aliquot / metastatic TM (document in verification_status).
-3. **Lock or reject remaining primaries** (user decisions) — clarifying questions below.
-4. After each lock, start only the matching account/DUA from the table above (do not apply for everything at once).
-5. For open GEO primaries (likely RA): pull series metadata + confirm baseline/3-mo pairing counts without credentials.
-6. Keep AURORA US in inventory as BRCA longitudinal alternate; defer dbGaP until Plan 02 needs true molecular repeats.
-7. Resolve `down_syndrome` → Epigenetic Aging registry naming in a later PR after the fifth primary is locked (no invented severity maps).
+| Slice | Status | Notes |
+|-------|--------|-------|
+| **BRCA Plan-1** | **Complete** for open path | Primary locked; GDC API verified; Docker chain = download → inventory verify → optional toy NAS; expected pins in `docs/data/smoke_expected.json`. Controlled/dbGaP still deferred. |
+| **Other-4 Plan-1** | **Open** | Alzheimer's / RA / T2D / Epigenetic Aging primaries still recommended-unlocked; no Docker verify for DUA cohorts. |
+
+## Next concrete Plan 01 steps (BRCA done; Other-4 remaining)
+
+1. ~~Spot-verify TCGA-BRCA~~ — done via `scripts/verify_cohort_inventory_open.py` (`verified_gdc_api`, 2026-07-27). Re-run anytime inside Compose.
+2. **Lock or reject remaining primaries** (user decisions) — clarifying questions below.
+3. After each lock, start only the matching account/DUA from the table above (do not apply for everything at once).
+4. For open GEO primaries (likely RA): pull series metadata + confirm baseline/3-mo pairing counts without credentials (optional extend verify script).
+5. Keep AURORA US in inventory as BRCA longitudinal alternate; defer dbGaP until Plan 02 needs true molecular repeats beyond open metadata.
+6. Resolve `down_syndrome` → Epigenetic Aging registry naming in a later PR after the fifth primary is locked (no invented severity maps).
 
 ### Clarifying questions (to lock Other-4)
 
@@ -156,5 +162,5 @@ Drafting this inventory **does not** require any credentials. With **BRCA primar
 1. **Multi-omic preference:** Primaries prioritized for ≥2 modalities (or methylation + genotype + rich clinical for AD/aging). Pure RNA or pure methylation series are alternate/exploratory.
 2. **BRCA longitudinal gap:** TCGA-BRCA is the **locked** Year-1/2 multi-omic anchor, but a poor natural longitudinal molecular cohort. Use AURORA (or similar paired primary–met) when Plan 02 matching needs genuine molecular repeats.
 3. **`down_syndrome` vs Epigenetic Aging:** Registry placeholder key is `down_syndrome`; this inventory covers **Epigenetic Aging** per Plan 01 / README. Severity maps intentionally untouched.
-4. **Verification:** Rows marked `unverified_public_metadata` should be spot-checked on the portal after account creation; replace TBD counts before ETL freeze (Plan 02+).
+4. **Verification:** TCGA-BRCA is `verified_gdc_api`. Other rows marked `unverified_public_metadata` / `needs_dua` should be spot-checked after account creation; replace TBD counts before ETL freeze (Plan 02+).
 5. **Out of scope here:** visit-pairing rules (Plan 02), feature axes / HDF5 (Plans 03–07), Other-4 full ETL (Year 3 gate).

@@ -209,9 +209,10 @@ docker compose -f Bio-NAS/docker-compose.yml up --build
 
 On first run, the entrypoint:
 
-1. Downloads a tiny **open-access** TCGA-BRCA sample from the GDC API (~5–10 cases; no login / token).
+1. Downloads a tiny **open-access** TCGA-BRCA sample from the GDC API (~5–10 joint meth+RNA cases + clinical; no login / token).
 2. Writes data under the host bind mount `Bio-NAS\data\tcga\BRCA` (container path `/data/tcga/BRCA`).
-3. Runs a toy MLP NAS demo and writes `nas_demo_results.json`.
+3. Verifies open TCGA-BRCA inventory counts via the public GDC API → `data\tcga\inventory_verification\`.
+4. Runs a toy MLP NAS demo on **methylation features only** and writes `nas_demo_results.json`.
 
 Re-runs skip the download when `data\tcga\BRCA\.ready` already exists.
 
@@ -219,8 +220,8 @@ Re-runs skip the download when `data\tcga\BRCA\.ready` already exists.
 
 | Location | Path |
 |----------|------|
-| Host (Explorer) | `Bio-NAS\data\tcga\BRCA\` |
-| Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\` |
+| Host (Explorer) | `Bio-NAS\data\tcga\BRCA\` and `Bio-NAS\data\tcga\inventory_verification\` |
+| Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\`, `verification.json` |
 | Logs | Dozzle UI at [http://localhost:8080](http://localhost:8080), or `docker compose logs bio-nas-demo` |
 
 Full contract, volumes, and troubleshooting: [`docker/README.md`](docker/README.md).

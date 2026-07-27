@@ -16,16 +16,31 @@ Agent rule (always apply): [`.cursor/rules/docker-first-implementation.mdc`](../
 
 The multi-omic PyTorch NAS path upgrades from **Stage 1 early fusion** (raw modality concat into one trunk) to **Intermediate Fusion** (multi-branch) to reduce curse-of-dimensionality and modality dominance. Optuna must tune distinct branches before post-fusion dense layers.
 
+### Clinical data roles (Drivers vs Results)
+
+Clinical fields are **not** a third omic branch. Split them for Intermediate Fusion (aligns with Static MTL / `LABEL_SOURCE_COLUMNS` in `src/data/clinical_time.py` and [Data-Acquisition-BRCA](../wiki/Data-Acquisition-BRCA.md); **do not invent** new severity maps):
+
+| Role | Examples | Use |
+|------|----------|-----|
+| **Drivers** | Age, Sex (and other non-label demographics / time tabular inputs already in `clinical_time.py`) | **Inputs** only — processed clinical vector at the fusion bottleneck |
+| **Results** | Subtype / phenotype, stage / severity (as already mapped in `disease_registry.yaml`) | **Strictly target labels** for the loss — never in `clinical_input` |
+
+Loader contract → [07](07-issue-360-four-d-tensor-hdf5.md). `FusionDecoder` input dim → [10](10-issue-363-spatial-cnn-transformer-modules.md). Train forward → [12](12-issue-365-causal-cv-architecture-search.md).
+
+### Steps
+
 | Step | What | Plan ownership |
 |------|------|----------------|
 | 1 | Methylation branch — betas, mean-impute NaNs, **no** Z-score/log; `MethEncoder` | Data prep → [07](07-issue-360-four-d-tensor-hdf5.md); module → [10](10-issue-363-spatial-cnn-transformer-modules.md) |
 | 2 | RNA branch — `log2(TPM+1)` then Z-score; `RNAEncoder` | Data prep → [07](07-issue-360-four-d-tensor-hdf5.md); module → [10](10-issue-363-spatial-cnn-transformer-modules.md) |
-| 3 | `torch.cat((meth_latent, rna_latent), dim=1)` | Train objective → [12](12-issue-365-causal-cv-architecture-search.md) |
-| 4 | Post-fusion dense (`FusionDecoder`) → MTL / epigenetic state | Module → [10](10-issue-363-spatial-cnn-transformer-modules.md); **phased Optuna** → [12](12-issue-365-causal-cv-architecture-search.md) |
+| 3 | Late Fusion at bottleneck: inject processed clinical **Drivers** — `torch.cat((meth_latent, rna_latent, clinical_vector), dim=1)` | Drivers prep → [07](07-issue-360-four-d-tensor-hdf5.md); train concat → [12](12-issue-365-causal-cv-architecture-search.md); decoder dim → [10](10-issue-363-spatial-cnn-transformer-modules.md) |
+| 4 | Post-fusion dense (`FusionDecoder`) → MTL heads; clinical **Results** as ground-truth targets | Module → [10](10-issue-363-spatial-cnn-transformer-modules.md); **phased Optuna** → [12](12-issue-365-causal-cv-architecture-search.md) |
 
-**Superseded for NAS:** early fusion / flat raw-concat as the default search architecture (`FusionMode.EARLY`, `brca_early_fusion.py`). Keep only as a legacy software baseline. Stage 2 stacked late fusion (OOF experts + ElasticNet) remains a separate ADR-001 path and is not replaced by Intermediate Fusion.
+**Driver preprocessing (Intermediate Fusion contract):** categorical Drivers → One-Hot; continuous Drivers → **Min-Max** scale (train-fit; apply to val/test). This **supersedes** train-only Z-score for continuous demographics **where Intermediate Fusion clinical Drivers are concerned**. Legacy Static MTL / Stage 1 clinical-time Z-score docs remain for non-IF paths until those call sites are migrated.
 
-**Phased Optuna (plan 12):** Phase A — independent branch HPs; Phase B — post-fusion dense only (branches frozen / fixed from A). Dual-track A/B (pathway mask) still applies on top.
+**Superseded for NAS:** early fusion / flat raw-concat as the default search architecture (`FusionMode.EARLY`, `brca_early_fusion.py`). Keep only as a legacy software baseline. ADR-001 Stage 2 stacked late fusion (OOF experts + ElasticNet) remains a separate path — distinct from Step-3 bottleneck Late Fusion of clinical Drivers.
+
+**Phased Optuna (plan 12):** Phase A — independent branch HPs (`MethEncoder`, `RNAEncoder`); Phase B — post-fusion dense only (branches frozen / fixed from A; `clinical_dim` fixed from plan-07 Drivers). Dual-track A/B (pathway mask) still applies on top.
 
 Storage / workers: [09](09-issue-362-dockerized-postgres-optuna.md) (Postgres), [13](13-issue-366-slurm-hyperband-workers.md) (Slurm/Hyperband). All executable steps remain Docker-first.
 
@@ -92,13 +107,13 @@ flowchart TD
   P23 --> P24
 ```
 
-**Non-duplication rule:** Foundational work lives in the earliest plan that needs it. Later plans reference earlier ones instead of restating setup (e.g. holdout locking is only in plan 05; Postgres only in plan 09; attribution API only in plan 17; **Track B adjacency build/freeze only in plan 10** — plan 12 consumes the frozen mask in dual-track Optuna search; **Intermediate Fusion loaders/scalings only in plan 07**; **branch/decoder modules only in plan 10**; **phased Optuna + train forward only in plan 12**).
+**Non-duplication rule:** Foundational work lives in the earliest plan that needs it. Later plans reference earlier ones instead of restating setup (e.g. holdout locking is only in plan 05; Postgres only in plan 09; attribution API only in plan 17; **Track B adjacency build/freeze only in plan 10** — plan 12 consumes the frozen mask in dual-track Optuna search; **clinical Drivers vs Results + Intermediate Fusion loaders/scalings only in plan 07** (roles summarized in this ROADMAP §); **branch/`FusionDecoder` modules + input dim only in plan 10**; **phased Optuna + train forward only in plan 12**).
 
 ## Implementation order
 
 | Order | Issue | Plan file | Depends on |
 |------:|-------|-----------|------------|
-| 01 | [#354](https://github.com/AdamCankaya/PhDNeural/issues/354) | [01-issue-354-multi-disease-dataset-inventory.md](01-issue-354-multi-disease-dataset-inventory.md) | — |
+| 01 | [#354](https://github.com/AdamCankaya/PhDNeural/issues/354) | [01-issue-354-multi-disease-dataset-inventory.md](01-issue-354-multi-disease-dataset-inventory.md) — **BRCA open slice complete** (GDC verify + Docker); Other-4 locks remaining | — |
 | 02 | [#355](https://github.com/AdamCankaya/PhDNeural/issues/355) | [02-issue-355-longitudinal-matching-strategy.md](02-issue-355-longitudinal-matching-strategy.md) | #354 |
 | 03 | [#356](https://github.com/AdamCankaya/PhDNeural/issues/356) | [03-issue-356-spatial-temporal-feature-map.md](03-issue-356-spatial-temporal-feature-map.md) | #354, #355 |
 | 04 | [#357](https://github.com/AdamCankaya/PhDNeural/issues/357) | [04-issue-357-genomic-structural-spacing.md](04-issue-357-genomic-structural-spacing.md) | #356 |
@@ -139,7 +154,7 @@ flowchart TD
 Already present and referenced by early plans rather than re-scoped as new issues:
 
 - Static MTL contract: `src/models/static_mtl_model.py`, `src/models/losses.py`
-- BRCA dataset scaffold: `src/data/brca_dataset.py`, `src/data/clinical_time.py` (extend for Intermediate Fusion batch fields in plan 07)
+- BRCA dataset scaffold: `src/data/brca_dataset.py`, `src/data/clinical_time.py` (extend for Intermediate Fusion batch fields — Drivers as `clinical_input`, Results as targets — in plan 07)
 - Legacy early fusion: `src/models/brca_early_fusion.py` (**superseded for NAS** by Intermediate Fusion in plans 10/12)
 - Disease registry placeholders: `src/config/disease_registry.yaml`
 - Wiki runbooks: `docs/wiki/*`
