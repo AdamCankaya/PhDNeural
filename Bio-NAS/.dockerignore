@@ -4,7 +4,10 @@
 **/*.pyc
 **/.pytest_cache
 data/
+# Exclude docs from context, but keep smoke pins needed by Dockerfile COPY.
 docs/
+!docs/data/
+!docs/data/smoke_expected.json
 *.html
 .env
 bio-nas_github_sync.config.json

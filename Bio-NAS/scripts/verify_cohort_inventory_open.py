@@ -515,9 +515,18 @@ def main(argv: list[str] | None = None) -> int:
         "cohorts": [brca],
         "skipped_controlled": [
             {
-                "cohort_name": "AURORA US / AURORA BIG / ADNI / KORA / LBC1936 / dbGaP",
-                "reason": "Controlled or DUA — outside Docker Plan-1 verify path",
-            }
+                "cohort_name": "ADNI (LONI)",
+                "selection_status": "locked",
+                "reason": (
+                    "Controlled ADNI/LONI — no public login-free API. "
+                    "Account + DUA in progress; inventory verify is post-DUA. "
+                    "Docker scaffold: scripts/download_adni_sample.py → /data/adni."
+                ),
+            },
+            {
+                "cohort_name": "AURORA US / AURORA BIG / KORA / LBC1936 / ROSMAP / dbGaP",
+                "reason": "Controlled or DUA — outside Docker Plan-1 open verify path",
+            },
         ],
         "smoke_manifest_check": smoke,
         "overall_status": (

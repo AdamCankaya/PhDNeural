@@ -17,12 +17,12 @@
 Maps 1:1 to the issue **Implementation requirements**, plus Track B adjacency ownership (this plan is the earliest consumer; see [`ROADMAP.md`](ROADMAP.md) non-duplication rule) and Intermediate Fusion branch modules (see [`ROADMAP.md`](ROADMAP.md) § Intermediate Fusion):
 
 - [ ] **Deliverables:** reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.
-- [ ] **Deliverables (Intermediate Fusion):** standalone `MethEncoder`, `RNAEncoder`, and `FusionDecoder` (post-fusion dense) `nn.Module`s consuming plan-07 separate modality tensors — **not** early raw-concat into one trunk.
+- [ ] **Deliverables (Intermediate Fusion):** standalone `MethEncoder`, `RNAEncoder`, and `FusionDecoder` (post-fusion dense) `nn.Module`s consuming plan-07 tensors — **not** early raw-concat into one trunk. `FusionDecoder` input dim = `meth_dim + rna_dim + clinical_dim`.
 - [ ] **Deliverables (Track B):** versioned frozen binary adjacency artifact + `MaskedLinear` (or equivalent) that applies it; load adapters for KEGG/Reactome blueprints.
 - [ ] **Acceptance:** forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.
-- [ ] **Acceptance (Intermediate Fusion):** forward on `(meth_batch, rna_batch)` → branch latents → `torch.cat` → `FusionDecoder` → MTL heads; each branch exposes searchable depth/width/dropout/latent-dim.
+- [ ] **Acceptance (Intermediate Fusion):** forward on `(meth_batch, rna_batch, clinical_input)` → branch latents → `torch.cat((meth_latent, rna_latent, clinical_vector), dim=1)` → `FusionDecoder` → MTL heads on **Results** targets; each branch exposes searchable depth/width/dropout/latent-dim; decoder accepts `meth_dim + rna_dim + clinical_dim`.
 - [ ] **Acceptance (Track B):** masked forward pass zeros disallowed synapses; frozen mask hash/version recorded in config.
-- [ ] **Upstream deps satisfied:** genomic spacing config; Year 1 tensors; plan-07 Intermediate Fusion loaders.
+- [ ] **Upstream deps satisfied:** genomic spacing config; Year 1 tensors; plan-07 Intermediate Fusion loaders (incl. Drivers).
 
 
 ## Approach
@@ -44,10 +44,10 @@ frozen mask in dual-track Optuna search and does not re-derive graph constructio
 |------|--------|------|
 | 1 | `MethEncoder` | Standalone branch: methylation betas → latent; NAS tunes layers, dropout, output latent dims |
 | 2 | `RNAEncoder` | Standalone branch: preprocessed RNA → latent; NAS tunes independently so RNA does not overpower methylation gradients |
-| 3 | Concat | `torch.cat((meth_latent, rna_latent), dim=1)` after finalized branch embeddings |
-| 4 | `FusionDecoder` | Post-fusion FC stack → classification / predicted epigenetic state (Static MTL heads) |
+| 3 | Late Fusion concat | `torch.cat((meth_latent, rna_latent, clinical_vector), dim=1)` — clinical **Drivers** from plan 07 (not a third encoder) |
+| 4 | `FusionDecoder` | Post-fusion FC stack; **input dim = `meth_dim + rna_dim + clinical_dim`** → Static MTL heads trained on clinical **Results** |
 
-Spatial CNN / Transformer blocks may implement or wrap the branch encoders (CpG-local CNN inside `MethEncoder`, gene-axis modules inside `RNAEncoder`). Phased Optuna sequencing (tune branches before post-fusion dense) is **plan 12** — this plan only registers searchable HPs per module.
+Spatial CNN / Transformer blocks may implement or wrap the branch encoders (CpG-local CNN inside `MethEncoder`, gene-axis modules inside `RNAEncoder`). Clinical Drivers are bottleneck Late Fusion only (distinct from ADR-001 Stage 2 OOF stacking). Phased Optuna sequencing (tune branches before post-fusion dense) is **plan 12** — this plan only registers searchable HPs per module (`clinical_dim` is fixed from plan-07 Driver vector width).
 
 ### Track B adjacency pipeline (build & freeze)
 
@@ -162,7 +162,7 @@ version string. Do not silently overwrite `v1` after Track B search starts.
 ## Out of scope / owned by other plans
 
 - Genomic spacing config → plan 04 (#357)
-- Dataset scalings / `(meth, rna, labels)` batches → plan 07 (#360)
+- Dataset scalings / `(meth, rna, clinical_input, target_label)` batches → plan 07 (#360)
 - Temporal modules → plan 11 (#364); may *consume* pathway-selected features / fused latents but does not own adjacency freeze
 - **Optuna dual-track search, phased branch-then-fusion studies, train.py forward orchestration** → plan 12 (#365)
 - Holdout Track A vs B metrics → plan 14 (#367)
@@ -180,7 +180,7 @@ Plus Track B adjacency:
 
 Plus Intermediate Fusion modules:
 
-> `MethEncoder`, `RNAEncoder`, and `FusionDecoder` forward on separate modality tensors; early raw-concat is not the default NAS architecture.
+> `MethEncoder`, `RNAEncoder`, and `FusionDecoder` forward with bottleneck Late Fusion of clinical Drivers (`FusionDecoder` in-dim = `meth_dim + rna_dim + clinical_dim`); early raw-concat is not the default NAS architecture.
 
 Plus: linked PR(s) reference this plan path and issue #363; experiments (if any) record IDs per `docs/wiki/Experiment-Log-Template.md`.
 

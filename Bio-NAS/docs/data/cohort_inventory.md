@@ -9,7 +9,7 @@ Inventory of candidate cohorts with **repeated molecular measurements over time*
 | Companion CSV | [`cohort_inventory.csv`](cohort_inventory.csv) |
 | BRCA template | [`docs/wiki/Data-Acquisition-BRCA.md`](../wiki/Data-Acquisition-BRCA.md) |
 | Draft date | 2026-07-24 |
-| Last updated | 2026-07-27 — TCGA-BRCA **verified_gdc_api** (Plan 01 BRCA slice); Other-4 still unlocked |
+| Last updated | 2026-07-27 — TCGA-BRCA **verified_gdc_api**; Alzheimer's primary **LOCKED** to ADNI (LONI; account+DUA **in progress**); RA/T2D/Epigenetic Aging still unlocked |
 
 ## How to read this table
 
@@ -40,7 +40,7 @@ User decisions recorded here. Unlock/change only by explicit decision (do not si
 | Disease | Status | Selected / recommended primary | Notes |
 |---------|--------|--------------------------------|-------|
 | BRCA | **LOCKED** | **TCGA-BRCA** (GDC) | Year-1/2 multi-omic anchor. Open Level-3 **PoC minimum** = meth betas + RNA + clinical/labels; controlled/dbGaP **deferred**. GDC token **not required** for open Plan 1/2 API smoke/metadata. True serial molecular repeats are **weak** on TCGA — keep AURORA US as the longitudinal-molecular alternate for Plan 02 pairing work. |
-| Alzheimer's | Recommended (unlocked) | ADNI (LONI) | Requires ADNI/LONI DUA before download. |
+| Alzheimer's | **LOCKED** | **ADNI** (LONI IDA) | Primary locked 2026-07-27. Blood EPIC methylation + genotype + clinical (± imaging). **ADNI/LONI account + DUA in progress** (user applying) — no controlled bulk/sample download can succeed yet. Docker scaffold skips without credentials (`scripts/download_adni_sample.py`). ROSMAP stays unlocked alternate. |
 | Rheumatoid Arthritis | Recommended (unlocked) | GEO GSE138747 | Open multi-omic; optional NCBI login. |
 | Type 2 Diabetes | Recommended (unlocked) | KORA F4/FF4 | Requires KORA.PASST + project agreement. |
 | Epigenetic Aging | Recommended (unlocked) | LBC1936 | Requires Edinburgh / EGA DAC. Registry key still `down_syndrome` (naming mismatch). |
@@ -52,7 +52,7 @@ User decisions recorded here. Unlock/change only by explicit decision (do not si
 | Disease | Primary | Selection | Access | Multi-omic? | ≥2 molecular timepoints? |
 |---------|---------|-----------|--------|-------------|--------------------------|
 | BRCA | **TCGA-BRCA** (GDC) | **LOCKED** | Open Level-3 PoC (meth+RNA+clinical); controlled deferred; token not required for Plan 1/2 | Yes | **Weak** on TCGA; use **AURORA US** when true molecular repeats matter |
-| Alzheimer's | ADNI (LONI) | recommended | Controlled (DUA) | Methylation + genotype + clinical (± imaging) | **Yes** (~annual visits, up to ~4y) |
+| Alzheimer's | **ADNI** (LONI) | **LOCKED** | Controlled (DUA **in progress**) | Methylation + genotype + clinical (± imaging) | **Yes** (~annual visits, up to ~4y) |
 | RA | GSE138747 (GEO) | recommended | Open | RNA-seq + methylation | **Yes** (baseline + 3 mo) |
 | T2D | KORA F4/FF4 | recommended | Controlled (project agreement) | Methylation (2 waves) + RNA-seq (FF4) | **Yes** (~7y between F4 and FF4) |
 | Epigenetic Aging | LBC1936 | recommended | Controlled (request / EGA DAC) | Methylation multi-wave + genetics via cohort | **Yes** (waves ~age 70/73/76/79) |
@@ -76,7 +76,7 @@ Columns match [`cohort_inventory.csv`](cohort_inventory.csv).
 
 | cohort_name | source_portal | accession_or_id | access_method | license_ethics_notes | modalities | n_subjects_approx | n_samples_approx | timepoints_or_visits | longitudinal_notes | recommended_priority | selection_status | url | verification_status | needs_account_or_api_key |
 |-------------|---------------|-----------------|---------------|----------------------|------------|-------------------|------------------|----------------------|--------------------|----------------------|------------------|-----|---------------------|--------------------------|
-| ADNI (blood EPIC methylation + genomics/clinical) | LONI IDA | ADNI (methylation studies ~n=650 subjects in published analyses) | controlled / account+DUA | ADNI Data Use Agreement required; IRB-aware use | DNA methylation (EPIC), GWAS, clinical/cognitive, imaging, CSF biomarkers | ~650 with methylation in published EWAS; ADNI overall larger | ~1,700+ methylation samples after QC in papers | baseline + follow-ups ~1y apart, up to ~4y | **Best AD fit for molecular Δt.** Multi-omic via methylation + genotype + clinical (± imaging). | primary (recommended) | recommended_unlocked | https://adni.loni.usc.edu/data-samples/adni-data/ | needs_dua | yes — **ADNI/LONI account + DUA required** |
+| ADNI (blood EPIC methylation + genomics/clinical) | LONI IDA | ADNI (methylation studies ~n=650 subjects in published analyses) | controlled / account+DUA | ADNI Data Use Agreement required; IRB-aware use. **Account + DUA in progress** (user applying 2026-07-27). | DNA methylation (EPIC), GWAS, clinical/cognitive, imaging, CSF biomarkers | ~650 with methylation in published EWAS; ADNI overall larger | ~1,700+ methylation samples after QC in papers | baseline + follow-ups ~1y apart, up to ~4y | **SELECTED primary.** Best AD fit for molecular Δt. Multi-omic via methylation + genotype + clinical (± imaging). Docker scaffold: `scripts/download_adni_sample.py` → `/data/adni` (skip until credentials). Verify **post-DUA** (no public LONI API without login). | primary (locked) | locked | https://adni.loni.usc.edu/data-samples/adni-data/ | needs_dua (account **in progress**) | yes — **ADNI/LONI account + DUA required** (in progress) |
 | ROSMAP (AMP-AD) | Synapse AD Knowledge Portal | syn3219045 (study); metadata syn3157322 | controlled / account+DUA | Synapse + Data Use Certificate (DUC) | genotypes, WGS, methylation, RNA-seq, ChIP-seq, proteomics (generation ongoing), rich clinical | ROS+MAP >3,000 enrolled; omic subsets hundreds–thousands | RNA-seq ~638; methylation ~740 (first-gen atlas; growing) | **Clinical** longitudinal; **brain omics usually one postmortem sample** | Excellent multi-omic AD/aging biology; limited repeated *molecular* timepoints on same tissue. Use for phenotype severity later. | alternate | unlocked_alternate | https://adknowledgeportal.synapse.org/Explore/Studies/DetailsPage?Study=syn3219045 | needs_dua | yes — **Synapse account + ADKP DUC required** |
 | Progressive MCI / AD blood RNA-seq | GEO | GSE282742 | open | GEO open; raw not provided | RNA-seq (WBC) | P-MCI ~28, S-MCI ~39, AD ~49 (+ serial draws) | ~100+ samples (serial subject IDs present) | ≥2 draws for many converters (ages differ across GSM rows) | Longitudinal *clinical progression* with repeated blood RNA. **Single-omic** → exploratory only under multi-omic preference. | exploratory | unlocked_exploratory | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE282742 | unverified_public_metadata | no (optional NCBI login) |
 | AddNeuroMed / related blood methylation | GEO | GSE153712 (and related) | open | GEO open | methylation (EPIC) | TBD — verify on GEO | TBD — verify on GEO | often case/control; confirm visit labels on portal | Useful open methylation; confirm longitudinal vs cross-sectional before ETL. Single-omic. | exploratory | unlocked_exploratory | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE153712 | unverified_public_metadata | no (optional NCBI login) |
@@ -112,14 +112,14 @@ Columns match [`cohort_inventory.csv`](cohort_inventory.csv).
 
 ---
 
-## Accounts, DUAs, and API keys (user has none yet)
+## Accounts, DUAs, and API keys
 
-Drafting this inventory **does not** require any credentials. With **BRCA primary locked to TCGA-BRCA (open Level-3)**, create accounts in this order:
+Inventory drafting does not require credentials. **BRCA** (open Level-3) and **Alzheimer's** (ADNI locked) account status:
 
-| Priority | Account / agreement | Needed for | Needed vs optional |
-|----------|---------------------|------------|--------------------|
+| Priority | Account / agreement | Needed for | Status / needed vs optional |
+|----------|---------------------|------------|------------------------------|
 | **1** | **GDC Portal account** (+ download token) | Optional portal bulk UX later; **not** required for Plan 1/2 open API smoke / metadata | **Optional for Plan 1/2** — open Level-3 needs no token; no dbGaP for PoC |
-| 2 | **ADNI / LONI IDA + DUA** | ADNI primary (if locked) | **Required** only after AD primary lock |
+| **2** | **ADNI / LONI IDA + DUA** | **ADNI primary (LOCKED)** | **In progress** — user applying (2026-07-27). Required before any controlled download. Host `.env` (`ADNI_USER` / `ADNI_PASSWORD`) only — never bake into Docker. |
 | 3 | **KORA.PASST + project agreement** | KORA F4/FF4 (if locked) | **Required** only after T2D primary lock |
 | 4 | **Lothian Birth Cohorts / EGA DAC** | LBC1936 (if locked) | **Required** only after Epigenetic Aging primary lock |
 | 5 | **Synapse + AD Knowledge Portal DUC** | ROSMAP (AD alternate) | **Required** only if ROSMAP chosen |
@@ -131,25 +131,28 @@ Drafting this inventory **does not** require any credentials. With **BRCA primar
 
 ---
 
-## Plan 01 status split (BRCA vs Other-4)
+## Plan 01 status split (BRCA / AD vs remaining Other-3)
 
 | Slice | Status | Notes |
 |-------|--------|-------|
 | **BRCA Plan-1** | **Complete** for open path | Primary locked; GDC API verified; Docker chain = download → inventory verify → optional toy NAS; expected pins in `docs/data/smoke_expected.json`. Controlled/dbGaP still deferred. |
-| **Other-4 Plan-1** | **Open** | Alzheimer's / RA / T2D / Epigenetic Aging primaries still recommended-unlocked; no Docker verify for DUA cohorts. |
+| **Alzheimer's Plan-1** | **Primary locked; Docker scaffold done; DUA open** | ADNI (LONI) locked. Account + DUA **in progress**. Compose adds ADNI scaffold (skip without creds) + optional AD meth NAS when sample present. Inventory verify for ADNI is **post-DUA** (no public login-free API). |
+| **Remaining Other-3** | **Open** | RA / T2D / Epigenetic Aging primaries still recommended-unlocked. |
 
-## Next concrete Plan 01 steps (BRCA done; Other-4 remaining)
+## Next concrete Plan 01 steps (BRCA + AD lock done; DUA + Other-3 remaining)
 
 1. ~~Spot-verify TCGA-BRCA~~ — done via `scripts/verify_cohort_inventory_open.py` (`verified_gdc_api`, 2026-07-27). Re-run anytime inside Compose.
-2. **Lock or reject remaining primaries** (user decisions) — clarifying questions below.
-3. After each lock, start only the matching account/DUA from the table above (do not apply for everything at once).
-4. For open GEO primaries (likely RA): pull series metadata + confirm baseline/3-mo pairing counts without credentials (optional extend verify script).
-5. Keep AURORA US in inventory as BRCA longitudinal alternate; defer dbGaP until Plan 02 needs true molecular repeats beyond open metadata.
-6. Resolve `down_syndrome` → Epigenetic Aging registry naming in a later PR after the fifth primary is locked (no invented severity maps).
+2. ~~Lock Alzheimer's primary → ADNI~~ — done 2026-07-27; ROSMAP alternate.
+3. **Complete ADNI/LONI account + DUA** (outside Docker) → then stage sample under `data/adni/` or extend download script; AD inventory verify post-DUA.
+4. **Lock or reject remaining primaries** (RA / T2D / Epigenetic Aging) — clarifying questions below.
+5. After each lock, start only the matching account/DUA from the table above (do not apply for everything at once).
+6. For open GEO primaries (likely RA): pull series metadata + confirm baseline/3-mo pairing counts without credentials (optional extend verify script).
+7. Keep AURORA US in inventory as BRCA longitudinal alternate; defer dbGaP until Plan 02 needs true molecular repeats beyond open metadata.
+8. Resolve `down_syndrome` → Epigenetic Aging registry naming in a later PR after the fifth primary is locked (no invented severity maps).
 
-### Clarifying questions (to lock Other-4)
+### Clarifying questions (to lock remaining Other-3)
 
-1. **Alzheimer's:** Lock **ADNI** as primary, or prefer open GEO (e.g. GSE282742) first to avoid DUA delay?
+1. ~~**Alzheimer's:** Lock **ADNI** as primary?~~ — **LOCKED** ADNI (LONI); DUA in progress.
 2. **RA:** Lock **GSE138747** (open multi-omic), or keep shopping for a larger controlled cohort?
 3. **T2D:** Lock **KORA F4/FF4** (best multi-omic Δt, controlled), or start with open **GSE184050** RNA-only for faster ETL rehearsal?
 4. **Epigenetic Aging:** Lock **LBC1936** (controlled), or open **SATSA (E-MTAB-7309)** first?

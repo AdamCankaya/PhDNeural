@@ -29,6 +29,11 @@ BRCA primary/recurrent pairing first (TCGA case/sample barcodes), then template 
 Encode join-key constants in a small config module (e.g. `src/config/longitudinal_keys.yaml`)
 consumed later by ETL — do not yet implement the full tensor pipeline.
 
+**Plan 1/2 open-focus (BRCA):** matching work uses **open / non-controlled** GDC metadata and
+barcodes (cases/samples APIs, clinical fields). **No controlled/dbGaP data** and **no full omic
+dump** are required for Plan 02 — metadata-level pairing is enough; full-cohort meth/RNA ETL
+stays Plan 07. PoC modality context remains open Level-3 meth + RNA + clinical/labels.
+
 ## Key files / areas to touch
 
 - `src/config/longitudinal_keys.yaml` (new)
@@ -42,6 +47,8 @@ consumed later by ETL — do not yet implement the full tensor pipeline.
 ## Out of scope / owned by other plans
 
 - Dataset inventory & access accounts → plan 01 (#354)
+- Full-cohort BRCA omic ETL / HDF5 → plan 07 (#360)
+- Controlled/dbGaP downloads → deferred (not required for open barcode/metadata matching)
 - Patient-level 80/20 split files → plan 05 (#358)
 - Δt embedding module → plan 06 (#359)
 

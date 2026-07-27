@@ -12,9 +12,10 @@ venv/
 .pytest_cache/
 .mypy_cache/
 
-# Raw / large data (never commit GDC downloads)
+# Raw / large data (never commit GDC / ADNI downloads)
 data/raw/
 data/tcga/
+data/adni/
 data/processed/
 *.h5
 *.hdf5

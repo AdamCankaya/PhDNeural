@@ -45,12 +45,18 @@ diseases:
   alzheimers:
     id: alzheimers
     name: Alzheimer's Disease
-    # inventory candidates: ADNI (LONI); ROSMAP syn3219045; GEO GSE282742 (exploratory)
-    n_severity_classes: 4  # placeholder: CDR/MMSE severity bands TBD
+    # Plan 01 LOCKED primary: ADNI via LONI IDA (controlled; account + DUA).
+    # Accession/source: https://adni.loni.usc.edu/data-samples/adni-data/
+    # PoC molecular modality: blood EPIC DNA methylation (+ genotype + clinical/cognitive).
+    # Alternate (unlocked): ROSMAP AMP-AD syn3219045 (Synapse DUC).
+    # Exploratory: GEO GSE282742, GSE153712.
+    # Account status (2026-07-27): ADNI/LONI account + DUA **in progress** (user applying).
+    # Do not invent severity/phenotype maps beyond placeholders below.
+    n_severity_classes: 4  # placeholder: CDR/MMSE severity bands TBD post-DUA schema
     phenotype:
       source_columns:
-        - diagnosis  # placeholder
-      mapping: {}  # 0 = control, 1 = AD — fill when GEO cohort is wired
+        - diagnosis  # placeholder — fill from ADNI clinical dictionary after DUA
+      mapping: {}  # 0 = control, 1 = AD/MCI diseased — fill when cohort schema is wired
     severity:
       source_columns:
         - cdr_score  # placeholder

@@ -31,7 +31,7 @@ Per-disease mappings and `n_severity_classes` (variable K): [`src/config/disease
 
 ## Input / label separation (no severity leakage)
 
-**Severity and stage source columns are labels only** — they must not appear in the clinical input concatenation branch. Implementation: [`src/data/clinical_time.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/clinical_time.py) defines `LABEL_SOURCE_COLUMNS` excluded from clinical features.
+**Severity and stage source columns are labels only** — they must not appear in the clinical input concatenation branch. Implementation: [`src/data/clinical_time.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/clinical_time.py) defines `LABEL_SOURCE_COLUMNS` excluded from clinical features. Intermediate Fusion names the same split **Drivers** (inputs) vs **Results** (targets) — see [`ROADMAP.md`](../plans/ROADMAP.md) § Intermediate Fusion.
 
 ## Stacking meta-features (Stage 2)
 

@@ -22,7 +22,7 @@ When you change files that affect the **built image**, you MUST tell the user th
 ## Does NOT require rebuild
 
 - Docs, plans, inventory markdown/CSV, Cursor rules
-- Host bind-mount data under `./data/tcga` (runtime mount, not in image)
+- Host bind-mount data under `./data/tcga` or `./data/adni` (runtime mount, not in image)
 - `docker-compose.yml` **environment / volume / ports only** — recreate container (`docker compose up`) may be enough; rebuild only if `build:` / Dockerfile inputs changed
 
 ```text
@@ -36,6 +36,6 @@ When you change files that affect the **built image**, you MUST tell the user th
 2. If the changed file is `COPY`'d or is a build dependency → **rebuild yes**.
 3. If it only lives on the host / mount and is not baked in → **rebuild no**.
 
-Current image `COPY`s (rebuild if any of these change): `docker/requirements.txt`, `scripts/download_tcga_brca_sample.py`, `scripts/train_nas_demo.py`, `scripts/verify_cohort_inventory_open.py`, `scripts/docker_entrypoint.py`, `docs/data/smoke_expected.json`.
+Current image `COPY`s (rebuild if any of these change): `docker/requirements.txt`, `scripts/download_tcga_brca_sample.py`, `scripts/train_nas_demo.py`, `scripts/verify_cohort_inventory_open.py`, `scripts/download_adni_sample.py`, `scripts/train_nas_ad_demo.py`, `scripts/docker_entrypoint.py`, `docs/data/smoke_expected.json`.
 
 State rebuild **yes/no** and a one-line why in your final response whenever Docker-related files changed.

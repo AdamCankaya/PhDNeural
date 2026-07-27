@@ -18,11 +18,11 @@ Maps 1:1 to the issue **Implementation requirements**, plus dual-track mask cons
 
 - [ ] **Deliverables:** Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).
 - [ ] **Deliverables (dual-track):** distinct Track A and Track B study configs; Track B cites frozen `adjacency_version` + hash from plan 10.
-- [ ] **Deliverables (phased Intermediate Fusion):** Optuna objective / study phases that tune **branch** HPs (`MethEncoder`, `RNAEncoder`) **before** post-fusion dense (`FusionDecoder`); train loop forwards branches → concat → decoder (user’s `train.py` / `optuna_search.py` map here).
+- [ ] **Deliverables (phased Intermediate Fusion):** Optuna objective / study phases that tune **branch** HPs (`MethEncoder`, `RNAEncoder`) **before** post-fusion dense (`FusionDecoder`); train loop forwards branches → Late Fusion concat with clinical Drivers → decoder (user’s `train.py` / `optuna_search.py` map here).
 - [ ] **Acceptance:** ≥1 full study completes on BRCA (or primary cohort) with reproducible seed and stored best trial.
 - [ ] **Acceptance (dual-track):** ≥1 full Track A study **and** ≥1 full Track B study complete; Track B run records mask version/hash in study user attrs or config snapshot.
-- [ ] **Acceptance (phased Intermediate Fusion):** study config or multi-phase study records branch-then-fusion sequencing; no trial proposes early raw-concat as the primary architecture.
-- [ ] **Upstream deps satisfied:** Postgres Optuna storage; Slurm workers; train tensors; **frozen Track B adjacency** (plan 10); Intermediate Fusion modules (plan 10) + loaders (plan 07).
+- [ ] **Acceptance (phased Intermediate Fusion):** study config or multi-phase study records branch-then-fusion sequencing; forward uses `torch.cat((meth_latent, rna_latent, clinical_vector), dim=1)`; no trial proposes early raw-concat as the primary architecture.
+- [ ] **Upstream deps satisfied:** Postgres Optuna storage; Slurm workers; train tensors; **frozen Track B adjacency** (plan 10); Intermediate Fusion modules (plan 10) + loaders with Drivers/Results (plan 07).
 
 
 ## Approach
@@ -43,15 +43,15 @@ Upgrade the PyTorch NAS path (including any β-VAE / MTL trunk evolution) to **I
 
 1. Methylation branch → `meth_latent`
 2. RNA branch → `rna_latent`
-3. `fused = torch.cat((meth_latent, rna_latent), dim=1)`
-4. `FusionDecoder` / post-fusion dense → predicted phenotype / severity (epigenetic state)
+3. Late Fusion at bottleneck: `fused = torch.cat((meth_latent, rna_latent, clinical_vector), dim=1)` — `clinical_vector` = plan-07 **Drivers** (One-Hot / Min-Max); not a searchable third branch
+4. `FusionDecoder` / post-fusion dense (in-dim `meth_dim + rna_dim + clinical_dim`) → MTL heads; loss against clinical **Results** (`target_label`)
 
 **Phased search sequence (strict):**
 
 | Phase | What Optuna tunes | Freeze / hold |
 |-------|-------------------|---------------|
-| **A — Branch studies** | Independent HPs for `MethEncoder` and `RNAEncoder` (layers, dropout, latent dims, etc.) | Post-fusion dense at a fixed stub or minimal default head |
-| **B — Post-fusion study** | Strictly `FusionDecoder` / post-fusion FC depth/width/dropout | Branch architectures at best (or frozen) configs from phase A |
+| **A — Branch studies** | Independent HPs for `MethEncoder` and `RNAEncoder` (layers, dropout, latent dims, etc.) | Post-fusion dense at a fixed stub or minimal default head; `clinical_dim` fixed from plan 07 |
+| **B — Post-fusion study** | Strictly `FusionDecoder` / post-fusion FC depth/width/dropout | Branch architectures at best (or frozen) configs from phase A; clinical Drivers still concatenated, not re-encoded |
 
 Implementation options (pick one; document in study YAML):
 
@@ -94,7 +94,7 @@ plan 13. See [`.cursor/rules/docker-first-implementation.mdc`](../../.cursor/rul
 ## Key files / areas to touch
 
 - `src/pipelines/` Optuna study entrypoints / `optuna_search.py` (new/extend) — **phased** Intermediate Fusion objective
-- `src/pipelines/` or `src/models/` train loop (`train.py` equivalent) — forward: branches → concat → `FusionDecoder`
+- `src/pipelines/` or `src/models/` train loop (`train.py` equivalent) — forward: branches → Late Fusion concat with `clinical_vector` → `FusionDecoder`
 - `src/models/losses.py`
 - `src/models/brca_early_fusion.py` — **legacy patterns only**; do not wire as default NAS objective
 - Plan-10 Intermediate Fusion modules (`MethEncoder`, `RNAEncoder`, `FusionDecoder`)
@@ -130,7 +130,7 @@ Plus dual-track / mask citation:
 
 Plus phased Intermediate Fusion:
 
-> Optuna sequencing tunes branch HPs before post-fusion dense; train forward uses Intermediate Fusion (not early raw-concat).
+> Optuna sequencing tunes branch HPs before post-fusion dense; train forward uses Intermediate Fusion with clinical Drivers at the bottleneck and Results as targets (not early raw-concat).
 
 Plus: linked PR(s) reference this plan path and issue #365; experiments (if any) record IDs per `docs/wiki/Experiment-Log-Template.md`.
 

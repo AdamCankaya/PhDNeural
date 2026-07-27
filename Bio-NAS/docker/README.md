@@ -1,12 +1,14 @@
-# Docker — Plan-1 TCGA-BRCA sample + inventory verify + toy NAS
+# Docker — Plan-1 TCGA-BRCA sample + inventory verify + toy NAS (+ ADNI scaffold)
 
 Minimal harness that builds a slim Python image from [`Dockerfile`](Dockerfile), then on **first container start**:
 
 1. Downloads a **tiny open-access** TCGA-BRCA cohort from the [GDC API](https://api.gdc.cancer.gov) (~5–10 joint meth+RNA cases + clinical)
 2. Runs open **inventory verification** (public GDC project / Level-3 modality counts) → host mount
-3. Runs a simple MLP architecture-search demo on **methylation features only**
+3. Runs a simple MLP architecture-search demo on **methylation features only** (BRCA)
+4. Runs the **ADNI (LONI) scaffold** → host `./data/adni` (skips with exit 0 when credentials absent / account pending)
+5. Optionally runs an **AD methylation toy NAS** only if an ADNI sample `.ready` is present
 
-No GDC login / dbGaP token. Not full-cohort ETL (see Plan 07 / [Data Acquisition BRCA](../docs/wiki/Data-Acquisition-BRCA.md)). Plan 1 inventory + open-artifact reproducibility: [docs/plans/01-issue-354-multi-disease-dataset-inventory.md](../docs/plans/01-issue-354-multi-disease-dataset-inventory.md). Multi-omic **Intermediate Fusion NAS** is planned in [ROADMAP § Intermediate Fusion](../docs/plans/ROADMAP.md#intermediate-fusion-nas-multi-omic-supersedes-early-raw-concat) — not this toy demo.
+No GDC login / dbGaP token for BRCA. **No ADNI secrets in the image** — use host `.env` after DUA. Not full-cohort ETL (see Plan 07 / [Data Acquisition BRCA](../docs/wiki/Data-Acquisition-BRCA.md) / [Data Acquisition Alzheimer's](../docs/wiki/Data-Acquisition-Alzheimer's.md)). Plan 1 inventory + open-artifact reproducibility: [docs/plans/01-issue-354-multi-disease-dataset-inventory.md](../docs/plans/01-issue-354-multi-disease-dataset-inventory.md). Multi-omic **Intermediate Fusion NAS** is planned in [ROADMAP § Intermediate Fusion](../docs/plans/ROADMAP.md#intermediate-fusion-nas-multi-omic-supersedes-early-raw-concat) — not this toy demo.
 
 **Docker-first:** New Bio-NAS executable work should run in this container (or an extension of it), not as a host-only workflow. High-level Windows deploy steps: [Bio-NAS README § Deploy with Docker](../README.md#5-deploy-with-docker-windows). Agent rule: when Dockerfile / `COPY`'d scripts / requirements change, rebuild with `docker compose up --build` ([`.cursor/rules/docker-rebuild-notify.mdc`](../.cursor/rules/docker-rebuild-notify.mdc)).
 
@@ -26,14 +28,16 @@ Leave Docker Desktop running for all build/run steps below.
 
 ## What it does
 
-1. **Build** installs Python deps only (no TCGA data baked into the image).
+1. **Build** installs Python deps only (no TCGA/ADNI data baked into the image).
 2. **First `docker compose up` / `docker run`** queries GDC for ~5–10 BRCA cases that have **both** open methylation and RNA, and downloads:
    - Clinical biotab + case demographics / AJCC labels
    - Methylation beta-value files (Illumina Human Methylation 450 SeSAMe Level-3)
    - RNA-seq gene expression (STAR counts) for the same cases (PoC-minimum completeness; **not** used by the toy train path)
-3. **Then** runs `scripts/verify_cohort_inventory_open.py` — public GDC API spot-check for TCGA-BRCA; writes `inventory_verification/`.
+3. **Then** runs `scripts/verify_cohort_inventory_open.py` — public GDC API spot-check for TCGA-BRCA; writes `inventory_verification/` (ADNI listed under `skipped_controlled` — post-DUA).
 4. **Then** runs `scripts/train_nas_demo.py` — toy NAS over a few MLP widths with leave-one-out CV on **methylation features + stage labels only** (skip with `SKIP_NAS_DEMO=1`).
-5. Re-runs skip download when `/data/tcga/BRCA/.ready` exists. If the download schema changes (manifest `schema_version`), delete `.ready` (and optionally `files/`) for a fresh pull.
+5. **Then** runs `scripts/download_adni_sample.py` — ADNI scaffold. Without `ADNI_USER`/`ADNI_PASSWORD`, writes `adni_access_status.json` (`skipped_account_pending`) and exits 0. **Account + DUA in progress** — no controlled download attempted.
+6. **Then** runs `scripts/train_nas_ad_demo.py` — AD meth NAS only if `data/adni/.ready` + methylation files exist; otherwise skip exit 0.
+7. Re-runs skip BRCA download when `/data/tcga/BRCA/.ready` exists. If the download schema changes (manifest `schema_version`), delete `.ready` (and optionally `files/`) for a fresh pull.
 
 Selection prefers joint meth+RNA cases ordered by `submitter_id`. Full ~1098-case cohort ETL is **Plan 07**, not this smoke.
 
@@ -56,15 +60,23 @@ docker compose -f Bio-NAS/docker-compose.yml up --build
 
 After changing `docker/Dockerfile`, `docker/requirements.txt`, or any script/`COPY`'d file, rebuild with `docker compose up --build`.
 
+Optional host `.env` (gitignored) for post-DUA ADNI credentials — Compose loads it when present:
+
+```env
+# After ADNI/LONI account + DUA approval only — never commit
+ADNI_USER=your_loni_user
+ADNI_PASSWORD=your_loni_password
+```
+
 ### Manual: `docker build` + `docker run`
 
 ```powershell
 cd Bio-NAS
 docker build -f docker\Dockerfile -t bio-nas-demo:local .
-docker run --rm -v "${PWD}/data/tcga:/data/tcga" bio-nas-demo:local
+docker run --rm -v "${PWD}/data/tcga:/data/tcga" -v "${PWD}/data/adni:/data/adni" bio-nas-demo:local
 ```
 
-## Expected Plan-1 host outputs
+## Expected Plan-1 host outputs (BRCA)
 
 | Host path (under `Bio-NAS/`) | Role |
 |------------------------------|------|
@@ -80,27 +92,41 @@ Pinned smoke expectations (schema / ranges / labels — not live file content ha
 
 Typical catalog size for ~8 joint cases is on the order of **~100–200 MB**. Still sample-scale — not the full cohort.
 
-## Data volume (host ↔ container)
+## Expected Plan-1 host outputs (Alzheimer's / ADNI)
 
-Compose bind-mounts host `./data/tcga` to container `/data/tcga`:
+| Host path (under `Bio-NAS/`) | Role |
+|------------------------------|------|
+| `data/adni/adni_access_status.json` | Scaffold status (`skipped_account_pending` while DUA in progress) |
+| `data/adni/.skipped` | Marker that controlled download was not performed |
+| `data/adni/.ready` + `files/` + `nas_demo_results.json` | **Only after** DUA + staged sample — not expected yet |
+
+**Blocker:** ADNI/LONI account + Data Use Agreement **in progress** (user applying). No real ADNI bulk/sample download can succeed until approval.
+
+## Data volume (host ↔ container)
 
 | Side | Path |
 |------|------|
-| Host (Windows) | `Bio-NAS\data\tcga\…` |
-| Container | `/data/tcga/…` |
+| Host (Windows) BRCA | `Bio-NAS\data\tcga\…` |
+| Container BRCA | `/data/tcga/…` |
+| Host (Windows) ADNI | `Bio-NAS\data\adni\…` |
+| Container ADNI | `/data/adni/…` |
 
-`data/tcga/` is gitignored so GDC downloads are not committed.
+`data/tcga/` and `data/adni/` are gitignored so downloads are not committed.
 
 ## Env knobs
 
 | Variable | Default | Meaning |
 |----------|---------|---------|
-| `TCGA_SAMPLE_OUT` | `/data/tcga/BRCA` | Smoke cohort root |
+| `TCGA_SAMPLE_OUT` | `/data/tcga/BRCA` | BRCA smoke cohort root |
 | `TCGA_SAMPLE_N_CASES` | `8` | Target patients (clamped 5–10) |
 | `TCGA_SAMPLE_MAX_BYTES` | `1572864000` (~1.5 GB) | Soft download budget |
 | `INVENTORY_VERIFY_OUT` | `/data/tcga/inventory_verification` | Verify artifact dir |
 | `SMOKE_EXPECTED_JSON` | `/app/docs/data/smoke_expected.json` | Pinned smoke expectations |
-| `SKIP_NAS_DEMO` | (unset) | Set `1` to skip toy NAS |
+| `ADNI_SAMPLE_OUT` | `/data/adni` | ADNI scaffold / sample root |
+| `ADNI_USER` / `ADNI_PASSWORD` | (unset) | Host `.env` only after DUA — never in image |
+| `ADNI_SKIP` | (unset) | Set `1` to force ADNI skip |
+| `SKIP_NAS_DEMO` | (unset) | Set `1` to skip BRCA toy NAS |
+| `SKIP_AD_NAS_DEMO` | (unset) | Set `1` to skip AD toy NAS |
 | `INVENTORY_VERIFY_DRY_RUN` | (unset) | Set `1` to skip GDC network in verify |
 
 ## Viewing results
@@ -114,11 +140,14 @@ cd Bio-NAS
 docker compose logs bio-nas-demo
 ```
 
-**On the host:** open `data/tcga/BRCA/nas_demo_results.json` and `data/tcga/inventory_verification/verification.json`.
+**On the host:** open `data/tcga/BRCA/nas_demo_results.json`, `data/tcga/inventory_verification/verification.json`, and `data/adni/adni_access_status.json`.
 
 ## Access / auth
 
-Open-access GDC endpoints only (`access=open`). **No login, token, or dbGaP approval** is required. Controlled/dbGaP data is deferred. Other-4 DUA cohorts are **not** fetched by this image — see [`docs/data/cohort_inventory.md`](../docs/data/cohort_inventory.md).
+- **BRCA:** Open-access GDC endpoints only (`access=open`). **No login, token, or dbGaP approval** is required.
+- **ADNI:** Controlled. Account + DUA **in progress**. Credentials via host `.env` after approval — **never** bake into Dockerfile. Scaffold skips without credentials. No login scrape.
+
+See [`docs/data/cohort_inventory.md`](../docs/data/cohort_inventory.md) and [Data Acquisition Alzheimer's](../docs/wiki/Data-Acquisition-Alzheimer's.md).
 
 ## Without Docker
 
@@ -127,6 +156,8 @@ pip install -r docker/requirements.txt
 python scripts/download_tcga_brca_sample.py --out-dir data/tcga/BRCA
 python scripts/verify_cohort_inventory_open.py --out-dir data/tcga/inventory_verification
 python scripts/train_nas_demo.py --data-dir data/tcga/BRCA
+python scripts/download_adni_sample.py --out-dir data/adni
+python scripts/train_nas_ad_demo.py --data-dir data/adni
 ```
 
 Prefer Compose for the supported Plan-1 path. Dry-run verify (no network):

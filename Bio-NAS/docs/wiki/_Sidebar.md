@@ -7,6 +7,7 @@
 * [Glossary](Glossary)
 * [Infrastructure Runbook](Infrastructure-Runbook)
 * [Data Acquisition BRCA](Data-Acquisition-BRCA)
+* [Data Acquisition Alzheimer's](Data-Acquisition-Alzheimer's)
 * [Architecture Decisions](Architecture-Decisions)
 * [Experiment Log Template](Experiment-Log-Template)
 * [FAQ and Troubleshooting](FAQ-and-Troubleshooting)

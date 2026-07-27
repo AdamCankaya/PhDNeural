@@ -67,6 +67,7 @@ Every timeline item on the dashboard and master-plan HTML links to its GitHub is
 | [Glossary](Glossary) | Track A/B, scaling gate, Bio-NAS keywords |
 | [Infrastructure Runbook](Infrastructure-Runbook) | Hetzner PostgreSQL, Docker Desktop / Compose, Slurm CI/CD |
 | [Data Acquisition BRCA](Data-Acquisition-BRCA) | TCGA sourcing, HDF5, disease registry, Docker smoke |
+| [Data Acquisition Alzheimer's](Data-Acquisition-Alzheimer's) | ADNI (LONI) primary lock, DUA in progress, Docker scaffold |
 | [Architecture Decisions](Architecture-Decisions) | ADRs for Bio-NAS and MTL design |
 | [Experiment Log Template](Experiment-Log-Template) | Reproducible experiment records |
 | [FAQ and Troubleshooting](FAQ-and-Troubleshooting) | Research design + sync/dashboard FAQs |
