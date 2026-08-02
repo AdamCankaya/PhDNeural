@@ -144,6 +144,11 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Deliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.
   * Acceptance: ≥2 concurrent workers report trials to the same study without corruption.
   * Dependencies: cluster account; shared storage for artifacts.
+* Integrate TensorBoard Logging into the training loop.
+  * Track scope: Shared (A+B) — TensorBoard tracking required for both tracks.
+  * Deliverables: Dynamic log paths (`runs/mtl_experiment_{disease_name}`); scalar logging for phenotype and severity metrics.
+  * Acceptance: TensorBoard logs populate correctly; conditionally skips `np.nan` severity metrics on healthy batches.
+  * Dependencies: Base training entrypoint and `evaluate_mtl_metrics` function.
 
 ### Q2 Summer 2028: Structural Taxonomy & Baseline Benchmarking
 **Phases:** 3 | **Goal:** Benchmark searched architectures against baselines and ablations.
