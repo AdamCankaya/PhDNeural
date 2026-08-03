@@ -29,6 +29,10 @@ Censoring indicators (e.g. `event_observed`) may be tabular inputs when survival
 
 Per-disease mappings and `n_severity_classes` (variable K): [`src/config/disease_registry.yaml`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/config/disease_registry.yaml)
 
+### Evaluation Metrics and Logging Constraints
+
+Because the severity metric uses a `missing_policy: mask` for healthy patients (who do not have a severity stage), the custom `evaluate_mtl_metrics` function will output `np.nan` for the `sev_qwk` metric if a validation batch contains *only* healthy patients. Downstream logging consumers (such as TensorBoard) **must conditionally check** this metric (e.g., `if not np.isnan(sev_qwk):`) and safely skip logging to prevent `NaN` values from corrupting the epoch's metrics visualization.
+
 ## Input / label separation (no severity leakage)
 
 **Severity and stage source columns are labels only** — they must not appear in the clinical input concatenation branch. Implementation: [`src/data/clinical_time.py`](https://github.com/AdamCankaya/PhDNeural/blob/main/src/data/clinical_time.py) defines `LABEL_SOURCE_COLUMNS` excluded from clinical features. Intermediate Fusion names the same split **Drivers** (inputs) vs **Results** (targets) — see [`ROADMAP.md`](../plans/ROADMAP.md) § Intermediate Fusion.

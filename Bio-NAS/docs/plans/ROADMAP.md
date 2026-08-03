@@ -1,6 +1,6 @@
 # Bio-NAS Implementation Roadmap
 
-Plans for all **24 open** `phd-sync` roadmap issues in [AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural).
+Plans for all **25 open** `phd-sync` roadmap issues in [AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural).
 Authoritative checklist: [`phd_bio-nas_master_plan.md`](../../phd_bio-nas_master_plan.md).
 Live tracker: [PhD Master Plan (Project #2)](https://github.com/users/AdamCankaya/projects/2).
 
@@ -50,7 +50,7 @@ Storage / workers: [09](09-issue-362-dockerized-postgres-optuna.md) (Postgres), 
 
 | Included | Skipped |
 |----------|---------|
-| All **24 open** issues `#354`–`#377` (`label:phd-sync`) | **Closed** superseded roadmap issues (prior sync generations) |
+| All **25 open** issues `#354`–`#378` (`label:phd-sync`) | **Closed** superseded roadmap issues (prior sync generations) |
 | | Closed `future-potential` / `consideration` / `infra-algo-exploration` items (not current phd-sync scope) |
 
 ## How plans interconnect
@@ -107,6 +107,7 @@ flowchart TD
   P08 --> P24["24 #377 OSS release"]
   P09 --> P24
   P23 --> P24
+  P12 --> P25["25 #378 TensorBoard"]
 ```
 
 **Non-duplication rule:** Foundational work lives in the earliest plan that needs it. Later plans reference earlier ones instead of restating setup (e.g. holdout locking is only in plan 05; Postgres only in plan 09; attribution API only in plan 17; **Track B adjacency build/freeze only in plan 10** — plan 12 consumes the frozen mask in dual-track Optuna search; **clinical Drivers vs Results + Intermediate Fusion loaders/scalings only in plan 07** (roles summarized in this ROADMAP §); **branch/`FusionDecoder` modules + input dim only in plan 10**; **phased Optuna + train forward only in plan 12**).
@@ -139,6 +140,7 @@ flowchart TD
 | 22 | [#375](https://github.com/AdamCankaya/PhDNeural/issues/375) | [22-issue-375-slow-vs-fast-architecture-compare.md](22-issue-375-slow-vs-fast-architecture-compare.md) | #374 |
 | 23 | [#376](https://github.com/AdamCankaya/PhDNeural/issues/376) | [23-issue-376-finalize-dissertation.md](23-issue-376-finalize-dissertation.md) | #374, #375 |
 | 24 | [#377](https://github.com/AdamCankaya/PhDNeural/issues/377) | [24-issue-377-oss-framework-release.md](24-issue-377-oss-framework-release.md) | #361, #362, #376 |
+| 25 | [#378](https://github.com/AdamCankaya/PhDNeural/issues/378) | [25-issue-378-tensorboard-integration.md](25-issue-378-tensorboard-integration.md) | #365 |
 
 ## Phase / year grouping
 
@@ -146,7 +148,7 @@ flowchart TD
 |-------|-------|-------|
 | Year 1 Fall–Winter | 01–04 | Cohort inventory, matching, feature map, spacing |
 | Year 1 Spring–Summer | 05–09 | Leakage-safe ETL, Δt, 4D HDF5, compute, Postgres |
-| Year 2 Fall–Spring | 10–13 | Spatial/temporal + Intermediate Fusion modules, phased Optuna search, Slurm workers |
+| Year 2 Fall–Spring | 10–13, 25 | Spatial/temporal + Intermediate Fusion modules, phased Optuna search, Slurm workers, TensorBoard logging |
 | Year 2 Summer | 14–16 | Holdout eval, ablations, classical baselines (**scaling gate**) |
 | Year 3 Fall–Winter | 17–20 | Attribution, driver maps, Streamlit trajectories |
 | Year 3 Spring–Summer | 21–24 | Taxonomy, tempo compare, dissertation, OSS release |
