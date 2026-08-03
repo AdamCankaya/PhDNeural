@@ -27,7 +27,12 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 def _log(msg: str) -> None:
-    print(msg, flush=True)
+    try:
+        print(msg, flush=True)
+    except UnicodeEncodeError:
+        enc = getattr(sys.stdout, "encoding", None) or "utf-8"
+        sys.stdout.buffer.write((msg + "\n").encode(enc, errors="replace"))
+        sys.stdout.flush()
 
 
 def _truthy(name: str) -> bool:
@@ -40,6 +45,7 @@ def main() -> int:
         os.environ.get("INVENTORY_VERIFY_OUT", "/data/tcga/inventory_verification")
     )
     adni_dir = Path(os.environ.get("ADNI_SAMPLE_OUT", "/data/adni"))
+    data_root = adni_dir.parent if adni_dir.parent.name == "data" else Path("data")
     _log("=== Bio-NAS Docker entrypoint ===")
     _log(f"Data path (inside container): {data_dir}")
     _log(f"Inventory verify path: {verify_dir}")
@@ -97,7 +103,7 @@ def main() -> int:
             return r3.returncode
 
     _log(
-        "--- Step 4/5: ADNI scaffold "
+        "--- Step 4/8: ADNI scaffold "
         "(skip/exit 0 without credentials; account+DUA in progress) ---"
     )
     r4 = subprocess.run([sys.executable, str(adni_download)], check=False)
@@ -106,16 +112,32 @@ def main() -> int:
         return r4.returncode
 
     if _truthy("SKIP_AD_NAS_DEMO"):
-        _log("--- Step 5/5: AD toy NAS skipped (SKIP_AD_NAS_DEMO) ---")
+        _log("--- Step 5/8: AD toy NAS skipped (SKIP_AD_NAS_DEMO) ---")
     else:
         _log(
-            "--- Step 5/5: AD toy NAS "
+            "--- Step 5/8: AD toy NAS "
             "(methylation-only; skips if no ADNI .ready sample) ---"
         )
         r5 = subprocess.run([sys.executable, str(ad_train)], check=False)
         if r5.returncode != 0:
             _log("AD training/NAS demo failed.")
             return r5.returncode
+
+    _log("--- Step 6/8: RA mock download & NAS ---")
+    subprocess.run([sys.executable, str(SCRIPTS / "download_mock_sample.py"), "--disease", "RA", "--out-dir", str(data_root / "ra")], check=False)
+    subprocess.run([sys.executable, str(SCRIPTS / "train_nas_mock_demo.py"), "--disease", "RA", "--data-dir", str(data_root / "ra")], check=False)
+
+    _log("--- Step 7/8: T2D mock download & NAS ---")
+    subprocess.run([sys.executable, str(SCRIPTS / "download_mock_sample.py"), "--disease", "T2D", "--out-dir", str(data_root / "t2d")], check=False)
+    subprocess.run([sys.executable, str(SCRIPTS / "train_nas_mock_demo.py"), "--disease", "T2D", "--data-dir", str(data_root / "t2d")], check=False)
+
+    _log("--- Step 8/8: Epigenetic Aging mock download & NAS ---")
+    subprocess.run([sys.executable, str(SCRIPTS / "download_mock_sample.py"), "--disease", "Epigenetic_Aging", "--out-dir", str(data_root / "epigenetic_aging")], check=False)
+    subprocess.run([sys.executable, str(SCRIPTS / "train_nas_mock_demo.py"), "--disease", "Epigenetic_Aging", "--data-dir", str(data_root / "epigenetic_aging")], check=False)
+
+    _log("--- Building Dashboard ---")
+    os.environ["DATA_ROOT"] = str(data_root)
+    subprocess.run([sys.executable, str(SCRIPTS / "build_dashboard.py")], check=False)
 
     _log("=== Bio-NAS Docker run complete ===")
     return 0
