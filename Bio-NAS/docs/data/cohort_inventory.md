@@ -9,7 +9,7 @@ Inventory of candidate cohorts with **repeated molecular measurements over time*
 | Companion CSV | [`cohort_inventory.csv`](cohort_inventory.csv) |
 | BRCA template | [`docs/wiki/Data-Acquisition-BRCA.md`](../wiki/Data-Acquisition-BRCA.md) |
 | Draft date | 2026-07-24 |
-| Last updated | 2026-07-27 — TCGA-BRCA **verified_gdc_api**; Alzheimer's primary **LOCKED** to ADNI (LONI; account+DUA **in progress**); RA/T2D/Epigenetic Aging still unlocked |
+| Last updated | 2026-08-02 — RA and Epigenetic Aging primaries **LOCKED**; All 5 diseases now locked |
 
 ## How to read this table
 
@@ -41,9 +41,9 @@ User decisions recorded here. Unlock/change only by explicit decision (do not si
 |---------|--------|--------------------------------|-------|
 | BRCA | **LOCKED** | **TCGA-BRCA** (GDC) | Year-1/2 multi-omic anchor. Open Level-3 **PoC minimum** = meth betas + RNA + clinical/labels; controlled/dbGaP **deferred**. GDC token **not required** for open Plan 1/2 API smoke/metadata. True serial molecular repeats are **weak** on TCGA — keep AURORA US as the longitudinal-molecular alternate for Plan 02 pairing work. |
 | Alzheimer's | **LOCKED** | **ADNI** (LONI IDA) | Primary locked 2026-07-27. Blood EPIC methylation + genotype + clinical (± imaging). **ADNI/LONI account + DUA in progress** (user applying) — no controlled bulk/sample download can succeed yet. Docker scaffold skips without credentials (`scripts/download_adni_sample.py`). ROSMAP stays unlocked alternate. |
-| Rheumatoid Arthritis | Recommended (unlocked) | GEO GSE138747 | Open multi-omic; optional NCBI login. |
-| Type 2 Diabetes | Recommended (unlocked) | KORA F4/FF4 | Requires KORA.PASST + project agreement. |
-| Epigenetic Aging | Recommended (unlocked) | LBC1936 | Requires Edinburgh / EGA DAC. Registry key still `down_syndrome` (naming mismatch). |
+| Rheumatoid Arthritis | **LOCKED** | **GSE71841 & DAS28 Cohorts** | GSE71841 as Phenotype Anchor; DAS28 cohorts as Severity Anchor. Unpaired multi-omic architecture with zero-imputation. All RA data sources are public and immediately available. |
+| Type 2 Diabetes | **LOCKED** | **KORA F4/FF4** | Primary source for T2D. Will apply for data access (12 week processing). GSE184050 may be used as well. |
+| Epigenetic Aging | **LOCKED** | **GSE40279, GSE87571, GSE280465** | Fused datasets to build an epigenetic clock with an Elastic Net regression baseline to compute EAA. K=4 discretized severity output. |
 
 ---
 
@@ -53,9 +53,9 @@ User decisions recorded here. Unlock/change only by explicit decision (do not si
 |---------|---------|-----------|--------|-------------|--------------------------|
 | BRCA | **TCGA-BRCA** (GDC) | **LOCKED** | Open Level-3 PoC (meth+RNA+clinical); controlled deferred; token not required for Plan 1/2 | Yes | **Weak** on TCGA; use **AURORA US** when true molecular repeats matter |
 | Alzheimer's | **ADNI** (LONI) | **LOCKED** | Controlled (DUA **in progress**) | Methylation + genotype + clinical (± imaging) | **Yes** (~annual visits, up to ~4y) |
-| RA | GSE138747 (GEO) | recommended | Open | RNA-seq + methylation | **Yes** (baseline + 3 mo) |
-| T2D | KORA F4/FF4 | recommended | Controlled (project agreement) | Methylation (2 waves) + RNA-seq (FF4) | **Yes** (~7y between F4 and FF4) |
-| Epigenetic Aging | LBC1936 | recommended | Controlled (request / EGA DAC) | Methylation multi-wave + genetics via cohort | **Yes** (waves ~age 70/73/76/79) |
+| RA | **GSE71841 & DAS28** | **LOCKED** | Open | Phenotype: 450K methylation (GSE71841); Severity: RNA-seq, WES, metabolites (DAS28) | **Yes** (DAS28 cohorts) |
+| T2D | **KORA F4/FF4** | **LOCKED** | Controlled (project agreement) | Methylation (2 waves) + RNA-seq (FF4) | **Yes** (~7y between F4 and FF4) |
+| Epigenetic Aging | **GSE40279, GSE87571, GSE280465** | **LOCKED** | Open | DNA methylation (Illumina 450K and EPIC arrays) | **Yes** (fused chronologically) |
 
 ---
 
@@ -85,9 +85,18 @@ Columns match [`cohort_inventory.csv`](cohort_inventory.csv).
 
 | cohort_name | source_portal | accession_or_id | access_method | license_ethics_notes | modalities | n_subjects_approx | n_samples_approx | timepoints_or_visits | longitudinal_notes | recommended_priority | selection_status | url | verification_status | needs_account_or_api_key |
 |-------------|---------------|-----------------|---------------|----------------------|------------|-------------------|------------------|----------------------|--------------------|----------------------|------------------|-----|---------------------|--------------------------|
-| Anti-TNF response multi-omics (Utrecht / CERTAIN-linked) | GEO | GSE138747 (SuperSeries); GSE138746 RNA; GSE138653 methylation | open | GEO open | RNA-seq + DNA methylation (+ related proteomics in paper) | ~40 biologic-naïve RA per described cohort arm (verify) | ~2× subjects (baseline + 3 mo) — TBD exact on GEO | baseline + ~3 months anti-TNF | **Open multi-omic + clear Δt.** Recommended RA primary under current constraints. | primary (recommended) | recommended_unlocked | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE138747 | unverified_public_metadata | no (optional NCBI login / E-utils key) |
-| TNFi response longitudinal methylation (IMIDC Spain) | GEO | GSE176168 | open | GEO open | DNA methylation (EPIC) | discovery ~62 + validation ~60 | ~2× (baseline + wk12) | baseline + week 12 | Clear longitudinal methylation. **Single-omic** → alternate. | alternate | unlocked_alternate | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE176168 | unverified_public_metadata | no |
-| Anti-TNF whole-blood RNA-seq | GEO | GSE129705 | open | GEO open; **raw withheld** (consent) | RNA-seq | TBD — verify on GEO | baseline + 3 mo pairs | baseline + 3 months | Processed counts available; raw blocked. Single-omic. | exploratory | unlocked_exploratory | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE129705 | unverified_public_metadata | no |
+| RA Phenotype Anchor | GEO | GSE71841 | open | GEO open | DNA methylation (450K) | 24 (12 RA, 12 healthy) | 24 | baseline | Provides the healthy baseline for the binary Phenotype prediction. | primary (locked) | locked | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE71841 | unverified_public_metadata | no |
+| RA Severity Anchor | Various | DAS28 cohorts | open | Open access | RNA-seq, WES, plasma metabolites | TBD | TBD | baseline + follow-ups | Provides the severity groups (DAS28L, DAS28M, DAS28H) for the ordinal Severity prediction. | primary (locked) | locked | N/A | unverified_public_metadata | no |
+
+**Unpaired Multi-Omic Architecture Strategy:**
+- **Datasets:** The Phenotype and Severity anchors feature completely different patients and distinct biological modalities. All data sources are public and immediately available.
+- **Encoders:** Independent PyTorch `nn.Module` encoders for each modality (Methylation, RNA-seq, Metabolomics).
+- **Zero-Imputation Strategy:** Implemented in the `Dataset` class. Missing modalities are filled with zero tensors, and a boolean mask vector (e.g., `[1, 0, 0]`) indicates which specific modalities are present.
+- **Unified Latent Fusion Strategy:** Concatenate the outputs of the available encoders alongside the boolean mask vector. The mask is passed explicitly into the fully connected layers so the network learns to ignore the zeroed-out nodes and make predictions based purely on the available latent space.
+- **Routing the MTL Losses:**
+  - *GSE71841 Healthy Patient:* Phenotype Target = 0, Severity Target = -1 (Severity loss is bypassed/masked).
+  - *GSE71841 RA Patient:* Phenotype Target = 1, Severity Target = -1 (Masked to prevent confusing the CORAL loss with arbitrary staging).
+  - *DAS28 Cohort Patient:* Phenotype Target = 1, Severity Target = 0, 1, 2, or 3 (Depending on mapped DAS28 clinical tier).
 
 ### Type 2 Diabetes
 
@@ -104,11 +113,18 @@ Columns match [`cohort_inventory.csv`](cohort_inventory.csv).
 
 | cohort_name | source_portal | accession_or_id | access_method | license_ethics_notes | modalities | n_subjects_approx | n_samples_approx | timepoints_or_visits | longitudinal_notes | recommended_priority | selection_status | url | verification_status | needs_account_or_api_key |
 |-------------|---------------|-----------------|---------------|----------------------|------------|-------------------|------------------|----------------------|--------------------|----------------------|------------------|-----|---------------------|--------------------------|
-| Lothian Birth Cohort 1936 (LBC1936) | EGA + University of Edinburgh data access | EGAS00001000910; cohort request | controlled / account+DUA | Not fully public; DAC / Edinburgh collaboration terms | blood DNA methylation (450K) multi-wave; genetics available via cohort; rich phenotypes | Wave1 methyl ~920 QC'd historically; later waves hundreds | multi-wave samples (W1–W4 methyl subsets) | waves ~age 70, 73, 76, 79 (+) | **Recommended Epigenetic Aging primary** under multi-omic preference (methylation Δt + genetics/phenotypes). | primary (recommended) | recommended_unlocked | https://www.ed.ac.uk/lothian-birth-cohorts/data-access | needs_dua | yes — **Edinburgh request / EGA DAC**; no public API key |
-| SATSA longitudinal methylation | ArrayExpress / BioStudies | E-MTAB-7309 | open | ArrayExpress open deposition | DNA methylation (450K) | ~385 twins after QC | ~1,011 samples across up to 5 waves | up to 5 waves (1992–2012); ~200 with ≥3 measures | Excellent open longitudinal methylation for clocks. **Single-omic** → alternate (upgrade if genotypes joined via Twin Registry). | alternate | unlocked_alternate | https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-7309 | unverified_public_metadata | no |
-| Normative Aging Study (NAS) methylation | dbGaP | phs000853 | controlled / account+DUA | dbGaP authorized-access | longitudinal blood methylation (+ study phenotypes) | TBD — verify on dbGaP | TBD — verify on dbGaP | repeated exams (multi-year) | Controlled longitudinal aging methylome; confirm multi-omic joins on dbGaP. | alternate | unlocked_alternate | https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs000853 | needs_login | yes — **dbGaP + eRA commons / institutional PI** |
-| Framingham Heart Study methylation (Offspring etc.) | dbGaP | phs000974 (and related) | controlled / account+DUA | dbGaP; Framingham terms | methylation + genotypes + clinical longitudinal | TBD — verify on dbGaP | TBD — verify on dbGaP | exam cycles (multi-year) | Strong controlled multi-omic aging resource; heavier DUA. | exploratory | unlocked_exploratory | https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs000974 | needs_login | yes — **dbGaP** |
-| Cross-sectional aging methylomes (clock training sets) | GEO | e.g. GSE40279, GSE87571 | open | GEO open | DNA methylation | hundreds each | hundreds–~700+ | typically **1 timepoint** (age span cross-sectional) | Useful for clock baselines / transfer learning; **do not** satisfy ≥2 timepoints alone. | exploratory | unlocked_exploratory | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE40279 | unverified_public_metadata | no |
+| Hannum blood methylation | GEO | GSE40279 | open | GEO open | DNA methylation (450K) | 656 | 656 | 1 timepoint | Spans ages 19-101. Provides massive anchor for adult/geriatric aging. | primary (locked) | locked | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE40279 | unverified_public_metadata | no |
+| Johansson blood methylation | GEO | GSE87571 | open | GEO open | DNA methylation (450K) | 729 | 729 | 1 timepoint | Spans ages 14-94. | primary (locked) | locked | https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE87571 | unverified_public_metadata | no |
+| Multi-tissue methylation | GEO | GSE280465 | open | GEO open | DNA methylation (arrays) | TBD | TBD | 1 timepoint | Covers diverse cell types (buccal epithelial, saliva, dry blood spots). | primary (locked) | locked | N/A | unverified_public_metadata | no |
+
+**Epigenetic Aging Pipeline & MTL Strategy:**
+- **Data Harmonization:** Combine GSE40279, GSE87571, and GSE280465 by extracting the intersection of overlapping CpG probes between Illumina 450K and EPIC arrays.
+- **Bias Mitigation:**
+  - *Tissue-Specific Bias:* Stratify multi-tissue arrays evenly in training batches.
+  - *Age Distribution Gaps:* Fuse diverse cohorts to ensure continuous support across the non-linear chronological axis.
+- **MTL Baseline (EAA):** A scikit-learn Elastic Net model trained on healthy controls predicts epigenetic age from methylation beta values. `EAA = Predicted Age - Chronological Age`.
+- **Ordinal Target Discretization:** EAA is binned into 4 classes: 0 (Normal, $\le$ 0y), 1 (Mild, 0 to +3y), 2 (Moderate, +3 to +7y), 3 (Severe, > +7y).
+- **Loss Routing:** Phenotype = 1 (Diseased) or 0 (Healthy). Severity = EAA Class (0-3), or -1 if chronological age is missing.
 
 ---
 

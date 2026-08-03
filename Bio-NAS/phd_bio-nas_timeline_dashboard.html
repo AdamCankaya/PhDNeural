@@ -325,6 +325,72 @@
                   "phase": 2,
                   "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/360",
                   "issue_number": 360
+                },
+                {
+                  "id": "year-1-q1-2027-phase-2-step-1-item-4-integrate-multi-dataset-fusion-for-rheum",
+                  "text": "Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA).",
+                  "detail": "Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA).\nTrack scope: Shared (A+B) — RA unpaired multi-omic architecture.\nDeliverables: Combine GSE71841 (Phenotype Anchor) and DAS28 cohorts (Severity Anchor).\nAcceptance: Independent PyTorch `nn.Module` encoders per modality; zero-imputation with boolean mask explicit in latent fusion layers.\nDependencies: GSE71841 and DAS28 cohorts sourced.",
+                  "requirements": [
+                    "Track scope: Shared (A+B) — RA unpaired multi-omic architecture.",
+                    "Deliverables: Combine GSE71841 (Phenotype Anchor) and DAS28 cohorts (Severity Anchor).",
+                    "Acceptance: Independent PyTorch `nn.Module` encoders per modality; zero-imputation with boolean mask explicit in latent fusion layers.",
+                    "Dependencies: GSE71841 and DAS28 cohorts sourced."
+                  ],
+                  "phase": 2,
+                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/404",
+                  "issue_number": 404
+                },
+                {
+                  "id": "year-1-q1-2027-phase-2-step-1-item-5-integrate-dataset-harmonization-and-base",
+                  "text": "Integrate Dataset Harmonization and Baseline for Epigenetic Aging.",
+                  "detail": "Integrate Dataset Harmonization and Baseline for Epigenetic Aging.\nTrack scope: Shared (A+B) — Epigenetic clock pipeline.\nDeliverables: Harmonize GSE40279, GSE87571, and GSE280465 via CpG probe intersection.\nAcceptance: Address tissue-specific and age distribution biases; train an Elastic Net regression baseline to compute Epigenetic Age Acceleration (EAA).\nDependencies: GEO datasets sourced.",
+                  "requirements": [
+                    "Track scope: Shared (A+B) — Epigenetic clock pipeline.",
+                    "Deliverables: Harmonize GSE40279, GSE87571, and GSE280465 via CpG probe intersection.",
+                    "Acceptance: Address tissue-specific and age distribution biases; train an Elastic Net regression baseline to compute Epigenetic Age Acceleration (EAA).",
+                    "Dependencies: GEO datasets sourced."
+                  ],
+                  "phase": 2,
+                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/405",
+                  "issue_number": 405
+                }
+              ]
+            },
+            {
+              "id": "y1-q1-2027-p2-step2",
+              "num": 2,
+              "kind": "step",
+              "title": "MTL Integration",
+              "goal": "Construct a leakage-safe ETL pipeline producing irregular-time 4D tensors.",
+              "phase": 2,
+              "tasks": [
+                {
+                  "id": "year-1-q1-2027-phase-2-step-2-item-1-configure-mtl-loss-routing-for-rheumatoi",
+                  "text": "Configure MTL Loss Routing for Rheumatoid Arthritis (RA).",
+                  "detail": "Configure MTL Loss Routing for Rheumatoid Arthritis (RA).\nTrack scope: Shared (A+B) — Ensure custom training loop perfectly handles dataset-specific masking.\nDeliverables: Binary Phenotype prediction and ordinal Severity prediction routing.\nAcceptance: Mask Severity loss for GSE71841 (Healthy = Phenotype 0, Severity -1; RA = Phenotype 1, Severity -1). DAS28 mapped to Phenotype 1 and Severity 0-3.\nDependencies: RA tensors constructed.",
+                  "requirements": [
+                    "Track scope: Shared (A+B) — Ensure custom training loop perfectly handles dataset-specific masking.",
+                    "Deliverables: Binary Phenotype prediction and ordinal Severity prediction routing.",
+                    "Acceptance: Mask Severity loss for GSE71841 (Healthy = Phenotype 0, Severity -1; RA = Phenotype 1, Severity -1). DAS28 mapped to Phenotype 1 and Severity 0-3.",
+                    "Dependencies: RA tensors constructed."
+                  ],
+                  "phase": 2,
+                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/406",
+                  "issue_number": 406
+                },
+                {
+                  "id": "year-1-q1-2027-phase-2-step-2-item-2-configure-mtl-loss-routing-for-epigeneti",
+                  "text": "Configure MTL Loss Routing for Epigenetic Aging.",
+                  "detail": "Configure MTL Loss Routing for Epigenetic Aging.\nTrack scope: Shared (A+B) — Ordinal target discretization.\nDeliverables: K=4 ordinal tiers for EAA.\nAcceptance: Phenotype target is 0/1; Severity target is discretized EAA (0-3), or -1 if chronological age is missing.\nDependencies: EAA regression baseline trained.",
+                  "requirements": [
+                    "Track scope: Shared (A+B) — Ordinal target discretization.",
+                    "Deliverables: K=4 ordinal tiers for EAA.",
+                    "Acceptance: Phenotype target is 0/1; Severity target is discretized EAA (0-3), or -1 if chronological age is missing.",
+                    "Dependencies: EAA regression baseline trained."
+                  ],
+                  "phase": 2,
+                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/407",
+                  "issue_number": 407
                 }
               ]
             }
@@ -497,6 +563,20 @@
                   "phase": 3,
                   "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/366",
                   "issue_number": 366
+                },
+                {
+                  "id": "year-2-q1-2028-phase-3-step-1-item-3-integrate-tensorboard-logging-into-the-t",
+                  "text": "Integrate TensorBoard Logging into the training loop.",
+                  "detail": "Integrate TensorBoard Logging into the training loop.\nTrack scope: Shared (A+B) — TensorBoard tracking required for both tracks.\nDeliverables: Dynamic log paths (`runs/mtl_experiment_{disease_name}`); scalar logging for phenotype and severity metrics.\nAcceptance: TensorBoard logs populate correctly; conditionally skips `np.nan` severity metrics on healthy batches.\nDependencies: Base training entrypoint and `evaluate_mtl_metrics` function.",
+                  "requirements": [
+                    "Track scope: Shared (A+B) — TensorBoard tracking required for both tracks.",
+                    "Deliverables: Dynamic log paths (`runs/mtl_experiment_{disease_name}`); scalar logging for phenotype and severity metrics.",
+                    "Acceptance: TensorBoard logs populate correctly; conditionally skips `np.nan` severity metrics on healthy batches.",
+                    "Dependencies: Base training entrypoint and `evaluate_mtl_metrics` function."
+                  ],
+                  "phase": 3,
+                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/408",
+                  "issue_number": 408
                 }
               ]
             }
@@ -780,14 +860,14 @@
       "label": "Phase 2",
       "subtitle": "Code Abstraction & Generalization",
       "color": "#8b5cf6",
-      "taskCount": 5
+      "taskCount": 9
     },
     {
       "id": "p3",
       "label": "Phase 3",
       "subtitle": "Scaling to the Comparative Matrix",
       "color": "#06b6d4",
-      "taskCount": 7
+      "taskCount": 8
     },
     {
       "id": "p4",
