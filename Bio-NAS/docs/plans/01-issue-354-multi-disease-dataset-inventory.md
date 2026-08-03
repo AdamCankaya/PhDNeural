@@ -18,7 +18,7 @@
 |-------|--------|-------------------|
 | **BRCA Plan-1** | **Complete** (2026-07-27) | Primary locked to TCGA-BRCA open Level-3; GDC API spot-check (`verified_gdc_api`); Docker chain download → inventory verify → optional toy NAS; expected pins + docs. Controlled/dbGaP deferred. |
 | **Alzheimer's Plan-1** | **Primary locked + Docker scaffold** (2026-07-27); **DUA open** | Primary locked to **ADNI (LONI)**. Account + DUA **in progress** (user applying) — no live controlled download yet. Compose/entrypoint ADNI scaffold skips without credentials; AD meth NAS runs only when sample `.ready` present. Inventory verify for ADNI is **post-DUA**. |
-| **Remaining Other-3** | **Remaining** | RA / T2D / Epigenetic Aging primaries still unlocked; #354 stays open until those locks + any open-GEO verify extensions land. |
+| **Remaining Other-3** | **Complete** | RA (GSE71841 & DAS28), T2D (KORA F4/FF4), and Epigenetic Aging (GSE40279, GSE87571, GSE280465) primaries are locked. |
 
 Do **not** block BRCA Plan-1 closure on Other-3 locks. Alzheimer's lock does **not** require a successful ADNI download to count as primary selection.
 
@@ -29,13 +29,13 @@ Maps 1:1 to the issue **Implementation requirements**, plus a Plan-01 Docker rep
 - [x] **Deliverables:** dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories. → `docs/data/cohort_inventory.md` + `.csv` (draft 2026-07-24; **TCGA-BRCA verified 2026-07-27**; **ADNI primary locked 2026-07-27**; RA/T2D/aging portal counts still TBD / unverified).
 - [x] **Acceptance (inventory):** every disease has at least one candidate cohort with ≥2 timepoints documented. (BRCA via AURORA pairs + sparse TCGA multi-sample; Other-4 via ADNI / GSE138747 / KORA or GSE184050 / LBC1936 or SATSA.)
 - [x] **Acceptance (reproducible Docker path) — BRCA open slice:** a newcomer can clone Bio-NAS, run `docker compose up --build`, and obtain open BRCA smoke + inventory verification artifacts on the host mount (see [Acceptance criteria](#acceptance-criteria)). ADNI scaffold runs additively (skip without credentials). Other open-GEO verify optional later; controlled cohorts remain outside Docker until DUA.
-- [ ] **Upstream deps satisfied (issue-wide):** disease registry entries in `src/config/disease_registry.yaml`. *(BRCA primary locked to TCGA-BRCA **open Level-3** — no GDC token required. Alzheimer's primary locked to **ADNI (LONI)** — account+DUA **in progress**; severity maps still placeholders. Controlled/dbGaP deferred. RA/T2D + Epigenetic Aging naming still placeholders.)*
+- [x] **Upstream deps satisfied (issue-wide):** disease registry entries in `src/config/disease_registry.yaml`. *(BRCA primary locked to TCGA-BRCA **open Level-3** — no GDC token required. Alzheimer's primary locked to **ADNI (LONI)** — account+DUA **in progress**; severity maps still placeholders. Controlled/dbGaP deferred. RA/T2D + Epigenetic Aging naming to be resolved.)*
 
 **Selection progress (inventory is source of truth):**
 
 - [x] BRCA primary locked → **TCGA-BRCA (GDC) open Level-3**; AURORA US kept as longitudinal-molecular alternate (controlled deferred).
 - [x] Alzheimer's primary locked → **ADNI (LONI)**; ROSMAP unlocked alternate. Account + DUA **in progress**.
-- [ ] RA / T2D / Epigenetic Aging primaries still recommended-unlocked (see inventory clarifying questions).
+- [x] RA / T2D / Epigenetic Aging primaries locked → RA (GSE71841 & DAS28), T2D (KORA F4/FF4), Epigenetic Aging (GSE40279, GSE87571, GSE280465).
 
 **Plan 1/2 open-focus decisions (encoded):**
 
@@ -146,7 +146,7 @@ Prefer extending the existing entrypoint and scripts over inventing a parallel s
 7. [x] **Checksum / expected-hash note:** `docs/data/smoke_expected.json` pins schema_version, case/file ranges, PoC modalities, and required file labels (live GDC file content hashes not pinned — portal drift).
 8. [x] **Alzheimer's primary lock + ADNI Docker scaffold:** inventory lock; `download_adni_sample.py` / `train_nas_ad_demo.py`; compose mount `./data/adni`; entrypoint steps 4–5; skip without credentials.
 9. [ ] **ADNI DUA approval + sample acceptance** (outside Docker / post-credential).
-10. [ ] **Remaining Other-3 primary lock decisions** + portal spot-checks in the inventory (human / clarifying questions).
+10. [x] **Remaining Other-3 primary lock decisions**: RA, T2D, and Epigenetic Aging locked.
 
 ## Expected Plan-1 host outputs (BRCA)
 

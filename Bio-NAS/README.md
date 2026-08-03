@@ -105,6 +105,8 @@ Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](p
 
 ## 3. Disease Categories (Comparative Matrix)
 
+> **Note:** Data sources for all five diseases are now **completely locked in** for Plan 1.
+
 | Category | Disease | Primary source |
 |----------|---------|----------------|
 | **Oncological (Anchor)** | Breast Invasive Carcinoma (BRCA) | [TCGA / GDC Portal](https://portal.gdc.cancer.gov/) |

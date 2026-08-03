@@ -90,6 +90,28 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Deliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.
   * Acceptance: round-trip equality tests; documented channel layout per omic.
   * Dependencies: feature map + Δt embedding from prior items.
+* Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA).
+  * Track scope: Shared (A+B) — RA unpaired multi-omic architecture.
+  * Deliverables: Combine GSE71841 (Phenotype Anchor) and DAS28 cohorts (Severity Anchor).
+  * Acceptance: Independent PyTorch `nn.Module` encoders per modality; zero-imputation with boolean mask explicit in latent fusion layers.
+  * Dependencies: GSE71841 and DAS28 cohorts sourced.
+* Integrate Dataset Harmonization and Baseline for Epigenetic Aging.
+  * Track scope: Shared (A+B) — Epigenetic clock pipeline.
+  * Deliverables: Harmonize GSE40279, GSE87571, and GSE280465 via CpG probe intersection. 
+  * Acceptance: Address tissue-specific and age distribution biases; train an Elastic Net regression baseline to compute Epigenetic Age Acceleration (EAA).
+  * Dependencies: GEO datasets sourced.
+
+#### Step 2: MTL Integration
+* Configure MTL Loss Routing for Rheumatoid Arthritis (RA).
+  * Track scope: Shared (A+B) — Ensure custom training loop perfectly handles dataset-specific masking.
+  * Deliverables: Binary Phenotype prediction and ordinal Severity prediction routing.
+  * Acceptance: Mask Severity loss for GSE71841 (Healthy = Phenotype 0, Severity -1; RA = Phenotype 1, Severity -1). DAS28 mapped to Phenotype 1 and Severity 0-3.
+  * Dependencies: RA tensors constructed.
+* Configure MTL Loss Routing for Epigenetic Aging.
+  * Track scope: Shared (A+B) — Ordinal target discretization.
+  * Deliverables: K=4 ordinal tiers for EAA.
+  * Acceptance: Phenotype target is 0/1; Severity target is discretized EAA (0-3), or -1 if chronological age is missing.
+  * Dependencies: EAA regression baseline trained.
 
 ### Q2 Summer 2027: Spatio-Temporal Software Integration & Central Hub
 **Phases:** 2 | **Goal:** Provision reproducible compute and experiment orchestration.

@@ -31,7 +31,7 @@
   <h1>PhD Master Roadmap: Comparative Spatio-Temporal Neural Architecture Search for Multi-Omic Disease Prediction</h1>
   <p>Develop a high-performance, distributed Neural Architecture Search (NAS) framework utilizing Optuna to discover optimal Spatio-Temporal Deep Learning networks across 5 distinct disease categories to model, predict, and forecast disease progression trajectories.</p>
   <div class="meta">
-    <strong>24 roadmap items</strong> — each links to a GitHub issue
+    <strong>29 roadmap items</strong> — each links to a GitHub issue
     with implementation requirements.
     <ul>
       <li><a href="https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html">Timeline dashboard</a></li>
@@ -113,6 +113,43 @@
       <li>Dependencies: feature map + Δt embedding from prior items.</li>
     </ul>
   </div>
+  <div class="task">
+    <h4>Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/404" target="_blank" rel="noopener noreferrer">(Issue #404)</a></h4>
+    <ul class="reqs">
+      <li>Track scope: Shared (A+B) — RA unpaired multi-omic architecture.</li>
+      <li>Deliverables: Combine GSE71841 (Phenotype Anchor) and DAS28 cohorts (Severity Anchor).</li>
+      <li>Acceptance: Independent PyTorch `nn.Module` encoders per modality; zero-imputation with boolean mask explicit in latent fusion layers.</li>
+      <li>Dependencies: GSE71841 and DAS28 cohorts sourced.</li>
+    </ul>
+  </div>
+  <div class="task">
+    <h4>Integrate Dataset Harmonization and Baseline for Epigenetic Aging. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/405" target="_blank" rel="noopener noreferrer">(Issue #405)</a></h4>
+    <ul class="reqs">
+      <li>Track scope: Shared (A+B) — Epigenetic clock pipeline.</li>
+      <li>Deliverables: Harmonize GSE40279, GSE87571, and GSE280465 via CpG probe intersection.</li>
+      <li>Acceptance: Address tissue-specific and age distribution biases; train an Elastic Net regression baseline to compute Epigenetic Age Acceleration (EAA).</li>
+      <li>Dependencies: GEO datasets sourced.</li>
+    </ul>
+  </div>
+  <h4>Step 2: MTL Integration</h4>
+  <div class="task">
+    <h4>Configure MTL Loss Routing for Rheumatoid Arthritis (RA). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/406" target="_blank" rel="noopener noreferrer">(Issue #406)</a></h4>
+    <ul class="reqs">
+      <li>Track scope: Shared (A+B) — Ensure custom training loop perfectly handles dataset-specific masking.</li>
+      <li>Deliverables: Binary Phenotype prediction and ordinal Severity prediction routing.</li>
+      <li>Acceptance: Mask Severity loss for GSE71841 (Healthy = Phenotype 0, Severity -1; RA = Phenotype 1, Severity -1). DAS28 mapped to Phenotype 1 and Severity 0-3.</li>
+      <li>Dependencies: RA tensors constructed.</li>
+    </ul>
+  </div>
+  <div class="task">
+    <h4>Configure MTL Loss Routing for Epigenetic Aging. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/407" target="_blank" rel="noopener noreferrer">(Issue #407)</a></h4>
+    <ul class="reqs">
+      <li>Track scope: Shared (A+B) — Ordinal target discretization.</li>
+      <li>Deliverables: K=4 ordinal tiers for EAA.</li>
+      <li>Acceptance: Phenotype target is 0/1; Severity target is discretized EAA (0-3), or -1 if chronological age is missing.</li>
+      <li>Dependencies: EAA regression baseline trained.</li>
+    </ul>
+  </div>
   <h3>Q2 Summer 2027: Spatio-Temporal Software Integration &amp; Central Hub</h3>
   <p class="goal"><strong>Phase 2</strong> (Phase 2: Code Abstraction &amp; Generalization) · <strong>Goal:</strong> Provision reproducible compute and experiment orchestration.</p>
   <h4>Step 1: Infrastructure</h4>
@@ -179,6 +216,15 @@
       <li>Deliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.</li>
       <li>Acceptance: ≥2 concurrent workers report trials to the same study without corruption.</li>
       <li>Dependencies: cluster account; shared storage for artifacts.</li>
+    </ul>
+  </div>
+  <div class="task">
+    <h4>Integrate TensorBoard Logging into the training loop. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/408" target="_blank" rel="noopener noreferrer">(Issue #408)</a></h4>
+    <ul class="reqs">
+      <li>Track scope: Shared (A+B) — TensorBoard tracking required for both tracks.</li>
+      <li>Deliverables: Dynamic log paths (`runs/mtl_experiment_{disease_name}`); scalar logging for phenotype and severity metrics.</li>
+      <li>Acceptance: TensorBoard logs populate correctly; conditionally skips `np.nan` severity metrics on healthy batches.</li>
+      <li>Dependencies: Base training entrypoint and `evaluate_mtl_metrics` function.</li>
     </ul>
   </div>
   <h3>Q2 Summer 2028: Structural Taxonomy &amp; Baseline Benchmarking</h3>
