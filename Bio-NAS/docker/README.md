@@ -1,14 +1,13 @@
-# Docker — Plan-1 TCGA-BRCA sample + inventory verify + toy NAS (+ ADNI scaffold)
+# Docker — Plan-1 public multi-disease CPU toy NAS + static dashboard
 
-Minimal harness that builds a slim Python image from [`Dockerfile`](Dockerfile), then on **first container start**:
+Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfile), then sequentially:
 
-1. Downloads a **tiny open-access** TCGA-BRCA cohort from the [GDC API](https://api.gdc.cancer.gov) (~5–10 joint meth+RNA cases + clinical)
-2. Runs open **inventory verification** (public GDC project / Level-3 modality counts) → host mount
-3. Runs a simple MLP architecture-search demo on **methylation features only** (BRCA)
-4. Runs the **ADNI (LONI) scaffold** → host `./data/adni` (skips with exit 0 when credentials absent / account pending)
-5. Optionally runs an **AD methylation toy NAS** only if an ADNI sample `.ready` is present
+1. Downloads tiny public samples for **BRCA** (GDC), **RA** (GSE71841), and **Epigenetic Aging** (GSE40279, GSE87571, GSE280465).
+2. Runs one independent CPU toy NAS per active disease and writes each `nas_demo_results.json` to its mounted directory.
+3. Skips **Alzheimer's/ADNI** and **T2D/KORA** instead of downloading protected data.
+4. Builds `data/dashboard/dashboard.html`, aggregating the toy results.
 
-No GDC login / dbGaP token for BRCA. **No ADNI secrets in the image** — use host `.env` after DUA. Not full-cohort ETL (see Plan 07 / [Data Acquisition BRCA](../docs/wiki/Data-Acquisition-BRCA.md) / [Data Acquisition Alzheimer's](../docs/wiki/Data-Acquisition-Alzheimer's.md)). Plan 1 inventory + open-artifact reproducibility: [docs/plans/01-issue-354-multi-disease-dataset-inventory.md](../docs/plans/01-issue-354-multi-disease-dataset-inventory.md). Multi-omic **Intermediate Fusion NAS** is planned in [ROADMAP § Intermediate Fusion](../docs/plans/ROADMAP.md#intermediate-fusion-nas-multi-omic-supersedes-early-raw-concat) — not this toy demo.
+ADNI and KORA are skipped by default because they require controlled access. No controlled-data credential is used or stored by the image. Toy NAS results validate the workflow only; they are not clinical evidence. Copy [`.env.example`](../.env.example) to `.env` to adjust skip flags or enable the optional GitHub Repository Dispatch.
 
 **Docker-first:** New Bio-NAS executable work should run in this container (or an extension of it), not as a host-only workflow. High-level Windows deploy steps: [Bio-NAS README § Deploy with Docker](../README.md#5-deploy-with-docker-windows). Agent rule: when Dockerfile / `COPY`'d scripts / requirements change, rebuild with `docker compose up --build` ([`.cursor/rules/docker-rebuild-notify.mdc`](../.cursor/rules/docker-rebuild-notify.mdc)).
 

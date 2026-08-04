@@ -23,7 +23,7 @@ def format_size(size_bytes: int) -> str:
 
 def main():
     data_root = Path(os.environ.get("DATA_ROOT", "data"))
-    out_html = data_root / "dashboard.html"
+    out_html = Path(os.environ.get("DASHBOARD_OUT", str(data_root / "dashboard.html")))
 
     diseases = [
         ("TCGA-BRCA", data_root / "tcga/BRCA", "TCGA (GDC)"),
@@ -74,12 +74,16 @@ def main():
                     with nas_path.open() as fh:
                         nas = json.load(fh)
                         if "best_architecture" in nas:
-                            acc = nas["best_architecture"].get("loo_accuracy", 0)
-                            arch = nas["best_architecture"].get("hidden_layer_sizes", [])
+                            best = nas["best_architecture"]
+                            acc = best.get("validation_accuracy", best.get("loo_accuracy", 0))
+                            arch = best.get("hidden_width", best.get("hidden_layer_sizes", []))
+                            loss = best.get("validation_loss")
                         else:
                             acc = nas.get("best_cv_accuracy", 0)
                             arch = nas.get("best_arch", [])
                         nas_details = f"Accuracy: {acc:.2f}, Arch: {arch}"
+                        if loss is not None:
+                            nas_details += f", Val loss: {loss:.4f}"
                 except:
                     nas_details = "Error parsing NAS"
             else:
@@ -90,7 +94,7 @@ def main():
             
         html.append(f"<tr><td>{name}</td><td>{source}</td><td>{status}</td><td>{size_str}</td><td>{samples}</td><td>{data_types}</td><td>{nas_details}</td></tr>")
 
-    html.extend(["</table>", "</body>", "</html>"])
+    html.extend(["</table>", "<p><small>Toy NAS values validate the CPU Docker pipeline only. They are not clinical results.</small></p>", "</body>", "</html>"])
 
     out_html.parent.mkdir(parents=True, exist_ok=True)
     with out_html.open("w") as fh:
