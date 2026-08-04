@@ -12,17 +12,17 @@ venv/
 .pytest_cache/
 .mypy_cache/
 
-# Raw / large data (never commit GDC / ADNI downloads)
-data/raw/
-data/tcga/
-data/adni/
-data/processed/
+# Generated / large data (never commit downloaded cohorts or demo artifacts)
+data/
 *.h5
 *.hdf5
 *.bam
 *.bai
 *.vcf.gz
 *.partial
+
+# Local command output
+output.txt
 
 # OS / editor
 .DS_Store
