@@ -1,4 +1,4 @@
-# Plan 01: Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer's, Rheumatoid Arthritis, T2D, Epigenetic Aging).
+# Plan 01: Lock cohorts and run a Docker CPU toy-NAS pipeline for all eligible public disease samples.
 
 ## Issue reference
 
@@ -19,6 +19,20 @@
 | **BRCA Plan-1** | **Complete** (2026-07-27) | Primary locked to TCGA-BRCA open Level-3; GDC API spot-check (`verified_gdc_api`); Docker chain download → inventory verify → optional toy NAS; expected pins + docs. Controlled/dbGaP deferred. |
 | **Alzheimer's Plan-1** | **Primary locked + Docker scaffold** (2026-07-27); **DUA open** | Primary locked to **ADNI (LONI)**. Account + DUA **in progress** (user applying) — no live controlled download yet. Compose/entrypoint ADNI scaffold skips without credentials; AD meth NAS runs only when sample `.ready` present. Inventory verify for ADNI is **post-DUA**. |
 | **Remaining Other-3** | **Complete** | RA (GSE71841 & DAS28), T2D (KORA F4/FF4), and Epigenetic Aging (GSE40279, GSE87571, GSE280465) primaries are locked. |
+
+### Updated Docker delivery goal
+
+The Plan-1 executable deliverable is a sequential, CPU-only Docker run that keeps each disease model independent, downloads small **public** samples, runs a toy PyTorch NAS, and writes a static HTML results dashboard to the mounted `data/` directory.
+
+| Disease | Default Docker behavior | Reason |
+|---|---|---|
+| BRCA | Run: open GDC TCGA-BRCA sample + toy NAS | Open Level-3 GDC files |
+| Alzheimer's | Skip | ADNI/LONI requires approved controlled access / DUA |
+| Rheumatoid Arthritis | Run: GSE71841 GEO sample + toy NAS | Public GEO source; DAS28 accession is not yet specified for automated retrieval |
+| Type 2 Diabetes | Skip | KORA F4/FF4 requires a project agreement; a future explicitly open proxy may replace it |
+| Epigenetic Aging | Run: GSE40279, GSE87571, GSE280465 GEO samples + toy NAS | Public GEO sources |
+
+The dashboard aggregates mounted `nas_demo_results.json` files. Toy metrics are pipeline smoke metrics only, never clinical claims. A GitHub Repository Dispatch is optional and disabled by default; a repository workflow must turn that event into a mobile notification.
 
 Do **not** block BRCA Plan-1 closure on Other-3 locks. Alzheimer's lock does **not** require a successful ADNI download to count as primary selection.
 
@@ -55,6 +69,8 @@ Maps 1:1 to the issue **Implementation requirements**, plus a Plan-01 Docker rep
 - [x] Expected pins: `docs/data/smoke_expected.json` (schema_version 2, case/file ranges, PoC labels) — checked by the verify script when `manifest.json` is present.
 - [x] Newcomer docs: [`docker/README.md`](../../docker/README.md) + this plan list expected Plan-1 host outputs (BRCA smoke + verification + ADNI status).
 - [ ] **ADNI DUA / download acceptance:** blocked on account approval; then stage sample or wire approved LONI client (outside scrape).
+- [ ] **Public multi-disease Docker acceptance:** compose downloads BRCA, RA, and Epigenetic Aging samples; runs isolated CPU toy NAS jobs; skips ADNI/KORA by default; writes `data/dashboard/dashboard.html`. No NVIDIA runtime, GPU reservation, or CUDA call is permitted in this pipeline.
+- [ ] **Dashboard notification acceptance:** optional Repository Dispatch is documented with no token in the repository and disabled unless explicitly enabled in `.env`.
 
 
 ## Approach
