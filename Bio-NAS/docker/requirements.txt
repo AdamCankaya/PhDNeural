@@ -1,3 +1,4 @@
-# Lean deps for Docker smoke: GDC download uses stdlib; training uses sklearn.
+# CPU-only dependencies for the small, reproducible Docker toy-NAS runs.
 numpy>=1.26,<3
 scikit-learn>=1.4,<2
+torch>=2.3,<3

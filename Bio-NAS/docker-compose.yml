@@ -24,13 +24,34 @@ services:
       INVENTORY_VERIFY_OUT: /data/tcga/inventory_verification
       SMOKE_EXPECTED_JSON: /app/docs/data/smoke_expected.json
       ADNI_SAMPLE_OUT: /data/adni
+      RA_SAMPLE_OUT: /data/ra
+      T2D_SAMPLE_OUT: /data/t2d
+      EPIGENETIC_AGING_SAMPLE_OUT: /data/epigenetic_aging
       # ~5–10 patients (clamped in download script).
       TCGA_SAMPLE_N_CASES: "8"
       # Sample-scale budget (~1.5 GB): N Illumina meth betas + STAR RNA + clinical.
       TCGA_SAMPLE_MAX_BYTES: "1572864000"
+      SKIP_ALZHEIMERS: "${SKIP_ALZHEIMERS:-1}"
+      SKIP_T2D: "${SKIP_T2D:-1}"
+      SKIP_BRCA_NAS: "${SKIP_BRCA_NAS:-0}"
+      SKIP_RA_NAS: "${SKIP_RA_NAS:-0}"
+      SKIP_EPIGENETIC_AGING_NAS: "${SKIP_EPIGENETIC_AGING_NAS:-0}"
+      TORCH_NUM_THREADS: "${TORCH_NUM_THREADS:-2}"
+      TOY_NAS_NUM_WORKERS: "${TOY_NAS_NUM_WORKERS:-0}"
+      GITHUB_DISPATCH_ENABLED: "${GITHUB_DISPATCH_ENABLED:-0}"
+      GITHUB_REPOSITORY: "${GITHUB_REPOSITORY:-}"
+      GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
+      GITHUB_DISPATCH_EVENT: "${GITHUB_DISPATCH_EVENT:-bio_nas_toy_pipeline_complete}"
     volumes:
       - ./data/tcga:/data/tcga
       - ./data/adni:/data/adni
+      - ./data/ra:/data/ra
+      - ./data/t2d:/data/t2d
+      - ./data/epigenetic_aging:/data/epigenetic_aging
+      - ./data/dashboard:/data/dashboard
+    # CPU-only smoke workload; no NVIDIA runtime or GPU reservations.
+    cpus: "2.0"
+    mem_limit: 4g
     # One-shot: BRCA chain → ADNI scaffold → exit.
     restart: "no"
 
