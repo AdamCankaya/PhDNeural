@@ -74,10 +74,10 @@ class PhdParserTests(unittest.TestCase):
         self.assertEqual(task0["text"], "Identify multi-disease datasets.")
         self.assertEqual(len(task0["requirements"]), 2)
 
-    def test_live_master_plan_has_twenty_four_tasks(self) -> None:
+    def test_live_master_plan_has_twenty_nine_tasks(self) -> None:
         live = ROOT / "phd_bio-nas_master_plan.md"
         tasks = load_tasks(live)
-        self.assertEqual(len(tasks), 24)
+        self.assertEqual(len(tasks), 29)
         for task in tasks:
             self.assertGreaterEqual(
                 len(task.requirements()),
