@@ -46,9 +46,9 @@ def main() -> int:
     torch.manual_seed(42)
     np.random.seed(42)
     if args.brca:
-        from train_nas_demo import load_cohort
+        from train_nas_demo import N_CPGS, load_cohort
 
-        values, labels, _ = load_cohort(args.data_dir)
+        values, labels, _ = load_cohort(args.data_dir, n_cpgs=N_CPGS)
         target_note = "clinical AJCC stage proxy"
     else:
         values = load_tsvs(args.data_dir)
