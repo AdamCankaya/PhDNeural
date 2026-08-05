@@ -53,8 +53,10 @@ def main() -> int:
     else:
         values = load_tsvs(args.data_dir)
         target_note = "data-derived synthetic proxy (not clinical)"
-    values = np.nan_to_num(values)
-    values = (values - values.mean(axis=0)) / (values.std(axis=0) + 1e-6)
+    values = np.nan_to_num(values).astype(np.float32, copy=False)
+    values = ((values - values.mean(axis=0)) / (values.std(axis=0) + 1e-6)).astype(
+        np.float32, copy=False
+    )
     # A deterministic, data-derived proxy target. This validates orchestration only;
     # it is not a clinical phenotype or severity label.
     if not args.brca:
