@@ -42,6 +42,9 @@ ENV PYTHONUNBUFFERED=1 \
     TOY_NAS_NUM_WORKERS=0
 
 # Internal data paths only — host bind-mount overlays at runtime.
-RUN mkdir -p /data/tcga/BRCA /data/adni /data/ra /data/t2d /data/epigenetic_aging && chmod +x /app/entrypoint.sh
+# Source checkouts on Windows may supply CRLF; normalize before executing in Linux.
+RUN mkdir -p /data/tcga/BRCA /data/adni /data/ra /data/t2d /data/epigenetic_aging \
+    && sed -i 's/\r$//' /app/entrypoint.sh \
+    && chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
