@@ -1,0 +1,8 @@
+[
+  {"case_id": "GSM_FIX001", "geo_accession": "GSM_FIX001", "sample_type": "Control", "phenotype": "Healthy", "label": 0},
+  {"case_id": "GSM_FIX002", "geo_accession": "GSM_FIX002", "sample_type": "Control", "phenotype": "Healthy", "label": 0},
+  {"case_id": "GSM_FIX003", "geo_accession": "GSM_FIX003", "sample_type": "Control", "phenotype": "Healthy", "label": 0},
+  {"case_id": "GSM_FIX004", "geo_accession": "GSM_FIX004", "sample_type": "Case", "phenotype": "RA", "label": 1},
+  {"case_id": "GSM_FIX005", "geo_accession": "GSM_FIX005", "sample_type": "Case", "phenotype": "RA", "label": 1},
+  {"case_id": "GSM_FIX006", "geo_accession": "GSM_FIX006", "sample_type": "Case", "phenotype": "RA", "label": 1}
+]

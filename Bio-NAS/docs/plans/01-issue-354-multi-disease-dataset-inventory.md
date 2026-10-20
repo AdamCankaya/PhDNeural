@@ -30,7 +30,7 @@ The Plan-1 executable deliverable is a sequential, CPU-only Docker run that keep
 | Alzheimer's | Skip | ADNI/LONI requires approved controlled access / DUA |
 | Rheumatoid Arthritis | Run: GSE71841 GEO sample + toy NAS | Public GEO source; DAS28 accession is not yet specified for automated retrieval |
 | Type 2 Diabetes | Skip | KORA F4/FF4 requires a project agreement; a future explicitly open proxy may replace it |
-| Epigenetic Aging | Run: GSE40279, GSE87571, GSE280465 GEO samples + toy NAS | Public GEO sources |
+| Epigenetic Aging | Skip in Plan-1 image (`epigenetic_aging/.skipped`) | Public GEO deferred; BRCA + RA demo focus |
 
 The dashboard aggregates mounted `nas_demo_results.json` files. Toy metrics are pipeline smoke metrics only, never clinical claims. A GitHub Repository Dispatch is optional and disabled by default; a repository workflow must turn that event into a mobile notification.
 
@@ -69,7 +69,7 @@ Maps 1:1 to the issue **Implementation requirements**, plus a Plan-01 Docker rep
 - [x] Expected pins: `docs/data/smoke_expected.json` (schema_version 2, case/file ranges, PoC labels) — checked by the verify script when `manifest.json` is present.
 - [x] Newcomer docs: [`docker/README.md`](../../docker/README.md) + this plan list expected Plan-1 host outputs (BRCA smoke + verification + ADNI status).
 - [ ] **ADNI DUA / download acceptance:** blocked on account approval; then stage sample or wire approved LONI client (outside scrape).
-- [ ] **Public multi-disease Docker acceptance:** compose downloads BRCA, RA, and Epigenetic Aging samples; runs isolated CPU toy NAS jobs; skips ADNI/KORA by default; writes `data/dashboard/dashboard.html`. No NVIDIA runtime, GPU reservation, or CUDA call is permitted in this pipeline.
+- [x] **Public multi-disease Docker acceptance:** compose downloads BRCA + RA (GSE71841, BRCA-shaped artifacts); runs isolated CPU toy NAS jobs; skips ADNI/KORA/epigenetic aging by default; writes `data/dashboard/dashboard.html`. No NVIDIA runtime, GPU reservation, or CUDA call is permitted in this pipeline.
 - [ ] **Dashboard notification acceptance:** optional Repository Dispatch is documented with no token in the repository and disabled unless explicitly enabled in `.env`.
 
 

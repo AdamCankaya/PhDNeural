@@ -1,0 +1,18 @@
+{
+  "description": "Pinned expectations for Bio-NAS Docker GEO RA smoke (GSE71841, Plan 01). No live FTP content hashes.",
+  "schema_version": 2,
+  "accession": "GSE71841",
+  "access": "open",
+  "n_cases_min": 5,
+  "n_cases_max": 10,
+  "poc_modalities": [
+    "methylation_beta",
+    "clinical_labels"
+  ],
+  "required_label_values": [0, 1],
+  "notes": [
+    "Validated by scripts/verify_geo_smoke.py against data/ra/manifest.json.",
+    "Labels: Control=0 (Healthy), Case=1 (RA) from !Sample_characteristics_ch1.",
+    "Delete .ready and re-download if schema_version changes."
+  ]
+}
