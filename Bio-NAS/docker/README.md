@@ -2,9 +2,9 @@
 
 Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfile), then sequentially:
 
-1. Downloads tiny public samples for **BRCA** (GDC) and **RA** (GEO GSE71841, BRCA-shaped manifest + per-sample methylation TSVs).
+1. Downloads tiny public samples for **BRCA** (GDC), **RA** (GEO GSE71841), and **Epigenetic Aging** (GEO GSE87571) — BRCA-shaped manifest + per-sample methylation TSVs.
 2. Runs one independent CPU toy NAS per active disease and writes each `nas_demo_results.json` to its mounted directory.
-3. Skips **Alzheimer's/ADNI**, **T2D/KORA**, and **Epigenetic Aging** (writes `data/epigenetic_aging/.skipped` — no GEO FTP in this image config).
+3. Skips **Alzheimer's/ADNI** and **T2D/KORA** (controlled access only).
 4. Builds `data/dashboard/dashboard.html`, aggregating the toy results.
 
 ADNI and KORA are skipped by default because they require controlled access. No controlled-data credential is used or stored by the image. Toy NAS results validate the workflow only; they are not clinical evidence. Copy [`.env.example`](../.env.example) to `.env` to adjust skip flags or enable the optional GitHub Repository Dispatch.
@@ -107,9 +107,19 @@ Wiki: [`docs/wiki/Data-Acquisition-RA.md`](../docs/wiki/Data-Acquisition-RA.md).
 
 ## Expected Plan-1 host outputs (Epigenetic Aging)
 
-| Host path | Role |
-|-----------|------|
-| `data/epigenetic_aging/.skipped` | Plan-1 image skips aging GEO downloads (BRCA + RA demo focus) |
+| Host path (under `Bio-NAS/`) | Role |
+|------------------------------|------|
+| `data/epigenetic_aging/manifest.json` | Smoke catalog (`schema_version` 2, GSE87571, GSM cohort) |
+| `data/epigenetic_aging/demographics.json` | Age-bin labels (`age` &lt; 50 vs ≥ 50) |
+| `data/epigenetic_aging/files/` | Per-GSM `*_methylation.tsv` (`probe`, `beta_value`) |
+| `data/epigenetic_aging/.ready` | Download-complete marker |
+| `data/epigenetic_aging/nas_demo_results.json` | Toy NAS summary (`best_architecture.validation_accuracy`) |
+
+Pinned smoke expectations: [`docs/data/smoke_expected_ea.json`](../docs/data/smoke_expected_ea.json). Verified in-container by `scripts/verify_geo_smoke.py` after download.
+
+Wiki: [`docs/wiki/Data-Acquisition-EA.md`](../docs/wiki/Data-Acquisition-EA.md).
+
+If `data/epigenetic_aging/.skipped` exists from an older Plan-1 run (`plan1_deferred`), **delete it** before re-running compose so the dashboard shows EA as Ready.
 
 Legacy `GSE*_features.tsv` trees from older entrypoints are not produced by the current pipeline.
 
@@ -147,6 +157,10 @@ Legacy `GSE*_features.tsv` trees from older entrypoints are not produced by the 
 | `RA_SAMPLE_N` | `8` | Target GSM samples (clamped 5–10) |
 | `RA_SMOKE_EXPECTED_JSON` | `/app/docs/data/smoke_expected_ra.json` | Pinned RA smoke expectations |
 | `SKIP_RA_NAS` | `0` | Set `1` to skip RA toy NAS |
+| `EPIGENETIC_AGING_SAMPLE_OUT` | `/data/epigenetic_aging` | EA smoke cohort root |
+| `EA_SAMPLE_N` | `8` | Target GSM samples (clamped 5–10) |
+| `EA_SMOKE_EXPECTED_JSON` | `/app/docs/data/smoke_expected_ea.json` | Pinned EA smoke expectations |
+| `SKIP_EPIGENETIC_AGING_NAS` | `0` | Set `1` to skip EA toy NAS (download + verify still run) |
 | `ADNI_SAMPLE_OUT` | `/data/adni` | ADNI scaffold / sample root |
 | `ADNI_USER` / `ADNI_PASSWORD` | (unset) | Host `.env` only after DUA — never in image |
 | `ADNI_SKIP` | (unset) | Set `1` to force ADNI skip |

@@ -42,6 +42,11 @@ def main() -> int:
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--brca", action="store_true", help="Load BRCA methylation and stage labels")
     parser.add_argument("--ra", action="store_true", help="Load GEO RA methylation and Healthy vs RA labels")
+    parser.add_argument(
+        "--ea",
+        action="store_true",
+        help="Load GEO EA methylation and GSE87571 age-bin labels",
+    )
     args = parser.parse_args()
     torch.set_num_threads(int(os.environ.get("TORCH_NUM_THREADS", "2")))
     torch.manual_seed(42)
@@ -56,6 +61,11 @@ def main() -> int:
 
         values, labels, _ = load_ra_cohort(args.data_dir, n_cpgs=N_CPGS)
         target_note = "GEO GSE71841 Healthy vs RA (smoke)"
+    elif args.ea:
+        from train_nas_demo import N_CPGS, load_ea_cohort
+
+        values, labels, _ = load_ea_cohort(args.data_dir, n_cpgs=N_CPGS)
+        target_note = "GEO GSE87571 age-bin phenotype (smoke)"
     else:
         values = load_tsvs(args.data_dir)
         target_note = "data-derived synthetic proxy (not clinical)"
@@ -65,7 +75,7 @@ def main() -> int:
     )
     # A deterministic, data-derived proxy target. This validates orchestration only;
     # it is not a clinical phenotype or severity label.
-    if not args.brca and not args.ra:
+    if not args.brca and not args.ra and not args.ea:
         labels = (values[:, 0] > np.median(values[:, 0])).astype(np.int64)
         if len(np.unique(labels)) < 2:
             labels = np.arange(len(values), dtype=np.int64) % 2
