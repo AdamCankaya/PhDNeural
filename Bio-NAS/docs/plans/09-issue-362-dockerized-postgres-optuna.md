@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [362](https://github.com/AdamCankaya/PhDNeural/issues/362) |
-| Title | [Y1 Q2 Summer 2027] Set up Dockerized PostgreSQL engine for orchestration. |
+| Title | [Y1 Q1 Spring 2027] Set up Dockerized PostgreSQL engine for orchestration. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/362 |
-| Labels | `phd-sync, year-1, abstraction, phase-2, step-1, q2-2027` |
-| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q2 Summer 2027 - Spatio-Temporal Software Integration & Central Hub |
+| Labels | `phd-sync, year-1, abstraction, phase-2, step-1, q1-2027` |
+| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q1 Spring 2027 - Spatio-Temporal Software Integration & Central Hub |
 | Phase | 2 - Code Abstraction & Generalization |
 | Master-plan goal | Provision reproducible compute and experiment orchestration. |
 

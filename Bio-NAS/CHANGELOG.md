@@ -2,6 +2,14 @@
 
 All notable changes to the Bio-NAS project documentation and roadmap tooling are recorded here.
 
+## 2026-10-20
+
+### Roadmap calendar shift (Spring 2026 start)
+
+- Cascaded all quarter labels one semester earlier in `phd_bio-nas_master_plan.md` (Spring 2026 → Summer 2029; no Fall 2026; Summer 2029 defense quarter unchanged).
+- Merged former Spring 2029 synthesis tasks into Winter 2028; regenerated dashboard and master-plan HTML.
+- Updated wiki, README, per-issue plans, and committee presentation builder. After push, run `python scripts/sync_phd_to_github.py --update-existing --close-stale --prune-project` with a token that has `read:project` / `project` scopes to refresh `phd-sync` issues and Project #2.
+
 ## 2026-07-26
 
 ### Docker-first deploy docs (Windows)

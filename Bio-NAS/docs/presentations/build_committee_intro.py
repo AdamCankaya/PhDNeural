@@ -220,7 +220,7 @@ def build():
         SLIDE_H - Inches(1.25),
         Inches(11.5),
         Inches(0.9),
-        "Adam Cankaya\nacankaya2017@fau.edu  ·  Thesis Committee Introduction  ·  Fall 2026",
+        "Adam Cankaya\nacankaya2017@fau.edu  ·  Thesis Committee Introduction  ·  Spring 2026",
         size=16,
         bold=True,
         color=WHITE,
@@ -411,22 +411,22 @@ Fourth, the NAS search space includes spatial modules like one-dimensional CNNs 
     # ----- Slide 6: Roadmap -----
     s = prs.slides.add_slide(blank)
     _bg(s)
-    _chrome(s, "Three-Year Roadmap", "Fall 2026 → Summer 2029  ·  24 checklist tasks synced to GitHub issues")
+    _chrome(s, "Three-Year Roadmap", "Spring 2026 → Summer 2029  ·  24 checklist tasks synced to GitHub issues")
 
     years = [
-        ("Year 1", "Fall 2026 – Summer 2027", FAU_BLUE, [
+        ("Year 1", "Spring 2026 – Spring 2027", FAU_BLUE, [
             "All-5 cohort inventory",
             "BRCA feature maps & spacing",
             "Leakage-safe 4D ETL + Δt",
             "Compute stack & Optuna hub",
         ], "Shared (A+B) · BRCA-first"),
-        ("Year 2", "Fall 2027 – Summer 2028", FAU_RED, [
+        ("Year 2", "Summer 2027 – Spring 2028", FAU_RED, [
             "Spatial & temporal modules",
             "Dual-track Optuna studies",
             "Holdout eval + ablations",
             "Classical baselines · scaling gate",
         ], "Track A vs B · BRCA"),
-        ("Year 3", "Fall 2028 – Summer 2029", FAU_BLUE, [
+        ("Year 3", "Summer 2028 – Summer 2029", FAU_BLUE, [
             "Attribution & driver maps",
             "Trajectory dashboard",
             "Taxonomy / tempo compare",
@@ -447,7 +447,7 @@ Fourth, the NAS search space includes spatial modules like one-dimensional CNNs 
 
     _set_notes(
         s,
-        """The program runs on a three-year academic calendar from Fall 2026 through Summer 2029, with twenty-four roadmap tasks tracked one-to-one as GitHub issues.
+        """The program runs on a three-year academic calendar from Spring 2026 through Summer 2029, with twenty-four roadmap tasks tracked one-to-one as GitHub issues.
 
 Year one is shared infrastructure: inventory all five diseases, build BRCA-first feature maps, construct leakage-safe four-dimensional tensors with delta-t embeddings, and stand up the compute and Optuna orchestration hub.
 

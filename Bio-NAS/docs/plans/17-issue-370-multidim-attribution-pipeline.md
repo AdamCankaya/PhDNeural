@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [370](https://github.com/AdamCankaya/PhDNeural/issues/370) |
-| Title | [Y3 Q3 Fall 2028] Implement `captum` or `shap` for multi-dimensional attribution. |
+| Title | [Y3 Q2 Summer 2028] Implement `captum` or `shap` for multi-dimensional attribution. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/370 |
-| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q3-2028` |
-| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q3 Fall 2028 - Spatio-Temporal Interpretability |
+| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q2-2028` |
+| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q2 Summer 2028 - Spatio-Temporal Interpretability |
 | Phase | 4 - Thesis Synthesis & Final Deliverables |
 | Master-plan goal | Attribute predictions to spatial sites and timepoints. |
 

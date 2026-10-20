@@ -17,7 +17,7 @@ A three-year PhD research program that investigates whether Biologically-Informe
 | Master plan (source) | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) |
 | Pages landing | [adamcankaya.github.io/PhDNeural/Bio-NAS/](https://adamcankaya.github.io/PhDNeural/Bio-NAS/) |
 
-The roadmap follows a **3-year quarterly calendar** (Fall 2026 → Summer 2029): twelve quarters grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task. Every dashboard row and master-plan HTML entry links to its GitHub issue.
+The roadmap follows a **3-year quarterly calendar** (Spring 2026 → Summer 2029): eleven active quarter blocks grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task. Every dashboard row and master-plan HTML entry links to its GitHub issue.
 
 ---
 
@@ -38,12 +38,12 @@ Year 1–2 complete a **BRCA dual-track vertical slice**. Year 3 work on the Oth
 
 | Quarter | Track scope | Cohort |
 |---------|-------------|--------|
-| Y1 Fall 2026 → Summer 2027 | Shared (A+B) | BRCA-first ETL/infra; All 5 inventory in Fall |
-| Y2 Fall 2027 → Winter 2027 | Track A + Track B modules | BRCA spatial/temporal search space |
-| Y2 Spring 2028 | Track A then Track B | BRCA Optuna studies |
-| Y2 Summer 2028 | Track A vs B | BRCA holdout + ablations (**scaling gate**) |
-| Y3 Fall 2028 → Winter 2028 | Track A + Track B | BRCA attribution + dashboard |
-| Y3 Spring 2029 → Summer 2029 | Track A + Track B | Other 4 / All 5 taxonomy, thesis, OSS |
+| Y1 Spring 2026 → Spring 2027 | Shared (A+B) | BRCA-first ETL/infra; All 5 inventory in Spring |
+| Y2 Summer 2027 → Fall 2027 | Track A + Track B modules | BRCA spatial/temporal search space |
+| Y2 Winter 2027 | Track A then Track B | BRCA Optuna studies |
+| Y2 Spring 2028 | Track A vs B | BRCA holdout + ablations (**scaling gate**) |
+| Y3 Summer 2028 → Fall 2028 | Track A + Track B | BRCA attribution + dashboard |
+| Y3 Winter 2028 → Summer 2029 | Track A + Track B | Other 4 / All 5 taxonomy, thesis, OSS |
 
 ---
 
@@ -59,9 +59,9 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 | Year | Quarters | Focus | Track / cohort | Tasks |
 |------|----------|-------|----------------|------:|
-| **Year 1** | Fall 2026 → Summer 2027 | Longitudinal cohort sourcing, feature mapping, 4D ETL / Δt embeddings, compute + Postgres hub | Shared (A+B) · BRCA-first | 9 |
-| **Year 2** | Fall 2027 → Summer 2028 | Spatial/temporal NAS modules, distributed Optuna search, holdout benchmarks & baselines | Track A+B → A vs B · BRCA | 8 |
-| **Year 3** | Fall 2028 → Summer 2029 | Attribution maps, Streamlit trajectories, taxonomy synthesis, thesis & OSS release | Track A+B · BRCA then Other 4 / All 5 | 7 |
+| **Year 1** | Spring 2026 → Spring 2027 | Longitudinal cohort sourcing, feature mapping, 4D ETL / Δt embeddings, compute + Postgres hub | Shared (A+B) · BRCA-first | 9 |
+| **Year 2** | Summer 2027 → Spring 2028 | Spatial/temporal NAS modules, distributed Optuna search, holdout benchmarks & baselines | Track A+B → A vs B · BRCA | 8 |
+| **Year 3** | Summer 2028 → Summer 2029 | Attribution maps, Streamlit trajectories, taxonomy synthesis, thesis & OSS release | Track A+B · BRCA then Other 4 / All 5 | 7 |
 | | | | | **24** |
 
 Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).

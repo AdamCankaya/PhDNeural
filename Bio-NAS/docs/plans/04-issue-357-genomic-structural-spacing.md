@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [357](https://github.com/AdamCankaya/PhDNeural/issues/357) |
-| Title | [Y1 Q4 Winter 2026] Define genomic structural spacing. |
+| Title | [Y1 Q2 Summer 2026] Define genomic structural spacing. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/357 |
-| Labels | `phd-sync, year-1, brca-anchor, phase-1, step-1, q4-2026` |
-| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q4 Winter 2026 - Spatio-Temporal Data Modalities |
+| Labels | `phd-sync, year-1, brca-anchor, phase-1, step-1, q2-2026` |
+| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q2 Summer 2026 - Spatio-Temporal Data Modalities |
 | Phase | 1 - The Anchor (BRCA PoC) |
 | Master-plan goal | Map spatial and temporal feature dimensions for multi-omic tensors. |
 

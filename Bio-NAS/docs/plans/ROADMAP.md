@@ -1,5 +1,7 @@
 # Bio-NAS Implementation Roadmap
 
+> Quarter labels in per-issue plans follow [`phd_bio-nas_master_plan.md`](../../phd_bio-nas_master_plan.md) (Spring 2026 → Summer 2029 calendar as of Oct 2026).
+
 Plans for all **25 open** `phd-sync` roadmap issues in [AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural).
 Authoritative checklist: [`phd_bio-nas_master_plan.md`](../../phd_bio-nas_master_plan.md).
 Live tracker: [PhD Master Plan (Project #2)](https://github.com/users/AdamCankaya/projects/2).

@@ -24,24 +24,24 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
 
 | Quarter | Track scope | Cohort focus |
 |---------|-------------|--------------|
-| Y1 Fall 2026 | Shared (A+B) | All 5 inventory; BRCA primary PoC readiness |
-| Y1 Winter 2026 | Shared (A+B) | BRCA-first feature maps (templates for Other 4) |
-| Y1 Spring 2027 | Shared (A+B) | BRCA vertical-slice ETL / tensors |
-| Y1 Summer 2027 | Shared (A+B) | Compute + Optuna hub for both tracks |
-| Y2 Fall 2027 | Track A + Track B modules | BRCA spatial search space |
-| Y2 Winter 2027 | Track A + Track B modules | BRCA temporal search space |
-| Y2 Spring 2028 | Track A then Track B | BRCA dual-track Optuna studies |
-| Y2 Summer 2028 | Track A vs B | BRCA holdout, ablations, classical baselines |
-| Y3 Fall 2028 | Track A + Track B | BRCA attribution; interpretability gate |
-| Y3 Winter 2028 | Track A + Track B | BRCA trajectory dashboard |
-| Y3 Spring 2029 | Track A + Track B | Other 4 / All 5 taxonomy (post–scaling gate) |
+| Y1 Spring 2026 | Shared (A+B) | All 5 inventory; BRCA primary PoC readiness |
+| Y1 Summer 2026 | Shared (A+B) | BRCA-first feature maps (templates for Other 4) |
+| Y1 Winter 2026 | Shared (A+B) | BRCA vertical-slice ETL / tensors |
+| Y1 Spring 2027 | Shared (A+B) | Compute + Optuna hub for both tracks |
+| Y2 Summer 2027 | Track A + Track B modules | BRCA spatial search space |
+| Y2 Fall 2027 | Track A + Track B modules | BRCA temporal search space |
+| Y2 Winter 2027 | Track A then Track B | BRCA dual-track Optuna studies |
+| Y2 Spring 2028 | Track A vs B | BRCA holdout, ablations, classical baselines |
+| Y3 Summer 2028 | Track A + Track B | BRCA attribution; interpretability gate |
+| Y3 Fall 2028 | Track A + Track B | BRCA trajectory dashboard |
+| Y3 Winter 2028 | Track A + Track B | Other 4 / All 5 taxonomy (post–scaling gate) |
 | Y3 Summer 2029 | Track A + Track B | Thesis + OSS (All 5 synthesis) |
 
 ---
 
 ## Year 1: Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure
 
-### Q3 Fall 2026: Longitudinal Multi-Omic Cohort Sourcing
+### Q1 Spring 2026: Longitudinal Multi-Omic Cohort Sourcing
 **Phases:** 1 | **Goal:** Identify and secure multi-disease datasets with repeated molecular measurements over time.
 **Track scope:** Shared (A+B) | **Cohort:** All 5 inventory; BRCA primary for PoC readiness
 #### Step 1: Data Acquisition
@@ -56,7 +56,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Acceptance: documented join keys and exclusion rules that preserve temporal order.
   * Dependencies: cohort-specific clinical/metadata dictionaries.
 
-### Q4 Winter 2026: Spatio-Temporal Data Modalities
+### Q2 Summer 2026: Spatio-Temporal Data Modalities
 **Phases:** 1 | **Goal:** Map spatial and temporal feature dimensions for multi-omic tensors.
 **Track scope:** Shared (A+B) | **Cohort:** BRCA-first (templates reusable for Other 4)
 #### Step 1: Feature Mapping
@@ -64,14 +64,14 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Track scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.
   * Deliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).
   * Acceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.
-  * Dependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing.
+  * Dependencies: Level-3 matrices or equivalent processed tables from Spring 2026 sourcing.
 * Define genomic structural spacing.
   * Track scope: Shared (A+B) — BRCA reference build; spacing config reusable across cohorts.
   * Deliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.
   * Acceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).
   * Dependencies: reference genome build documented (e.g., GRCh38).
 
-### Q1 Spring 2027: 4D Tensor Construction & Irregular Time-Step Normalization
+### Q4 Winter 2026: 4D Tensor Construction & Irregular Time-Step Normalization
 **Phases:** 2 | **Goal:** Construct a leakage-safe ETL pipeline producing irregular-time 4D tensors.
 **Track scope:** Shared (A+B) | **Cohort:** BRCA vertical slice
 #### Step 1: ETL Pipeline
@@ -79,7 +79,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Track scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).
   * Deliverables: patient-level split files + loader that never peeks at holdout during fit.
   * Acceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).
-  * Dependencies: finalized cohort tables from Year 1 Fall/Winter.
+  * Dependencies: finalized cohort tables from Year 1 Spring/Summer 2026.
 * Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals.
   * Track scope: Shared (A+B) — BRCA Δt embedding consumed by both tracks.
   * Deliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.
@@ -113,7 +113,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Acceptance: Phenotype target is 0/1; Severity target is discretized EAA (0-3), or -1 if chronological age is missing.
   * Dependencies: EAA regression baseline trained.
 
-### Q2 Summer 2027: Spatio-Temporal Software Integration & Central Hub
+### Q1 Spring 2027: Spatio-Temporal Software Integration & Central Hub
 **Phases:** 2 | **Goal:** Provision reproducible compute and experiment orchestration.
 **Track scope:** Shared (A+B) | **Cohort:** Infra for BRCA first; study naming supports All 5
 #### Step 1: Infrastructure
@@ -132,7 +132,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
 
 ## Year 2: Spatio-Temporal NAS Execution & Multi-Task Forecasting
 
-### Q3 Fall 2027: Engineering the Spatio-Temporal Search Space
+### Q2 Summer 2027: Engineering the Spatio-Temporal Search Space
 **Phases:** 3 | **Goal:** Code modular spatial PyTorch blocks for the NAS search space.
 **Track scope:** Track A + Track B modules | **Cohort:** BRCA
 #### Step 1: Spatial Modules
@@ -142,7 +142,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Acceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.
   * Dependencies: genomic spacing config; Year 1 tensors.
 
-### Q4 Winter 2027: Temporal Progression Modules
+### Q3 Fall 2027: Temporal Progression Modules
 **Phases:** 3 | **Goal:** Implement temporal progression blocks for longitudinal forecasting.
 **Track scope:** Track A + Track B modules | **Cohort:** BRCA
 #### Step 1: Temporal Modules
@@ -152,7 +152,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Acceptance: causal masking verified (no future visit leakage); gradient flow smoke test.
   * Dependencies: spatial module outputs; Δt embedding layer.
 
-### Q1 Spring 2028: Parallel Search Optimization
+### Q4 Winter 2027: Parallel Search Optimization
 **Phases:** 3 | **Goal:** Execute large-scale distributed spatio-temporal architecture search.
 **Track scope:** Track A then Track B | **Cohort:** BRCA dual-track studies
 #### Step 1: Large Scale Search
@@ -172,7 +172,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Acceptance: TensorBoard logs populate correctly; conditionally skips `np.nan` severity metrics on healthy batches.
   * Dependencies: Base training entrypoint and `evaluate_mtl_metrics` function.
 
-### Q2 Summer 2028: Structural Taxonomy & Baseline Benchmarking
+### Q1 Spring 2028: Structural Taxonomy & Baseline Benchmarking
 **Phases:** 3 | **Goal:** Benchmark searched architectures against baselines and ablations.
 **Track scope:** Track A vs B | **Cohort:** BRCA comparative holdout (scaling gate evidence)
 #### Step 1: Benchmarking
@@ -196,7 +196,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
 
 ## Year 3: Spatio-Temporal Interpretability and Clinical Interface
 
-### Q3 Fall 2028: Spatio-Temporal Interpretability
+### Q2 Summer 2028: Spatio-Temporal Interpretability
 **Phases:** 4 | **Goal:** Attribute predictions to spatial sites and timepoints.
 **Track scope:** Track A + Track B | **Cohort:** BRCA (interpretability gate for Track B advantage)
 #### Step 1: Multi-dimensional Attribution
@@ -211,7 +211,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Acceptance: top-k drivers reviewable per disease trajectory example; Track B biological plausibility note drafted.
   * Dependencies: attribution pipeline; genomic annotations.
 
-### Q4 Winter 2028: The Trajectory Dashboard Application
+### Q3 Fall 2028: The Trajectory Dashboard Application
 **Phases:** 4 | **Goal:** Build an interactive clinical trajectory interface.
 **Track scope:** Track A + Track B | **Cohort:** BRCA demo
 #### Step 1: Streamlit Dashboard
@@ -226,7 +226,7 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
   * Acceptance: at least one end-to-end patient view from load → forecast → attribution snippet.
   * Dependencies: Streamlit shell; attribution exports.
 
-### Q1 Spring 2029: Thesis Synthesis and Framework Release
+### Q4 Winter 2028: Thesis Synthesis and Framework Release
 **Phases:** 4 | **Goal:** Document discovery and prepare framework release notes.
 **Track scope:** Track A + Track B | **Cohort:** Other 4 / All 5 (post–scaling gate)
 #### Step 1: Synthesis

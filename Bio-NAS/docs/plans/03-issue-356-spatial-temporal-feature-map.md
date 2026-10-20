@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [356](https://github.com/AdamCankaya/PhDNeural/issues/356) |
-| Title | [Y1 Q4 Winter 2026] Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals). |
+| Title | [Y1 Q2 Summer 2026] Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals). |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/356 |
-| Labels | `phd-sync, year-1, brca-anchor, phase-1, step-1, q4-2026` |
-| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q4 Winter 2026 - Spatio-Temporal Data Modalities |
+| Labels | `phd-sync, year-1, brca-anchor, phase-1, step-1, q2-2026` |
+| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q2 Summer 2026 - Spatio-Temporal Data Modalities |
 | Phase | 1 - The Anchor (BRCA PoC) |
 | Master-plan goal | Map spatial and temporal feature dimensions for multi-omic tensors. |
 
@@ -18,7 +18,7 @@ Maps 1:1 to the issue **Implementation requirements**:
 
 - [ ] **Deliverables:** feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).
 - [ ] **Acceptance:** written mapping covering methylation, transcriptomics, and at least one additional omic modality.
-- [ ] **Upstream deps satisfied:** Level-3 matrices or equivalent processed tables from Fall 2026 sourcing.
+- [ ] **Upstream deps satisfied:** Level-3 matrices or equivalent processed tables from Spring 2026 sourcing.
 
 
 ## Approach

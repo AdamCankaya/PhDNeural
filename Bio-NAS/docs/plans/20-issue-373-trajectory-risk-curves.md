@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [373](https://github.com/AdamCankaya/PhDNeural/issues/373) |
-| Title | [Y3 Q4 Winter 2028] Render health trajectories and risk forecasting curves. |
+| Title | [Y3 Q3 Fall 2028] Render health trajectories and risk forecasting curves. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/373 |
-| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q4-2028` |
-| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q4 Winter 2028 - The Trajectory Dashboard Application |
+| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q3-2028` |
+| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q3 Fall 2028 - The Trajectory Dashboard Application |
 | Phase | 4 - Thesis Synthesis & Final Deliverables |
 | Master-plan goal | Build an interactive clinical trajectory interface. |
 

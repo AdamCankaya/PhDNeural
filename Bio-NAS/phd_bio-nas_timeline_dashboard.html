@@ -173,15 +173,15 @@
       "color": "#6366f1",
       "quarters": [
         {
-          "id": "y1-q3-2026",
-          "label": "Q3 Fall 2026",
+          "id": "y1-q1-2026",
+          "label": "Q1 Spring 2026",
           "title": "Longitudinal Multi-Omic Cohort Sourcing",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q3-2026-p1-step1",
+              "id": "y1-q1-2026-p1-step1",
               "num": 1,
               "kind": "step",
               "title": "Data Acquisition",
@@ -189,7 +189,7 @@
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-q3-2026-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase",
+                  "id": "year-1-q1-2026-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase",
                   "text": "Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).",
                   "detail": "Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).\nTrack scope: Shared (A+B) — All 5 cohort inventory; BRCA listed first as anchor.\nDeliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.\nAcceptance: every disease has at least one candidate cohort with ≥2 timepoints documented.\nDependencies: GDC/GEO/recount3 accounts; disease registry entries in `src/config/disease_registry.yaml`.",
                   "requirements": [
@@ -198,12 +198,10 @@
                     "Acceptance: every disease has at least one candidate cohort with ≥2 timepoints documented.",
                     "Dependencies: GDC/GEO/recount3 accounts; disease registry entries in `src/config/disease_registry.yaml`."
                   ],
-                  "phase": 1,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/354",
-                  "issue_number": 354
+                  "phase": 1
                 },
                 {
-                  "id": "year-1-q3-2026-phase-1-step-1-item-2-source-longitudinal-tracking-options-foc",
+                  "id": "year-1-q1-2026-phase-1-step-1-item-2-source-longitudinal-tracking-options-foc",
                   "text": "Source longitudinal tracking options focusing on primary vs. recurrent match points.",
                   "detail": "Source longitudinal tracking options focusing on primary vs. recurrent match points.\nTrack scope: Shared (A+B) — All 5 matching rules; BRCA primary/recurrent pairing prototyped first.\nDeliverables: matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.\nAcceptance: documented join keys and exclusion rules that preserve temporal order.\nDependencies: cohort-specific clinical/metadata dictionaries.",
                   "requirements": [
@@ -212,24 +210,22 @@
                     "Acceptance: documented join keys and exclusion rules that preserve temporal order.",
                     "Dependencies: cohort-specific clinical/metadata dictionaries."
                   ],
-                  "phase": 1,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/355",
-                  "issue_number": 355
+                  "phase": 1
                 }
               ]
             }
           ]
         },
         {
-          "id": "y1-q4-2026",
-          "label": "Q4 Winter 2026",
+          "id": "y1-q2-2026",
+          "label": "Q2 Summer 2026",
           "title": "Spatio-Temporal Data Modalities",
           "phase": 1,
           "phaseLabel": "Phase 1: The Anchor (BRCA PoC)",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q4-2026-p1-step1",
+              "id": "y1-q2-2026-p1-step1",
               "num": 1,
               "kind": "step",
               "title": "Feature Mapping",
@@ -237,21 +233,19 @@
               "phase": 1,
               "tasks": [
                 {
-                  "id": "year-1-q4-2026-phase-1-step-1-item-1-map-spatial-dimension-sequence-coordinat",
+                  "id": "year-1-q2-2026-phase-1-step-1-item-1-map-spatial-dimension-sequence-coordinat",
                   "text": "Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).",
-                  "detail": "Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).\nTrack scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.\nDeliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).\nAcceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.\nDependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing.",
+                  "detail": "Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals).\nTrack scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.\nDeliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).\nAcceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.\nDependencies: Level-3 matrices or equivalent processed tables from Spring 2026 sourcing.",
                   "requirements": [
                     "Track scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.",
                     "Deliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).",
                     "Acceptance: written mapping covering methylation, transcriptomics, and at least one additional omic modality.",
-                    "Dependencies: Level-3 matrices or equivalent processed tables from Fall 2026 sourcing."
+                    "Dependencies: Level-3 matrices or equivalent processed tables from Spring 2026 sourcing."
                   ],
-                  "phase": 1,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/356",
-                  "issue_number": 356
+                  "phase": 1
                 },
                 {
-                  "id": "year-1-q4-2026-phase-1-step-1-item-2-define-genomic-structural-spacing",
+                  "id": "year-1-q2-2026-phase-1-step-1-item-2-define-genomic-structural-spacing",
                   "text": "Define genomic structural spacing.",
                   "detail": "Define genomic structural spacing.\nTrack scope: Shared (A+B) — BRCA reference build; spacing config reusable across cohorts.\nDeliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.\nAcceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).\nDependencies: reference genome build documented (e.g., GRCh38).",
                   "requirements": [
@@ -260,24 +254,22 @@
                     "Acceptance: reproducible spacing config checked into repo with unit tests for edge cases (chromosome ends, missing coords).",
                     "Dependencies: reference genome build documented (e.g., GRCh38)."
                   ],
-                  "phase": 1,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/357",
-                  "issue_number": 357
+                  "phase": 1
                 }
               ]
             }
           ]
         },
         {
-          "id": "y1-q1-2027",
-          "label": "Q1 Spring 2027",
+          "id": "y1-q4-2026",
+          "label": "Q4 Winter 2026",
           "title": "4D Tensor Construction & Irregular Time-Step Normalization",
           "phase": 2,
           "phaseLabel": "Phase 2: Code Abstraction & Generalization",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q1-2027-p2-step1",
+              "id": "y1-q4-2026-p2-step1",
               "num": 1,
               "kind": "step",
               "title": "ETL Pipeline",
@@ -285,21 +277,19 @@
               "phase": 2,
               "tasks": [
                 {
-                  "id": "year-1-q1-2027-phase-2-step-1-item-1-partition-data-by-patient-id-80-20-train",
+                  "id": "year-1-q4-2026-phase-2-step-1-item-1-partition-data-by-patient-id-80-20-train",
                   "text": "Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).",
-                  "detail": "Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).\nTrack scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).\nDeliverables: patient-level split files + loader that never peeks at holdout during fit.\nAcceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).\nDependencies: finalized cohort tables from Year 1 Fall/Winter.",
+                  "detail": "Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation).\nTrack scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).\nDeliverables: patient-level split files + loader that never peeks at holdout during fit.\nAcceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).\nDependencies: finalized cohort tables from Year 1 Spring/Summer 2026.",
                   "requirements": [
                     "Track scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).",
                     "Deliverables: patient-level split files + loader that never peeks at holdout during fit.",
                     "Acceptance: automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).",
-                    "Dependencies: finalized cohort tables from Year 1 Fall/Winter."
+                    "Dependencies: finalized cohort tables from Year 1 Spring/Summer 2026."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/358",
-                  "issue_number": 358
+                  "phase": 2
                 },
                 {
-                  "id": "year-1-q1-2027-phase-2-step-1-item-2-implement-time-delta-embedding-layer-del",
+                  "id": "year-1-q4-2026-phase-2-step-1-item-2-implement-time-delta-embedding-layer-del",
                   "text": "Implement Time-Delta Embedding Layer ($\\Delta t$) for irregular intervals.",
                   "detail": "Implement Time-Delta Embedding Layer ($\\Delta t$) for irregular intervals.\nTrack scope: Shared (A+B) — BRCA Δt embedding consumed by both tracks.\nDeliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.\nAcceptance: unit tests for zero, irregular, and missing Δt; shapes match tensor contract.\nDependencies: visit timestamps aligned to patient IDs.",
                   "requirements": [
@@ -308,12 +298,10 @@
                     "Acceptance: unit tests for zero, irregular, and missing Δt; shapes match tensor contract.",
                     "Dependencies: visit timestamps aligned to patient IDs."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/359",
-                  "issue_number": 359
+                  "phase": 2
                 },
                 {
-                  "id": "year-1-q1-2027-phase-2-step-1-item-3-construct-4d-tensors-batch-time-steps-sp",
+                  "id": "year-1-q4-2026-phase-2-step-1-item-3-construct-4d-tensors-batch-time-steps-sp",
                   "text": "Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).",
                   "detail": "Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels).\nTrack scope: Shared (A+B) — BRCA `(B, T, S, C)` tensors feed Track A and Track B search.\nDeliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.\nAcceptance: round-trip equality tests; documented channel layout per omic.\nDependencies: feature map + Δt embedding from prior items.",
                   "requirements": [
@@ -322,12 +310,10 @@
                     "Acceptance: round-trip equality tests; documented channel layout per omic.",
                     "Dependencies: feature map + Δt embedding from prior items."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/360",
-                  "issue_number": 360
+                  "phase": 2
                 },
                 {
-                  "id": "year-1-q1-2027-phase-2-step-1-item-4-integrate-multi-dataset-fusion-for-rheum",
+                  "id": "year-1-q4-2026-phase-2-step-1-item-4-integrate-multi-dataset-fusion-for-rheum",
                   "text": "Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA).",
                   "detail": "Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA).\nTrack scope: Shared (A+B) — RA unpaired multi-omic architecture.\nDeliverables: Combine GSE71841 (Phenotype Anchor) and DAS28 cohorts (Severity Anchor).\nAcceptance: Independent PyTorch `nn.Module` encoders per modality; zero-imputation with boolean mask explicit in latent fusion layers.\nDependencies: GSE71841 and DAS28 cohorts sourced.",
                   "requirements": [
@@ -336,12 +322,10 @@
                     "Acceptance: Independent PyTorch `nn.Module` encoders per modality; zero-imputation with boolean mask explicit in latent fusion layers.",
                     "Dependencies: GSE71841 and DAS28 cohorts sourced."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/404",
-                  "issue_number": 404
+                  "phase": 2
                 },
                 {
-                  "id": "year-1-q1-2027-phase-2-step-1-item-5-integrate-dataset-harmonization-and-base",
+                  "id": "year-1-q4-2026-phase-2-step-1-item-5-integrate-dataset-harmonization-and-base",
                   "text": "Integrate Dataset Harmonization and Baseline for Epigenetic Aging.",
                   "detail": "Integrate Dataset Harmonization and Baseline for Epigenetic Aging.\nTrack scope: Shared (A+B) — Epigenetic clock pipeline.\nDeliverables: Harmonize GSE40279, GSE87571, and GSE280465 via CpG probe intersection.\nAcceptance: Address tissue-specific and age distribution biases; train an Elastic Net regression baseline to compute Epigenetic Age Acceleration (EAA).\nDependencies: GEO datasets sourced.",
                   "requirements": [
@@ -350,14 +334,12 @@
                     "Acceptance: Address tissue-specific and age distribution biases; train an Elastic Net regression baseline to compute Epigenetic Age Acceleration (EAA).",
                     "Dependencies: GEO datasets sourced."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/405",
-                  "issue_number": 405
+                  "phase": 2
                 }
               ]
             },
             {
-              "id": "y1-q1-2027-p2-step2",
+              "id": "y1-q4-2026-p2-step2",
               "num": 2,
               "kind": "step",
               "title": "MTL Integration",
@@ -365,7 +347,7 @@
               "phase": 2,
               "tasks": [
                 {
-                  "id": "year-1-q1-2027-phase-2-step-2-item-1-configure-mtl-loss-routing-for-rheumatoi",
+                  "id": "year-1-q4-2026-phase-2-step-2-item-1-configure-mtl-loss-routing-for-rheumatoi",
                   "text": "Configure MTL Loss Routing for Rheumatoid Arthritis (RA).",
                   "detail": "Configure MTL Loss Routing for Rheumatoid Arthritis (RA).\nTrack scope: Shared (A+B) — Ensure custom training loop perfectly handles dataset-specific masking.\nDeliverables: Binary Phenotype prediction and ordinal Severity prediction routing.\nAcceptance: Mask Severity loss for GSE71841 (Healthy = Phenotype 0, Severity -1; RA = Phenotype 1, Severity -1). DAS28 mapped to Phenotype 1 and Severity 0-3.\nDependencies: RA tensors constructed.",
                   "requirements": [
@@ -374,12 +356,10 @@
                     "Acceptance: Mask Severity loss for GSE71841 (Healthy = Phenotype 0, Severity -1; RA = Phenotype 1, Severity -1). DAS28 mapped to Phenotype 1 and Severity 0-3.",
                     "Dependencies: RA tensors constructed."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/406",
-                  "issue_number": 406
+                  "phase": 2
                 },
                 {
-                  "id": "year-1-q1-2027-phase-2-step-2-item-2-configure-mtl-loss-routing-for-epigeneti",
+                  "id": "year-1-q4-2026-phase-2-step-2-item-2-configure-mtl-loss-routing-for-epigeneti",
                   "text": "Configure MTL Loss Routing for Epigenetic Aging.",
                   "detail": "Configure MTL Loss Routing for Epigenetic Aging.\nTrack scope: Shared (A+B) — Ordinal target discretization.\nDeliverables: K=4 ordinal tiers for EAA.\nAcceptance: Phenotype target is 0/1; Severity target is discretized EAA (0-3), or -1 if chronological age is missing.\nDependencies: EAA regression baseline trained.",
                   "requirements": [
@@ -388,24 +368,22 @@
                     "Acceptance: Phenotype target is 0/1; Severity target is discretized EAA (0-3), or -1 if chronological age is missing.",
                     "Dependencies: EAA regression baseline trained."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/407",
-                  "issue_number": 407
+                  "phase": 2
                 }
               ]
             }
           ]
         },
         {
-          "id": "y1-q2-2027",
-          "label": "Q2 Summer 2027",
+          "id": "y1-q1-2027",
+          "label": "Q1 Spring 2027",
           "title": "Spatio-Temporal Software Integration & Central Hub",
           "phase": 2,
           "phaseLabel": "Phase 2: Code Abstraction & Generalization",
           "color": "#6366f1",
           "steps": [
             {
-              "id": "y1-q2-2027-p2-step1",
+              "id": "y1-q1-2027-p2-step1",
               "num": 1,
               "kind": "step",
               "title": "Infrastructure",
@@ -413,7 +391,7 @@
               "phase": 2,
               "tasks": [
                 {
-                  "id": "year-1-q2-2027-phase-2-step-1-item-1-provision-compute-servers-with-torch-tsa",
+                  "id": "year-1-q1-2027-phase-2-step-1-item-1-provision-compute-servers-with-torch-tsa",
                   "text": "Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.",
                   "detail": "Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`.\nTrack scope: Shared (A+B) — environment supports unconstrained and pathway-masked models.\nDeliverables: environment lockfile / Docker image pin list; smoke-test script importing stack packages.\nAcceptance: clean install on target host(s); GPU detection logged when available.\nDependencies: cloud/HPC access; Slurm or equivalent job runner path identified.",
                   "requirements": [
@@ -422,12 +400,10 @@
                     "Acceptance: clean install on target host(s); GPU detection logged when available.",
                     "Dependencies: cloud/HPC access; Slurm or equivalent job runner path identified."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/361",
-                  "issue_number": 361
+                  "phase": 2
                 },
                 {
-                  "id": "year-1-q2-2027-phase-2-step-1-item-2-set-up-dockerized-postgresql-engine-for",
+                  "id": "year-1-q1-2027-phase-2-step-1-item-2-set-up-dockerized-postgresql-engine-for",
                   "text": "Set up Dockerized PostgreSQL engine for orchestration.",
                   "detail": "Set up Dockerized PostgreSQL engine for orchestration.\nTrack scope: Shared (A+B) — separate Optuna studies for Track A and Track B (BRCA first).\nDeliverables: `docker-compose` (or k8s) Postgres for Optuna/study metadata; backup/restore notes.\nAcceptance: Optuna RDB storage connects; one trial write/read verified.\nDependencies: host networking/firewall rules; credentials in `.env` (not committed).",
                   "requirements": [
@@ -436,9 +412,7 @@
                     "Acceptance: Optuna RDB storage connects; one trial write/read verified.",
                     "Dependencies: host networking/firewall rules; credentials in `.env` (not committed)."
                   ],
-                  "phase": 2,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/362",
-                  "issue_number": 362
+                  "phase": 2
                 }
               ]
             }
@@ -453,15 +427,15 @@
       "color": "#8b5cf6",
       "quarters": [
         {
-          "id": "y2-q3-2027",
-          "label": "Q3 Fall 2027",
+          "id": "y2-q2-2027",
+          "label": "Q2 Summer 2027",
           "title": "Engineering the Spatio-Temporal Search Space",
           "phase": 3,
           "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-q3-2027-p3-step1",
+              "id": "y2-q2-2027-p3-step1",
               "num": 1,
               "kind": "step",
               "title": "Spatial Modules",
@@ -469,7 +443,7 @@
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-q3-2027-phase-3-step-1-item-1-develop-1d-cnns-for-local-clusters-of-cp",
+                  "id": "year-2-q2-2027-phase-3-step-1-item-1-develop-1d-cnns-for-local-clusters-of-cp",
                   "text": "Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.",
                   "detail": "Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies.\nTrack scope: Track A + Track B — BRCA spatial blocks; Track A unconstrained; Track B adds pathway-masked / adjacency-constrained variants (`MaskedLinear`).\nDeliverables: reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.\nAcceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.\nDependencies: genomic spacing config; Year 1 tensors.",
                   "requirements": [
@@ -478,24 +452,22 @@
                     "Acceptance: forward-pass tests on synthetic `(B,T,S,C)` batches; parameter counts logged.",
                     "Dependencies: genomic spacing config; Year 1 tensors."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/363",
-                  "issue_number": 363
+                  "phase": 3
                 }
               ]
             }
           ]
         },
         {
-          "id": "y2-q4-2027",
-          "label": "Q4 Winter 2027",
+          "id": "y2-q3-2027",
+          "label": "Q3 Fall 2027",
           "title": "Temporal Progression Modules",
           "phase": 3,
           "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-q4-2027-p3-step1",
+              "id": "y2-q3-2027-p3-step1",
               "num": 1,
               "kind": "step",
               "title": "Temporal Modules",
@@ -503,7 +475,7 @@
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-q4-2027-phase-3-step-1-item-1-implement-convlstm-gru-blocks-and-tempor",
+                  "id": "year-2-q3-2027-phase-3-step-1-item-1-implement-convlstm-gru-blocks-and-tempor",
                   "text": "Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.",
                   "detail": "Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression.\nTrack scope: Track A + Track B — BRCA temporal stack shared where possible; Track B may route pathway-selected features into the same temporal blocks.\nDeliverables: temporal stack modules that consume Δt embeddings; optional attention over time.\nAcceptance: causal masking verified (no future visit leakage); gradient flow smoke test.\nDependencies: spatial module outputs; Δt embedding layer.",
                   "requirements": [
@@ -512,24 +484,22 @@
                     "Acceptance: causal masking verified (no future visit leakage); gradient flow smoke test.",
                     "Dependencies: spatial module outputs; Δt embedding layer."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/364",
-                  "issue_number": 364
+                  "phase": 3
                 }
               ]
             }
           ]
         },
         {
-          "id": "y2-q1-2028",
-          "label": "Q1 Spring 2028",
+          "id": "y2-q4-2027",
+          "label": "Q4 Winter 2027",
           "title": "Parallel Search Optimization",
           "phase": 3,
           "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-q1-2028-p3-step1",
+              "id": "y2-q4-2027-p3-step1",
               "num": 1,
               "kind": "step",
               "title": "Large Scale Search",
@@ -537,7 +507,7 @@
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-q1-2028-phase-3-step-1-item-1-execute-large-scale-spatio-temporal-arch",
+                  "id": "year-2-q4-2027-phase-3-step-1-item-1-execute-large-scale-spatio-temporal-arch",
                   "text": "Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.",
                   "detail": "Execute large-scale spatio-temporal architecture search with Causal Cross-Validation.\nTrack scope: Track A then Track B — BRCA Optuna studies run for both tracks (control then Bio-NAS, or parallel with distinct study IDs).\nDeliverables: Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).\nAcceptance: ≥1 full Track A study and ≥1 full Track B study complete on BRCA with reproducible seeds and stored best trials.\nDependencies: Postgres Optuna storage; Slurm workers; train tensors.",
                   "requirements": [
@@ -546,12 +516,10 @@
                     "Acceptance: ≥1 full Track A study and ≥1 full Track B study complete on BRCA with reproducible seeds and stored best trials.",
                     "Dependencies: Postgres Optuna storage; Slurm workers; train tensors."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/365",
-                  "issue_number": 365
+                  "phase": 3
                 },
                 {
-                  "id": "year-2-q1-2028-phase-3-step-1-item-2-use-horizontally-scaled-workers-via-slur",
+                  "id": "year-2-q4-2027-phase-3-step-1-item-2-use-horizontally-scaled-workers-via-slur",
                   "text": "Use Horizontally Scaled Workers via Slurm and HyperbandPruner.",
                   "detail": "Use Horizontally Scaled Workers via Slurm and HyperbandPruner.\nTrack scope: Shared (A+B) — Slurm workers serve BRCA Track A and Track B studies.\nDeliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.\nAcceptance: ≥2 concurrent workers report trials to the same study without corruption.\nDependencies: cluster account; shared storage for artifacts.",
                   "requirements": [
@@ -560,12 +528,10 @@
                     "Acceptance: ≥2 concurrent workers report trials to the same study without corruption.",
                     "Dependencies: cluster account; shared storage for artifacts."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/366",
-                  "issue_number": 366
+                  "phase": 3
                 },
                 {
-                  "id": "year-2-q1-2028-phase-3-step-1-item-3-integrate-tensorboard-logging-into-the-t",
+                  "id": "year-2-q4-2027-phase-3-step-1-item-3-integrate-tensorboard-logging-into-the-t",
                   "text": "Integrate TensorBoard Logging into the training loop.",
                   "detail": "Integrate TensorBoard Logging into the training loop.\nTrack scope: Shared (A+B) — TensorBoard tracking required for both tracks.\nDeliverables: Dynamic log paths (`runs/mtl_experiment_{disease_name}`); scalar logging for phenotype and severity metrics.\nAcceptance: TensorBoard logs populate correctly; conditionally skips `np.nan` severity metrics on healthy batches.\nDependencies: Base training entrypoint and `evaluate_mtl_metrics` function.",
                   "requirements": [
@@ -574,24 +540,22 @@
                     "Acceptance: TensorBoard logs populate correctly; conditionally skips `np.nan` severity metrics on healthy batches.",
                     "Dependencies: Base training entrypoint and `evaluate_mtl_metrics` function."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/408",
-                  "issue_number": 408
+                  "phase": 3
                 }
               ]
             }
           ]
         },
         {
-          "id": "y2-q2-2028",
-          "label": "Q2 Summer 2028",
+          "id": "y2-q1-2028",
+          "label": "Q1 Spring 2028",
           "title": "Structural Taxonomy & Baseline Benchmarking",
           "phase": 3,
           "phaseLabel": "Phase 3: Scaling to the Comparative Matrix",
           "color": "#8b5cf6",
           "steps": [
             {
-              "id": "y2-q2-2028-p3-step1",
+              "id": "y2-q1-2028-p3-step1",
               "num": 1,
               "kind": "step",
               "title": "Benchmarking",
@@ -599,7 +563,7 @@
               "phase": 3,
               "tasks": [
                 {
-                  "id": "year-2-q2-2028-phase-3-step-1-item-1-evaluate-architectures-on-20-holdout-tra",
+                  "id": "year-2-q1-2028-phase-3-step-1-item-1-evaluate-architectures-on-20-holdout-tra",
                   "text": "Evaluate architectures on 20% holdout trajectories.",
                   "detail": "Evaluate architectures on 20% holdout trajectories.\nTrack scope: Track A vs B — BRCA holdout metrics for best Track A and Track B architectures side-by-side.\nDeliverables: holdout evaluation script + metrics table for best NAS architectures.\nAcceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted; Track A vs Track B delta reported.\nDependencies: completed Optuna studies; locked holdout split.",
                   "requirements": [
@@ -608,12 +572,10 @@
                     "Acceptance: metrics published for frozen holdout only; confidence intervals or bootstrap noted; Track A vs Track B delta reported.",
                     "Dependencies: completed Optuna studies; locked holdout split."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/367",
-                  "issue_number": 367
+                  "phase": 3
                 },
                 {
-                  "id": "year-2-q2-2028-phase-3-step-1-item-2-ablation-study-spatial-vs-spatio-tempora",
+                  "id": "year-2-q1-2028-phase-3-step-1-item-2-ablation-study-spatial-vs-spatio-tempora",
                   "text": "Ablation study: Spatial vs. Spatio-Temporal predictive gain.",
                   "detail": "Ablation study: Spatial vs. Spatio-Temporal predictive gain.\nTrack scope: Track A + Track B — BRCA ablations repeated per track where applicable.\nDeliverables: controlled ablation comparing spatial-only vs full spatio-temporal models.\nAcceptance: same data splits/seeds; delta metrics documented with interpretation.\nDependencies: spatial and temporal modules; evaluation harness.",
                   "requirements": [
@@ -622,12 +584,10 @@
                     "Acceptance: same data splits/seeds; delta metrics documented with interpretation.",
                     "Dependencies: spatial and temporal modules; evaluation harness."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/368",
-                  "issue_number": 368
+                  "phase": 3
                 },
                 {
-                  "id": "year-2-q2-2028-phase-3-step-1-item-3-compare-with-longitudinal-random-forests",
+                  "id": "year-2-q1-2028-phase-3-step-1-item-3-compare-with-longitudinal-random-forests",
                   "text": "Compare with longitudinal Random Forests/XGBoost.",
                   "detail": "Compare with longitudinal Random Forests/XGBoost.\nTrack scope: Track-agnostic baseline — BRCA classical baselines (shared external control for both tracks).\nDeliverables: classical baseline pipelines on comparable flattened/windowed features.\nAcceptance: baseline metrics on identical holdout; fair feature budget documented.\nDependencies: tabular feature export from tensors/metadata.",
                   "requirements": [
@@ -636,9 +596,7 @@
                     "Acceptance: baseline metrics on identical holdout; fair feature budget documented.",
                     "Dependencies: tabular feature export from tensors/metadata."
                   ],
-                  "phase": 3,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/369",
-                  "issue_number": 369
+                  "phase": 3
                 }
               ]
             }
@@ -653,15 +611,15 @@
       "color": "#06b6d4",
       "quarters": [
         {
-          "id": "y3-q3-2028",
-          "label": "Q3 Fall 2028",
+          "id": "y3-q2-2028",
+          "label": "Q2 Summer 2028",
           "title": "Spatio-Temporal Interpretability",
           "phase": 4,
           "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-q3-2028-p4-step1",
+              "id": "y3-q2-2028-p4-step1",
               "num": 1,
               "kind": "step",
               "title": "Multi-dimensional Attribution",
@@ -669,7 +627,7 @@
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-q3-2028-phase-4-step-1-item-1-implement-captum-or-shap-for-multi-dimen",
+                  "id": "year-3-q2-2028-phase-4-step-1-item-1-implement-captum-or-shap-for-multi-dimen",
                   "text": "Implement `captum` or `shap` for multi-dimensional attribution.",
                   "detail": "Implement `captum` or `shap` for multi-dimensional attribution.\nTrack scope: Track A + Track B — BRCA attribution pipelines for both best models.\nDeliverables: attribution pipeline producing per-sample spatial×temporal importance tensors.\nAcceptance: attributions run on holdout subset without OOM; API documented.\nDependencies: trained best models; captum/shap in environment.",
                   "requirements": [
@@ -678,12 +636,10 @@
                     "Acceptance: attributions run on holdout subset without OOM; API documented.",
                     "Dependencies: trained best models; captum/shap in environment."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/370",
-                  "issue_number": 370
+                  "phase": 4
                 },
                 {
-                  "id": "year-3-q3-2028-phase-4-step-1-item-2-extract-maps-identifying-cpg-sites-and-t",
+                  "id": "year-3-q2-2028-phase-4-step-1-item-2-extract-maps-identifying-cpg-sites-and-t",
                   "text": "Extract maps identifying CpG sites and timestamps driving disease progression predictions.",
                   "detail": "Extract maps identifying CpG sites and timestamps driving disease progression predictions.\nTrack scope: Track A + Track B — BRCA site/time maps; Track B maps checked against pathway priors.\nDeliverables: ranked site/time maps + export (CSV/Parquet) and summary figures.\nAcceptance: top-k drivers reviewable per disease trajectory example; Track B biological plausibility note drafted.\nDependencies: attribution pipeline; genomic annotations.",
                   "requirements": [
@@ -692,24 +648,22 @@
                     "Acceptance: top-k drivers reviewable per disease trajectory example; Track B biological plausibility note drafted.",
                     "Dependencies: attribution pipeline; genomic annotations."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/371",
-                  "issue_number": 371
+                  "phase": 4
                 }
               ]
             }
           ]
         },
         {
-          "id": "y3-q4-2028",
-          "label": "Q4 Winter 2028",
+          "id": "y3-q3-2028",
+          "label": "Q3 Fall 2028",
           "title": "The Trajectory Dashboard Application",
           "phase": 4,
           "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-q4-2028-p4-step1",
+              "id": "y3-q3-2028-p4-step1",
               "num": 1,
               "kind": "step",
               "title": "Streamlit Dashboard",
@@ -717,7 +671,7 @@
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-q4-2028-phase-4-step-1-item-1-build-interactive-streamlit-interface",
+                  "id": "year-3-q3-2028-phase-4-step-1-item-1-build-interactive-streamlit-interface",
                   "text": "Build interactive `streamlit` interface.",
                   "detail": "Build interactive `streamlit` interface.\nTrack scope: Track A + Track B — BRCA demo app toggles Track A vs Track B predictions.\nDeliverables: Streamlit app loading model outputs and patient trajectories.\nAcceptance: local demo runbook; auth/PII constraints documented.\nDependencies: inference artifacts; holdout demo cohort.",
                   "requirements": [
@@ -726,12 +680,10 @@
                     "Acceptance: local demo runbook; auth/PII constraints documented.",
                     "Dependencies: inference artifacts; holdout demo cohort."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/372",
-                  "issue_number": 372
+                  "phase": 4
                 },
                 {
-                  "id": "year-3-q4-2028-phase-4-step-1-item-2-render-health-trajectories-and-risk-fore",
+                  "id": "year-3-q3-2028-phase-4-step-1-item-2-render-health-trajectories-and-risk-fore",
                   "text": "Render health trajectories and risk forecasting curves.",
                   "detail": "Render health trajectories and risk forecasting curves.\nTrack scope: Track A + Track B — BRCA observed vs predicted curves for both tracks.\nDeliverables: plots for observed vs predicted risk over time with uncertainty bands if available.\nAcceptance: at least one end-to-end patient view from load → forecast → attribution snippet.\nDependencies: Streamlit shell; attribution exports.",
                   "requirements": [
@@ -740,24 +692,22 @@
                     "Acceptance: at least one end-to-end patient view from load → forecast → attribution snippet.",
                     "Dependencies: Streamlit shell; attribution exports."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/373",
-                  "issue_number": 373
+                  "phase": 4
                 }
               ]
             }
           ]
         },
         {
-          "id": "y3-q1-2029",
-          "label": "Q1 Spring 2029",
+          "id": "y3-q4-2028",
+          "label": "Q4 Winter 2028",
           "title": "Thesis Synthesis and Framework Release",
           "phase": 4,
           "phaseLabel": "Phase 4: Thesis Synthesis & Final Deliverables",
           "color": "#06b6d4",
           "steps": [
             {
-              "id": "y3-q1-2029-p4-step1",
+              "id": "y3-q4-2028-p4-step1",
               "num": 1,
               "kind": "step",
               "title": "Synthesis",
@@ -765,7 +715,7 @@
               "phase": 4,
               "tasks": [
                 {
-                  "id": "year-3-q1-2029-phase-4-step-1-item-1-document-structural-taxonomy-discovered",
+                  "id": "year-3-q4-2028-phase-4-step-1-item-1-document-structural-taxonomy-discovered",
                   "text": "Document structural taxonomy discovered.",
                   "detail": "Document structural taxonomy discovered.\nTrack scope: Track A + Track B — taxonomy across BRCA and Other 4 after scaling gate; if gate fails, BRCA-only dual-track taxonomy.\nDeliverables: taxonomy chapter/section mapping architectures to disease categories and motifs.\nAcceptance: peer-readable draft checked into docs with figure list.\nDependencies: Year 2–3 experiment logs and benchmarks; documented BRCA Track A vs B outcome.",
                   "requirements": [
@@ -774,12 +724,10 @@
                     "Acceptance: peer-readable draft checked into docs with figure list.",
                     "Dependencies: Year 2–3 experiment logs and benchmarks; documented BRCA Track A vs B outcome."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/374",
-                  "issue_number": 374
+                  "phase": 4
                 },
                 {
-                  "id": "year-3-q1-2029-phase-4-step-1-item-2-compare-slow-progressing-vs-fast-acting",
+                  "id": "year-3-q4-2028-phase-4-step-1-item-2-compare-slow-progressing-vs-fast-acting",
                   "text": "Compare slow-progressing vs. fast-acting condition architectures.",
                   "detail": "Compare slow-progressing vs. fast-acting condition architectures.\nTrack scope: Track A + Track B — Other 4 (Alzheimer's, RA, T2D, Epigenetic Aging) dual-track comparisons when justified; else BRCA tempo analysis only.\nDeliverables: comparative analysis contrasting architecture preferences across disease tempos.\nAcceptance: quantitative table + qualitative discussion ready for thesis inclusion.\nDependencies: multi-disease study results (Phases 3–4) or BRCA-only fallback analysis.",
                   "requirements": [
@@ -788,9 +736,7 @@
                     "Acceptance: quantitative table + qualitative discussion ready for thesis inclusion.",
                     "Dependencies: multi-disease study results (Phases 3–4) or BRCA-only fallback analysis."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/375",
-                  "issue_number": 375
+                  "phase": 4
                 }
               ]
             }
@@ -822,9 +768,7 @@
                     "Acceptance: committee-ready PDF; all chapters cite frozen experiment IDs.",
                     "Dependencies: synthesis documents; completed experiments."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/376",
-                  "issue_number": 376
+                  "phase": 4
                 },
                 {
                   "id": "year-3-q2-2029-phase-4-step-1-item-2-release-the-complete-open-source-python",
@@ -836,9 +780,7 @@
                     "Acceptance: clean clone → install → smoke demo on public sample data.",
                     "Dependencies: stable `src/` APIs; CI green on main."
                   ],
-                  "phase": 4,
-                  "issue_url": "https://github.com/AdamCankaya/PhDNeural/issues/377",
-                  "issue_number": 377
+                  "phase": 4
                 }
               ]
             }

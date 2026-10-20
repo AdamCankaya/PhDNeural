@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [369](https://github.com/AdamCankaya/PhDNeural/issues/369) |
-| Title | [Y2 Q2 Summer 2028] Compare with longitudinal Random Forests/XGBoost. |
+| Title | [Y2 Q1 Spring 2028] Compare with longitudinal Random Forests/XGBoost. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/369 |
-| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q2-2028` |
-| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q2 Summer 2028 - Structural Taxonomy & Baseline Benchmarking |
+| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q1-2028` |
+| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q1 Spring 2028 - Structural Taxonomy & Baseline Benchmarking |
 | Phase | 3 - Scaling to the Comparative Matrix |
 | Master-plan goal | Benchmark searched architectures against baselines and ablations. |
 

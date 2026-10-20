@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [366](https://github.com/AdamCankaya/PhDNeural/issues/366) |
-| Title | [Y2 Q1 Spring 2028] Use Horizontally Scaled Workers via Slurm and HyperbandPruner. |
+| Title | [Y2 Q4 Winter 2027] Use Horizontally Scaled Workers via Slurm and HyperbandPruner. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/366 |
-| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q1-2028` |
-| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q1 Spring 2028 - Parallel Search Optimization |
+| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q4-2027` |
+| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q4 Winter 2027 - Parallel Search Optimization |
 | Phase | 3 - Scaling to the Comparative Matrix |
 | Master-plan goal | Execute large-scale distributed spatio-temporal architecture search. |
 

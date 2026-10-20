@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [355](https://github.com/AdamCankaya/PhDNeural/issues/355) |
-| Title | [Y1 Q3 Fall 2026] Source longitudinal tracking options focusing on primary vs. recurrent match points. |
+| Title | [Y1 Q1 Spring 2026] Source longitudinal tracking options focusing on primary vs. recurrent match points. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/355 |
-| Labels | `phd-sync, year-1, brca-anchor, phase-1, step-1, q3-2026` |
-| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q3 Fall 2026 - Longitudinal Multi-Omic Cohort Sourcing |
+| Labels | `phd-sync, year-1, brca-anchor, phase-1, step-1, q1-2026` |
+| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q1 Spring 2026 - Longitudinal Multi-Omic Cohort Sourcing |
 | Phase | 1 - The Anchor (BRCA PoC) |
 | Master-plan goal | Identify and secure multi-disease datasets with repeated molecular measurements over time. |
 

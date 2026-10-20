@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [363](https://github.com/AdamCankaya/PhDNeural/issues/363) |
-| Title | [Y2 Q3 Fall 2027] Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies. |
+| Title | [Y2 Q2 Summer 2027] Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/363 |
-| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q3-2027` |
-| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q3 Fall 2027 - Engineering the Spatio-Temporal Search Space |
+| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q2-2027` |
+| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q2 Summer 2027 - Engineering the Spatio-Temporal Search Space |
 | Phase | 3 - Scaling to the Comparative Matrix |
 | Master-plan goal | Code modular spatial PyTorch blocks for the NAS search space. |
 
