@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [374](https://github.com/AdamCankaya/PhDNeural/issues/374) |
-| Title | [Y3 Q1 Spring 2029] Document structural taxonomy discovered. |
+| Title | [Y3 Q4 Winter 2028] Document structural taxonomy discovered. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/374 |
-| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q1-2029` |
-| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q1 Spring 2029 - Thesis Synthesis and Framework Release |
+| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q4-2028` |
+| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q4 Winter 2028 - Thesis Synthesis and Framework Release and Framework Release |
 | Phase | 4 - Thesis Synthesis & Final Deliverables |
 | Master-plan goal | Document discovery and prepare framework release notes. |
 

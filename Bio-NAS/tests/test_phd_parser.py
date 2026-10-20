@@ -23,7 +23,7 @@ Ship a consistent Bio-NAS timeline.
 
 ## Year 1: Foundations
 
-### Q3 Fall 2026: Cohort Sourcing
+### Q1 Spring 2026: Cohort Sourcing
 **Phases:** 1 | **Goal:** Secure datasets.
 #### Step 1: Data Acquisition
 * Identify multi-disease datasets.
@@ -55,7 +55,7 @@ class PhdParserTests(unittest.TestCase):
             ],
         )
         self.assertEqual(tasks[0].goal, "Secure datasets.")
-        self.assertIn("Fall 2026", tasks[0].quarter_label)
+        self.assertIn("Spring 2026", tasks[0].quarter_label)
 
     def test_issue_body_includes_requirements_section(self) -> None:
         task = parse_master_plan(self.plan_path)[0]

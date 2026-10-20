@@ -1,6 +1,6 @@
 # Code Map and Status
 
-Implementation status for `src/` modules (Y2 Summer 2027 Step 5 targets and related code). README has the full module table — this page tracks **done vs. TODO**.
+Implementation status for `src/` modules (Y2 Spring 2028 benchmarking targets and related code). README has the full module table — this page tracks **done vs. TODO**.
 
 Repository: [`src/`](https://github.com/AdamCankaya/PhDNeural/tree/main/src)
 

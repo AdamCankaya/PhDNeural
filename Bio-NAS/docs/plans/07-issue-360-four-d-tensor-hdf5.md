@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [360](https://github.com/AdamCankaya/PhDNeural/issues/360) |
-| Title | [Y1 Q1 Spring 2027] Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels). |
+| Title | [Y1 Q4 Winter 2026] Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels). |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/360 |
-| Labels | `phd-sync, year-1, abstraction, phase-2, step-1, q1-2027` |
-| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q1 Spring 2027 - 4D Tensor Construction & Irregular Time-Step Normalization |
+| Labels | `phd-sync, year-1, abstraction, phase-2, step-1, q4-2026` |
+| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q4 Winter 2026 - 4D Tensor Construction & Irregular Time-Step Normalization |
 | Phase | 2 - Code Abstraction & Generalization |
 | Master-plan goal | Construct a leakage-safe ETL pipeline producing irregular-time 4D tensors. |
 

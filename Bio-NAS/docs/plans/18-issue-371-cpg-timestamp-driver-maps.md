@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [371](https://github.com/AdamCankaya/PhDNeural/issues/371) |
-| Title | [Y3 Q3 Fall 2028] Extract maps identifying CpG sites and timestamps driving disease progression predictions. |
+| Title | [Y3 Q2 Summer 2028] Extract maps identifying CpG sites and timestamps driving disease progression predictions. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/371 |
-| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q3-2028` |
-| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q3 Fall 2028 - Spatio-Temporal Interpretability |
+| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q2-2028` |
+| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q2 Summer 2028 - Spatio-Temporal Interpretability |
 | Phase | 4 - Thesis Synthesis & Final Deliverables |
 | Master-plan goal | Attribute predictions to spatial sites and timepoints. |
 

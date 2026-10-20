@@ -37,7 +37,7 @@ First run downloads a tiny open-access TCGA-BRCA sample and runs the toy NAS dem
 
 ## Research overview
 
-**Spatio-Temporal Dual-Track Multi-Omic Fusion & Bio-NAS** — BRCA as the anchor cohort, scaling toward five disease categories over a **3-year academic calendar** (Fall 2026 → Summer 2029).
+**Spatio-Temporal Dual-Track Multi-Omic Fusion & Bio-NAS** — BRCA as the anchor cohort, scaling toward five disease categories over a **3-year academic calendar** (Spring 2026 → Summer 2029).
 
 | Track | Approach | Purpose |
 |-------|----------|---------|
