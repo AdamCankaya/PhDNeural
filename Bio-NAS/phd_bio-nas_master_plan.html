@@ -45,7 +45,7 @@
   <p class="goal"><strong>Phase 1</strong> (Phase 1: The Anchor (BRCA PoC)) · <strong>Goal:</strong> Identify and secure multi-disease datasets with repeated molecular measurements over time.</p>
   <h4>Step 1: Data Acquisition</h4>
   <div class="task">
-    <h4>Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging). <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/421" target="_blank" rel="noopener noreferrer">(Issue #421)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — All 5 cohort inventory; BRCA listed first as anchor.</li>
       <li>Deliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.</li>
@@ -54,7 +54,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Source longitudinal tracking options focusing on primary vs. recurrent match points. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Source longitudinal tracking options focusing on primary vs. recurrent match points. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/422" target="_blank" rel="noopener noreferrer">(Issue #422)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — All 5 matching rules; BRCA primary/recurrent pairing prototyped first.</li>
       <li>Deliverables: matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.</li>
@@ -66,7 +66,7 @@
   <p class="goal"><strong>Phase 1</strong> (Phase 1: The Anchor (BRCA PoC)) · <strong>Goal:</strong> Map spatial and temporal feature dimensions for multi-omic tensors.</p>
   <h4>Step 1: Feature Mapping</h4>
   <div class="task">
-    <h4>Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals). <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Map spatial dimension (sequence coordinates, CpG sites) and temporal dimension (longitudinal intervals). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/423" target="_blank" rel="noopener noreferrer">(Issue #423)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — BRCA-first feature map; schema must generalize to Other 4.</li>
       <li>Deliverables: feature map spec covering spatial axes (genomic coordinates / CpG / gene indices) and temporal axes (visit index, calendar time, Δt).</li>
@@ -75,7 +75,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Define genomic structural spacing. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Define genomic structural spacing. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/424" target="_blank" rel="noopener noreferrer">(Issue #424)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — BRCA reference build; spacing config reusable across cohorts.</li>
       <li>Deliverables: spacing/binning rules (bp windows, CpG neighborhood, chromosome boundaries) used by spatial modules.</li>
@@ -87,7 +87,7 @@
   <p class="goal"><strong>Phase 2</strong> (Phase 2: Code Abstraction &amp; Generalization) · <strong>Goal:</strong> Construct a leakage-safe ETL pipeline producing irregular-time 4D tensors.</p>
   <h4>Step 1: ETL Pipeline</h4>
   <div class="task">
-    <h4>Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation). <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/425" target="_blank" rel="noopener noreferrer">(Issue #425)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — BRCA patient-level holdout (same split for Track A and Track B).</li>
       <li>Deliverables: patient-level split files + loader that never peeks at holdout during fit.</li>
@@ -96,7 +96,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Implement Time-Delta Embedding Layer ($\Delta t$) for irregular intervals. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/426" target="_blank" rel="noopener noreferrer">(Issue #426)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — BRCA Δt embedding consumed by both tracks.</li>
       <li>Deliverables: PyTorch module embedding inter-visit Δt; documented units (days/weeks) and missing-interval policy.</li>
@@ -105,7 +105,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels). <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Construct 4D tensors: (Batch, Time_Steps, Spatial_Features, Channels). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/427" target="_blank" rel="noopener noreferrer">(Issue #427)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — BRCA `(B, T, S, C)` tensors feed Track A and Track B search.</li>
       <li>Deliverables: HDF5 (or equivalent) writer/reader for `(B, T, S, C)` tensors plus metadata sidecars.</li>
@@ -114,7 +114,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA). <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Integrate Multi-Dataset Fusion for Rheumatoid Arthritis (RA). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/428" target="_blank" rel="noopener noreferrer">(Issue #428)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — RA unpaired multi-omic architecture.</li>
       <li>Deliverables: Combine GSE71841 (Phenotype Anchor) and DAS28 cohorts (Severity Anchor).</li>
@@ -123,7 +123,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Integrate Dataset Harmonization and Baseline for Epigenetic Aging. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Integrate Dataset Harmonization and Baseline for Epigenetic Aging. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/429" target="_blank" rel="noopener noreferrer">(Issue #429)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — Epigenetic clock pipeline.</li>
       <li>Deliverables: Harmonize GSE40279, GSE87571, and GSE280465 via CpG probe intersection.</li>
@@ -133,7 +133,7 @@
   </div>
   <h4>Step 2: MTL Integration</h4>
   <div class="task">
-    <h4>Configure MTL Loss Routing for Rheumatoid Arthritis (RA). <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Configure MTL Loss Routing for Rheumatoid Arthritis (RA). <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/430" target="_blank" rel="noopener noreferrer">(Issue #430)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — Ensure custom training loop perfectly handles dataset-specific masking.</li>
       <li>Deliverables: Binary Phenotype prediction and ordinal Severity prediction routing.</li>
@@ -142,7 +142,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Configure MTL Loss Routing for Epigenetic Aging. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Configure MTL Loss Routing for Epigenetic Aging. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/431" target="_blank" rel="noopener noreferrer">(Issue #431)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — Ordinal target discretization.</li>
       <li>Deliverables: K=4 ordinal tiers for EAA.</li>
@@ -154,7 +154,7 @@
   <p class="goal"><strong>Phase 2</strong> (Phase 2: Code Abstraction &amp; Generalization) · <strong>Goal:</strong> Provision reproducible compute and experiment orchestration.</p>
   <h4>Step 1: Infrastructure</h4>
   <div class="task">
-    <h4>Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Provision compute servers with `torch`, `tsai`/`sktime`, `optuna`. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/432" target="_blank" rel="noopener noreferrer">(Issue #432)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — environment supports unconstrained and pathway-masked models.</li>
       <li>Deliverables: environment lockfile / Docker image pin list; smoke-test script importing stack packages.</li>
@@ -163,7 +163,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Set up Dockerized PostgreSQL engine for orchestration. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Set up Dockerized PostgreSQL engine for orchestration. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/433" target="_blank" rel="noopener noreferrer">(Issue #433)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — separate Optuna studies for Track A and Track B (BRCA first).</li>
       <li>Deliverables: `docker-compose` (or k8s) Postgres for Optuna/study metadata; backup/restore notes.</li>
@@ -177,7 +177,7 @@
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Code modular spatial PyTorch blocks for the NAS search space.</p>
   <h4>Step 1: Spatial Modules</h4>
   <div class="task">
-    <h4>Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Develop 1D-CNNs for local clusters of CpG sites and Spatial Transformers for long-range dependencies. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/434" target="_blank" rel="noopener noreferrer">(Issue #434)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — BRCA spatial blocks; Track A unconstrained; Track B adds pathway-masked / adjacency-constrained variants (`MaskedLinear`).</li>
       <li>Deliverables: reusable `nn.Module`s with configurable depth/width; registered in Optuna search space.</li>
@@ -189,7 +189,7 @@
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Implement temporal progression blocks for longitudinal forecasting.</p>
   <h4>Step 1: Temporal Modules</h4>
   <div class="task">
-    <h4>Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/435" target="_blank" rel="noopener noreferrer">(Issue #435)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — BRCA temporal stack shared where possible; Track B may route pathway-selected features into the same temporal blocks.</li>
       <li>Deliverables: temporal stack modules that consume Δt embeddings; optional attention over time.</li>
@@ -201,7 +201,7 @@
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Execute large-scale distributed spatio-temporal architecture search.</p>
   <h4>Step 1: Large Scale Search</h4>
   <div class="task">
-    <h4>Execute large-scale spatio-temporal architecture search with Causal Cross-Validation. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Execute large-scale spatio-temporal architecture search with Causal Cross-Validation. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/436" target="_blank" rel="noopener noreferrer">(Issue #436)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A then Track B — BRCA Optuna studies run for both tracks (control then Bio-NAS, or parallel with distinct study IDs).</li>
       <li>Deliverables: Optuna study configs, causal CV splitter, trial metrics schema (loss, AUROC/C-index as applicable).</li>
@@ -210,7 +210,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Use Horizontally Scaled Workers via Slurm and HyperbandPruner. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Use Horizontally Scaled Workers via Slurm and HyperbandPruner. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/437" target="_blank" rel="noopener noreferrer">(Issue #437)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — Slurm workers serve BRCA Track A and Track B studies.</li>
       <li>Deliverables: Slurm job templates; HyperbandPruner wired; worker scale-out runbook.</li>
@@ -219,7 +219,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Integrate TensorBoard Logging into the training loop. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Integrate TensorBoard Logging into the training loop. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/438" target="_blank" rel="noopener noreferrer">(Issue #438)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — TensorBoard tracking required for both tracks.</li>
       <li>Deliverables: Dynamic log paths (`runs/mtl_experiment_{disease_name}`); scalar logging for phenotype and severity metrics.</li>
@@ -231,7 +231,7 @@
   <p class="goal"><strong>Phase 3</strong> (Phase 3: Scaling to the Comparative Matrix) · <strong>Goal:</strong> Benchmark searched architectures against baselines and ablations.</p>
   <h4>Step 1: Benchmarking</h4>
   <div class="task">
-    <h4>Evaluate architectures on 20% holdout trajectories. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Evaluate architectures on 20% holdout trajectories. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/439" target="_blank" rel="noopener noreferrer">(Issue #439)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A vs B — BRCA holdout metrics for best Track A and Track B architectures side-by-side.</li>
       <li>Deliverables: holdout evaluation script + metrics table for best NAS architectures.</li>
@@ -240,7 +240,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Ablation study: Spatial vs. Spatio-Temporal predictive gain. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Ablation study: Spatial vs. Spatio-Temporal predictive gain. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/440" target="_blank" rel="noopener noreferrer">(Issue #440)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — BRCA ablations repeated per track where applicable.</li>
       <li>Deliverables: controlled ablation comparing spatial-only vs full spatio-temporal models.</li>
@@ -249,7 +249,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Compare with longitudinal Random Forests/XGBoost. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Compare with longitudinal Random Forests/XGBoost. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/441" target="_blank" rel="noopener noreferrer">(Issue #441)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track-agnostic baseline — BRCA classical baselines (shared external control for both tracks).</li>
       <li>Deliverables: classical baseline pipelines on comparable flattened/windowed features.</li>
@@ -263,7 +263,7 @@
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Attribute predictions to spatial sites and timepoints.</p>
   <h4>Step 1: Multi-dimensional Attribution</h4>
   <div class="task">
-    <h4>Implement `captum` or `shap` for multi-dimensional attribution. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Implement `captum` or `shap` for multi-dimensional attribution. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/442" target="_blank" rel="noopener noreferrer">(Issue #442)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — BRCA attribution pipelines for both best models.</li>
       <li>Deliverables: attribution pipeline producing per-sample spatial×temporal importance tensors.</li>
@@ -272,7 +272,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Extract maps identifying CpG sites and timestamps driving disease progression predictions. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Extract maps identifying CpG sites and timestamps driving disease progression predictions. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/443" target="_blank" rel="noopener noreferrer">(Issue #443)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — BRCA site/time maps; Track B maps checked against pathway priors.</li>
       <li>Deliverables: ranked site/time maps + export (CSV/Parquet) and summary figures.</li>
@@ -284,7 +284,7 @@
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Build an interactive clinical trajectory interface.</p>
   <h4>Step 1: Streamlit Dashboard</h4>
   <div class="task">
-    <h4>Build interactive `streamlit` interface. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Build interactive `streamlit` interface. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/444" target="_blank" rel="noopener noreferrer">(Issue #444)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — BRCA demo app toggles Track A vs Track B predictions.</li>
       <li>Deliverables: Streamlit app loading model outputs and patient trajectories.</li>
@@ -293,7 +293,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Render health trajectories and risk forecasting curves. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Render health trajectories and risk forecasting curves. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/445" target="_blank" rel="noopener noreferrer">(Issue #445)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — BRCA observed vs predicted curves for both tracks.</li>
       <li>Deliverables: plots for observed vs predicted risk over time with uncertainty bands if available.</li>
@@ -305,7 +305,7 @@
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Document discovery and prepare framework release notes.</p>
   <h4>Step 1: Synthesis</h4>
   <div class="task">
-    <h4>Document structural taxonomy discovered. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Document structural taxonomy discovered. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/446" target="_blank" rel="noopener noreferrer">(Issue #446)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — taxonomy across BRCA and Other 4 after scaling gate; if gate fails, BRCA-only dual-track taxonomy.</li>
       <li>Deliverables: taxonomy chapter/section mapping architectures to disease categories and motifs.</li>
@@ -314,7 +314,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Compare slow-progressing vs. fast-acting condition architectures. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Compare slow-progressing vs. fast-acting condition architectures. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/447" target="_blank" rel="noopener noreferrer">(Issue #447)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — Other 4 (Alzheimer&#x27;s, RA, T2D, Epigenetic Aging) dual-track comparisons when justified; else BRCA tempo analysis only.</li>
       <li>Deliverables: comparative analysis contrasting architecture preferences across disease tempos.</li>
@@ -326,7 +326,7 @@
   <p class="goal"><strong>Phase 4</strong> (Phase 4: Thesis Synthesis &amp; Final Deliverables) · <strong>Goal:</strong> Finalize dissertation and release the open-source framework.</p>
   <h4>Step 1: Defense</h4>
   <div class="task">
-    <h4>Finalize dissertation. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Finalize dissertation. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/376" target="_blank" rel="noopener noreferrer">(Issue #376)</a></h4>
     <ul class="reqs">
       <li>Track scope: Track A + Track B — thesis reports BRCA dual-track result and any Other 4 extensions.</li>
       <li>Deliverables: defense draft, slides, and response-to-committee checklist.</li>
@@ -335,7 +335,7 @@
     </ul>
   </div>
   <div class="task">
-    <h4>Release the complete open-source Python framework. <span class="issue missing">(Missing issue)</span></h4>
+    <h4>Release the complete open-source Python framework. <a class="issue" href="https://github.com/AdamCankaya/PhDNeural/issues/377" target="_blank" rel="noopener noreferrer">(Issue #377)</a></h4>
     <ul class="reqs">
       <li>Track scope: Shared (A+B) — OSS release includes Track A and Track B tooling for BRCA; Other 4 configs as available.</li>
       <li>Deliverables: tagged release, install docs, example notebooks, license/citation.</li>
