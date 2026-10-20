@@ -50,6 +50,34 @@ def step_failures_for_disease(steps: list[tuple[str, int]], keywords: tuple[str,
     return failed
 
 
+_SKIP_LABELS: dict[str, str] = {
+    "plan1_deferred": "Skipped (not in Plan-1 demo; public GEO deferred)",
+    "credentials_dua": "Skipped (credentials/DUA required)",
+}
+
+
+def skipped_status(path: Path) -> str | None:
+    """Return dashboard status when ``.skipped`` exists, else None."""
+    marker = path / ".skipped"
+    if not marker.is_file():
+        return None
+    raw = marker.read_text(encoding="utf-8").strip()
+    if raw in _SKIP_LABELS:
+        return _SKIP_LABELS[raw]
+    lowered = raw.lower()
+    if raw and ("dua" in lowered or "credential" in lowered or "account" in lowered or "agreement" in lowered):
+        return _SKIP_LABELS["credentials_dua"]
+    if raw and ("plan-1" in lowered or "plan1" in lowered or "deferred" in lowered):
+        return _SKIP_LABELS["plan1_deferred"]
+    if not raw:
+        if path.name == "epigenetic_aging":
+            return _SKIP_LABELS["plan1_deferred"]
+        if path.name in ("adni", "t2d"):
+            return _SKIP_LABELS["credentials_dua"]
+        return "Skipped"
+    return f"Skipped ({raw.splitlines()[0][:120]})"
+
+
 def disease_row(
     name: str,
     path: Path,
@@ -65,9 +93,10 @@ def disease_row(
     nas_path = path / "nas_demo_results.json"
     manifest_path = path / "manifest.json"
     failed_steps = step_failures_for_disease(steps, step_keywords)
+    skip_status = skipped_status(path)
 
-    if (path / ".skipped").is_file():
-        status = "Skipped (Credentials/DUA required)"
+    if skip_status is not None:
+        status = skip_status
     elif failed_steps and not (path / ".ready").is_file() and not nas_path.is_file() and not feature_files:
         status = f"Failed ({len(failed_steps)} step(s))"
     elif (path / ".ready").is_file() or manifest_path.is_file():
@@ -83,7 +112,7 @@ def disease_row(
         if failed_steps:
             status = f"Failed ({len(failed_steps)} step(s))"
 
-    if manifest_path.is_file():
+    if skip_status is None and manifest_path.is_file():
         try:
             with manifest_path.open(encoding="utf-8") as fh:
                 manifest = json.load(fh)
@@ -91,7 +120,7 @@ def disease_row(
         except (json.JSONDecodeError, OSError):
             samples = "Unknown"
 
-    if nas_path.is_file():
+    if skip_status is None and nas_path.is_file():
         try:
             with nas_path.open(encoding="utf-8") as fh:
                 nas = json.load(fh)
@@ -111,7 +140,7 @@ def disease_row(
                 nas_details += f", Val loss: {loss:.4f}"
         except (json.JSONDecodeError, OSError, TypeError, ValueError):
             nas_details = "Error parsing NAS"
-    elif feature_files:
+    elif skip_status is None and feature_files:
         nas_details = f"{len(feature_files)} GEO matrix file(s); no NAS results yet"
     elif status.startswith("Failed"):
         nas_details = "; ".join(failed_steps[:3])

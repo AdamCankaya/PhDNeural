@@ -13,7 +13,7 @@ venv/
 .mypy_cache/
 
 # Generated / large data (never commit downloaded cohorts or demo artifacts)
-data/
+/data/
 *.h5
 *.hdf5
 *.bam

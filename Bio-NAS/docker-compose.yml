@@ -25,6 +25,8 @@ services:
       SMOKE_EXPECTED_JSON: /app/docs/data/smoke_expected.json
       ADNI_SAMPLE_OUT: /data/adni
       RA_SAMPLE_OUT: /data/ra
+      RA_SAMPLE_N: "${RA_SAMPLE_N:-8}"
+      RA_SMOKE_EXPECTED_JSON: /app/docs/data/smoke_expected_ra.json
       T2D_SAMPLE_OUT: /data/t2d
       EPIGENETIC_AGING_SAMPLE_OUT: /data/epigenetic_aging
       # ~5–10 patients (clamped in download script).

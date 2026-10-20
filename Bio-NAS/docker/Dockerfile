@@ -21,10 +21,13 @@ COPY scripts/verify_cohort_inventory_open.py /app/scripts/verify_cohort_inventor
 COPY scripts/download_adni_sample.py /app/scripts/download_adni_sample.py
 COPY scripts/train_nas_ad_demo.py /app/scripts/train_nas_ad_demo.py
 COPY scripts/download_geo_series_sample.py /app/scripts/download_geo_series_sample.py
+COPY scripts/download_geo_ra_sample.py /app/scripts/download_geo_ra_sample.py
+COPY scripts/verify_geo_smoke.py /app/scripts/verify_geo_smoke.py
 COPY scripts/train_toy_nas_cpu.py /app/scripts/train_toy_nas_cpu.py
 COPY scripts/build_dashboard.py /app/scripts/build_dashboard.py
 COPY docker/entrypoint.sh /app/entrypoint.sh
 COPY docs/data/smoke_expected.json /app/docs/data/smoke_expected.json
+COPY docs/data/smoke_expected_ra.json /app/docs/data/smoke_expected_ra.json
 
 ENV PYTHONUNBUFFERED=1 \
     TCGA_SAMPLE_OUT=/data/tcga/BRCA \
@@ -34,6 +37,8 @@ ENV PYTHONUNBUFFERED=1 \
     SMOKE_EXPECTED_JSON=/app/docs/data/smoke_expected.json \
     ADNI_SAMPLE_OUT=/data/adni \
     RA_SAMPLE_OUT=/data/ra \
+    RA_SAMPLE_N=8 \
+    RA_SMOKE_EXPECTED_JSON=/app/docs/data/smoke_expected_ra.json \
     T2D_SAMPLE_OUT=/data/t2d \
     EPIGENETIC_AGING_SAMPLE_OUT=/data/epigenetic_aging \
     SKIP_ALZHEIMERS=1 \

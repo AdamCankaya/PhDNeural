@@ -196,6 +196,94 @@ def load_cohort(data_dir: Path, n_cpgs: int) -> tuple[np.ndarray, np.ndarray, li
     return x, y, case_ids
 
 
+def _ra_label_from_demographics(demo: dict[str, Any]) -> int:
+    """Map GSE71841 demographics row to binary label (0=Healthy, 1=RA)."""
+    if "label" in demo and demo["label"] is not None:
+        return int(demo["label"])
+    sample_type = str(demo.get("sample_type") or "").lower()
+    if "control" in sample_type:
+        return 0
+    if "case" in sample_type:
+        return 1
+    phenotype = str(demo.get("phenotype") or demo.get("disease_status") or "").lower()
+    if phenotype in ("healthy", "control"):
+        return 0
+    if phenotype in ("ra", "rheumatoid arthritis"):
+        return 1
+    return 0
+
+
+def load_ra_cohort(data_dir: Path, n_cpgs: int) -> tuple[np.ndarray, np.ndarray, list[str]]:
+    """Load GEO RA methylation + Healthy vs RA labels from manifest/demographics."""
+    manifest_path = data_dir / "manifest.json"
+    demo_path = data_dir / "demographics.json"
+    if not manifest_path.exists():
+        raise FileNotFoundError(f"Missing {manifest_path}; run download_geo_ra_sample first.")
+    if not demo_path.exists():
+        raise FileNotFoundError(f"Missing {demo_path}; run download_geo_ra_sample first.")
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    demographics = {
+        row["case_id"]: row
+        for row in json.loads(demo_path.read_text(encoding="utf-8"))
+    }
+    cohort = manifest.get("cohort") or []
+    if len(cohort) < 5:
+        raise RuntimeError(f"Expected >=5 cases in manifest, found {len(cohort)}")
+
+    meth_by_case: dict[str, dict[str, float]] = {}
+    files_dir = data_dir / "files"
+    for entry in cohort:
+        case_id = entry["case_id"]
+        path = _resolve_meth_path(entry, files_dir, manifest)
+        meth_by_case[case_id] = _parse_methylation_betas(
+            path, max_rows=max(5000, n_cpgs * 25)
+        )
+
+    probe_sets = [set(v.keys()) for v in meth_by_case.values()]
+    common = set.intersection(*probe_sets) if probe_sets else set()
+    if len(common) < 10:
+        common = set()
+        for vals in meth_by_case.values():
+            common.update(list(vals.keys())[:n_cpgs])
+    probes = sorted(common)
+    mat = np.array(
+        [[meth_by_case[c["case_id"]].get(p, np.nan) for p in probes] for c in cohort],
+        dtype=np.float64,
+    )
+    col_means = np.nanmean(mat, axis=0)
+    inds = np.where(np.isnan(mat))
+    mat[inds] = np.take(col_means, inds[1])
+    mat = np.clip(mat, 0.0, 1.0)
+
+    if mat.shape[1] > n_cpgs:
+        var = mat.var(axis=0)
+        keep = np.argsort(var)[-n_cpgs:]
+        probes = [probes[i] for i in keep]
+        mat = mat[:, keep]
+
+    labels: list[int] = []
+    case_ids: list[str] = []
+    for entry in cohort:
+        case_id = entry["case_id"]
+        demo: dict[str, Any] = demographics.get(case_id, {})
+        labels.append(_ra_label_from_demographics(demo))
+        case_ids.append(demo.get("geo_accession") or case_id)
+
+    x = mat
+    y = np.array(labels, dtype=np.int64)
+
+    if len(np.unique(y)) < 2:
+        _log("Note: RA labels are single-class; using median-split proxy label.")
+        y = (x[:, 0] >= np.median(x[:, 0])).astype(np.int64)
+
+    _log(
+        f"Loaded {x.shape[0]} patients × {x.shape[1]} methylation features "
+        f"({len(probes)} CpGs); label counts={np.bincount(y)}"
+    )
+    return x, y, case_ids
+
+
 def run_nas(x: np.ndarray, y: np.ndarray) -> dict[str, Any]:
     """Leave-one-out CV over a small MLP architecture grid."""
     loo = LeaveOneOut()

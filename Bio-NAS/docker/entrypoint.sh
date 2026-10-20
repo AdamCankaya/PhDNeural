@@ -41,34 +41,31 @@ fi
 
 if truthy "${SKIP_ALZHEIMERS:-1}"; then
   mkdir -p "$DATA_ROOT/adni"
-  : > "$DATA_ROOT/adni/.skipped"
+  printf '%s\n' "credentials_dua" > "$DATA_ROOT/adni/.skipped"
   echo "--- Alzheimer's skipped: ADNI/LONI requires approved controlled access ---"
 else
   echo "Refusing ADNI run: this image never downloads controlled-access data." >&2
   exit 2
 fi
 
-run_step "RA public GEO sample (GSE71841)" python /app/scripts/download_geo_series_sample.py --accession GSE71841 --out-dir "$RA_DIR"
+run_step "RA public GEO sample (GSE71841)" python /app/scripts/download_geo_ra_sample.py --out-dir "$RA_DIR"
+run_step "RA smoke verify" python /app/scripts/verify_geo_smoke.py --smoke-dir "$RA_DIR"
 if ! truthy "${SKIP_RA_NAS:-0}"; then
-  run_step "RA toy NAS" python /app/scripts/train_toy_nas_cpu.py --disease "Rheumatoid Arthritis" --data-dir "$RA_DIR"
+  run_step "RA toy NAS" python /app/scripts/train_toy_nas_cpu.py --disease "Rheumatoid Arthritis" --data-dir "$RA_DIR" --ra
 fi
 
 if truthy "${SKIP_T2D:-1}"; then
   mkdir -p "$DATA_ROOT/t2d"
-  : > "$DATA_ROOT/t2d/.skipped"
+  printf '%s\n' "credentials_dua" > "$DATA_ROOT/t2d/.skipped"
   echo "--- Type 2 Diabetes skipped: KORA F4/FF4 requires a project agreement ---"
 else
   echo "Refusing KORA run: configure a separate, explicitly open proxy before enabling T2D." >&2
   exit 2
 fi
 
-for accession in GSE40279 GSE87571 GSE280465; do
-  run_step "Epigenetic Aging public GEO sample (${accession})" \
-    python /app/scripts/download_geo_series_sample.py --accession "$accession" --out-dir "$AGING_DIR" --max-samples 8
-done
-if ! truthy "${SKIP_EPIGENETIC_AGING_NAS:-0}"; then
-  run_step "Epigenetic Aging toy NAS" python /app/scripts/train_toy_nas_cpu.py --disease "Epigenetic Aging" --data-dir "$AGING_DIR"
-fi
+mkdir -p "$AGING_DIR"
+printf '%s\n' "plan1_deferred" > "$AGING_DIR/.skipped"
+echo "--- Epigenetic Aging skipped in Plan-1 image (BRCA + RA demo); see data/epigenetic_aging/.skipped ---"
 
 export DATA_ROOT
 export DASHBOARD_OUT="${DASHBOARD_OUT:-$DATA_ROOT/dashboard/dashboard.html}"
