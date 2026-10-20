@@ -1,0 +1,9 @@
+{
+  "schema_version": 2,
+  "accession": "GSE87571",
+  "access": "open",
+  "n_cases_min": 5,
+  "n_cases_max": 10,
+  "required_label_values": [0, 1],
+  "poc_modalities": ["methylation_beta", "clinical_labels"]
+}

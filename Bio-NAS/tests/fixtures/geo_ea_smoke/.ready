@@ -1,0 +1,6 @@
+{
+  "accession": "GSE87571",
+  "schema_version": 2,
+  "n_cases": 6,
+  "poc_modalities": ["methylation_beta", "clinical_labels"]
+}

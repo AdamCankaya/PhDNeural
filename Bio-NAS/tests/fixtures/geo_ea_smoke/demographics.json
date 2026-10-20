@@ -1,0 +1,8 @@
+[
+  {"case_id": "GSM_EA001", "geo_accession": "GSM_EA001", "age": 35, "phenotype": "younger", "label": 0},
+  {"case_id": "GSM_EA002", "geo_accession": "GSM_EA002", "age": 41, "phenotype": "younger", "label": 0},
+  {"case_id": "GSM_EA003", "geo_accession": "GSM_EA003", "age": 48, "phenotype": "younger", "label": 0},
+  {"case_id": "GSM_EA004", "geo_accession": "GSM_EA004", "age": 55, "phenotype": "older", "label": 1},
+  {"case_id": "GSM_EA005", "geo_accession": "GSM_EA005", "age": 62, "phenotype": "older", "label": 1},
+  {"case_id": "GSM_EA006", "geo_accession": "GSM_EA006", "age": 71, "phenotype": "older", "label": 1}
+]

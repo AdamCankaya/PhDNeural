@@ -69,6 +69,7 @@ Every timeline item on the dashboard and master-plan HTML links to its GitHub is
 | [Data Acquisition BRCA](Data-Acquisition-BRCA) | TCGA sourcing, HDF5, disease registry, Docker smoke |
 | [Data Acquisition Alzheimer's](Data-Acquisition-Alzheimer's) | ADNI (LONI) primary lock, DUA in progress, Docker scaffold |
 | [Data Acquisition RA](Data-Acquisition-RA) | GSE71841 open GEO smoke, Healthy vs RA labels, Docker verify + toy NAS |
+| [Data Acquisition EA](Data-Acquisition-EA) | GSE87571 open GEO smoke, age-bin labels, Docker verify + toy NAS |
 | [Architecture Decisions](Architecture-Decisions) | ADRs for Bio-NAS and MTL design |
 | [Experiment Log Template](Experiment-Log-Template) | Reproducible experiment records |
 | [FAQ and Troubleshooting](FAQ-and-Troubleshooting) | Research design + sync/dashboard FAQs |

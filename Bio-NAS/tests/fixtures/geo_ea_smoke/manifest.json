@@ -1,0 +1,17 @@
+{
+  "project": "GSE87571",
+  "accession": "GSE87571",
+  "source": "fixture",
+  "access": "open",
+  "schema_version": 2,
+  "n_cases": 6,
+  "poc_modalities": ["methylation_beta", "clinical_labels"],
+  "cohort": [
+    {"case_id": "GSM_EA001", "geo_accession": "GSM_EA001", "methylation_file_name": "GSM_EA001_methylation.tsv"},
+    {"case_id": "GSM_EA002", "geo_accession": "GSM_EA002", "methylation_file_name": "GSM_EA002_methylation.tsv"},
+    {"case_id": "GSM_EA003", "geo_accession": "GSM_EA003", "methylation_file_name": "GSM_EA003_methylation.tsv"},
+    {"case_id": "GSM_EA004", "geo_accession": "GSM_EA004", "methylation_file_name": "GSM_EA004_methylation.tsv"},
+    {"case_id": "GSM_EA005", "geo_accession": "GSM_EA005", "methylation_file_name": "GSM_EA005_methylation.tsv"},
+    {"case_id": "GSM_EA006", "geo_accession": "GSM_EA006", "methylation_file_name": "GSM_EA006_methylation.tsv"}
+  ]
+}

@@ -30,7 +30,7 @@ The Plan-1 executable deliverable is a sequential, CPU-only Docker run that keep
 | Alzheimer's | Skip | ADNI/LONI requires approved controlled access / DUA |
 | Rheumatoid Arthritis | Run: GSE71841 GEO sample + toy NAS | Public GEO source; DAS28 accession is not yet specified for automated retrieval |
 | Type 2 Diabetes | Skip | KORA F4/FF4 requires a project agreement; a future explicitly open proxy may replace it |
-| Epigenetic Aging | Skip in Plan-1 image (`epigenetic_aging/.skipped`) | Public GEO deferred; BRCA + RA demo focus |
+| Epigenetic Aging | Run: GSE87571 GEO sample + toy NAS | Single open GEO series for Plan-1; three-study harmonization deferred — see [EA toy NAS implementation plan](01-issue-354-ea-toy-nas-implementation.md) |
 
 The dashboard aggregates mounted `nas_demo_results.json` files. Toy metrics are pipeline smoke metrics only, never clinical claims. A GitHub Repository Dispatch is optional and disabled by default; a repository workflow must turn that event into a mobile notification.
 
@@ -69,7 +69,7 @@ Maps 1:1 to the issue **Implementation requirements**, plus a Plan-01 Docker rep
 - [x] Expected pins: `docs/data/smoke_expected.json` (schema_version 2, case/file ranges, PoC labels) — checked by the verify script when `manifest.json` is present.
 - [x] Newcomer docs: [`docker/README.md`](../../docker/README.md) + this plan list expected Plan-1 host outputs (BRCA smoke + verification + ADNI status).
 - [ ] **ADNI DUA / download acceptance:** blocked on account approval; then stage sample or wire approved LONI client (outside scrape).
-- [x] **Public multi-disease Docker acceptance:** compose downloads BRCA + RA (GSE71841, BRCA-shaped artifacts); runs isolated CPU toy NAS jobs; skips ADNI/KORA/epigenetic aging by default; writes `data/dashboard/dashboard.html`. No NVIDIA runtime, GPU reservation, or CUDA call is permitted in this pipeline.
+- [x] **Public multi-disease Docker acceptance:** compose downloads BRCA + RA (GSE71841) + Epigenetic Aging (GSE87571, BRCA-shaped artifacts); runs isolated CPU toy NAS jobs; skips ADNI/KORA by default; writes `data/dashboard/dashboard.html`. No NVIDIA runtime, GPU reservation, or CUDA call is permitted in this pipeline.
 - [ ] **Dashboard notification acceptance:** optional Repository Dispatch is documented with no token in the repository and disabled unless explicitly enabled in `.env`.
 
 
@@ -163,6 +163,7 @@ Prefer extending the existing entrypoint and scripts over inventing a parallel s
 8. [x] **Alzheimer's primary lock + ADNI Docker scaffold:** inventory lock; `download_adni_sample.py` / `train_nas_ad_demo.py`; compose mount `./data/adni`; entrypoint steps 4–5; skip without credentials.
 9. [ ] **ADNI DUA approval + sample acceptance** (outside Docker / post-credential).
 10. [x] **Remaining Other-3 primary lock decisions**: RA, T2D, and Epigenetic Aging locked.
+11. [x] **Epigenetic Aging Plan-1 Docker smoke:** implement [01-issue-354-ea-toy-nas-implementation.md](01-issue-354-ea-toy-nas-implementation.md) (GSE87571 download → verify → `train_toy_nas_cpu.py --ea`).
 
 ## Expected Plan-1 host outputs (BRCA)
 

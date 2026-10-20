@@ -63,9 +63,12 @@ else
   exit 2
 fi
 
-mkdir -p "$AGING_DIR"
-printf '%s\n' "plan1_deferred" > "$AGING_DIR/.skipped"
-echo "--- Epigenetic Aging skipped in Plan-1 image (BRCA + RA demo); see data/epigenetic_aging/.skipped ---"
+EA_EXPECTED="${EA_SMOKE_EXPECTED_JSON:-/app/docs/data/smoke_expected_ea.json}"
+run_step "EA public GEO sample (GSE87571)" python /app/scripts/download_geo_ea_sample.py --out-dir "$AGING_DIR"
+run_step "EA smoke verify" python /app/scripts/verify_geo_smoke.py --smoke-dir "$AGING_DIR" --expected "$EA_EXPECTED"
+if ! truthy "${SKIP_EPIGENETIC_AGING_NAS:-0}"; then
+  run_step "EA toy NAS" python /app/scripts/train_toy_nas_cpu.py --disease "Epigenetic Aging" --data-dir "$AGING_DIR" --ea
+fi
 
 export DATA_ROOT
 export DASHBOARD_OUT="${DASHBOARD_OUT:-$DATA_ROOT/dashboard/dashboard.html}"
