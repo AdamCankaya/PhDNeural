@@ -224,6 +224,7 @@ Re-runs skip the BRCA download when `data\tcga\BRCA\.ready` already exists.
 
 | Location | Path |
 |----------|------|
+| **Toy NAS dashboard** | `Bio-NAS\data\dashboard\dashboard.html` (always regenerated; lists failed steps if any) |
 | Host (Explorer) BRCA | `Bio-NAS\data\tcga\BRCA\` and `Bio-NAS\data\tcga\inventory_verification\` |
 | Host (Explorer) ADNI | `Bio-NAS\data\adni\` (`adni_access_status.json` while DUA pending) |
 | Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\`, `verification.json`, `adni_access_status.json` |
