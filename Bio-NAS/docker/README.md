@@ -130,7 +130,9 @@ Typical catalog size for ~8 joint cases is on the order of **~100–200 MB**. St
 
 ## Viewing results
 
-**Primary (UI):** [Dozzle](https://dozzle.dev/) at [http://localhost:8080](http://localhost:8080) — live logs for `bio-nas-demo`. Starts with `docker compose up`.
+**Toy NAS dashboard (HTML):** after every run (even when individual disease steps fail), open **`data/dashboard/dashboard.html`** on the host. Failed steps are listed at the top; per-disease rows reflect the latest on-disk artifacts. Step details: `data/dashboard/pipeline_steps.log`. The container may exit with code **1** when some steps failed even though the dashboard was written.
+
+**Logs UI:** [Dozzle](https://dozzle.dev/) at [http://localhost:8080](http://localhost:8080) — live logs for `bio-nas-demo`. Starts with `docker compose up`.
 
 **CLI:**
 
@@ -139,7 +141,7 @@ cd Bio-NAS
 docker compose logs bio-nas-demo
 ```
 
-**On the host:** open `data/tcga/BRCA/nas_demo_results.json`, `data/tcga/inventory_verification/verification.json`, and `data/adni/adni_access_status.json`.
+**On the host:** `data/dashboard/dashboard.html`, plus `data/tcga/BRCA/nas_demo_results.json`, `data/tcga/inventory_verification/verification.json`, and `data/adni/adni_access_status.json`.
 
 ## Access / auth
 
