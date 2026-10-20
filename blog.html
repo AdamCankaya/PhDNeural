@@ -76,6 +76,19 @@
 
     <main>
         <article class="post">
+            <h2>Public Toy NAS for RA — and the EA Smoke Pattern</h2>
+            <div class="post-meta">
+                <span>📅 October 20, 2026</span>
+                <span>👤 Adam Cankaya</span>
+            </div>
+            <div class="post-content">
+                <p>Plan 1’s Docker pipeline now runs a real open-access <strong>Rheumatoid Arthritis</strong> slice end to end, not a mock cohort. We pull a tiny sample from GEO <strong>GSE71841</strong>, verify it against pinned smoke expectations, and run the same CPU-only PyTorch toy NAS we use for BRCA—searching a few MLP widths with leave-one-out-style holdout on methylation betas and binary Healthy vs RA labels. Results land on the host as <code>data/ra/nas_demo_results.json</code> and show up on the static dashboard beside BRCA.</p>
+                <p>The purpose is orchestration smoke: prove we can download, normalize on-disk artifacts to a BRCA-shaped layout (<code>manifest.json</code>, per-GSM methylation TSVs, <code>.ready</code>), and feed a disease-specific loader into <code>train_toy_nas_cpu.py</code> without claiming clinical accuracy. DAS28 severity and multi-study fusion stay on the thesis roadmap; this step only validates the public-data path for the Other-4.</p>
+                <p>For <strong>Epigenetic Aging (EA)</strong>, we locked the same pattern on <strong>GSE87571</strong>: stratified age-bin labels for a two-class smoke target, reuse of <code>verify_geo_smoke.py</code>, and a planned <code>--ea</code> loader mirroring RA. The detailed implementation checklist lives in the repo under Bio-NAS Plan 01; once wired into <code>docker/entrypoint.sh</code>, EA will join BRCA and RA as a third public toy NAS row before we tackle controlled ADNI/KORA access.</p>
+            </div>
+        </article>
+
+        <article class="post">
             <h2>Finishing Plan 1 with Codex</h2>
             <div class="post-meta">
                 <span>📅 August 4, 2026</span>
