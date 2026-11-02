@@ -6,7 +6,7 @@ Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfi
 2. **Alzheimer's (ADNI):** `download_adni_sample.py` scaffold (status JSON; no controlled download without DUA) → optional `train_nas_ad_demo.py` when `.ready` exists.
 3. **RA (GEO GSE71841):** download → `verify_geo_smoke.py` → optional toy NAS.
 4. **T2D (KORA):** honest skip (project agreement required).
-5. **Epigenetic Aging (GEO GSE87571):** download → verify → optional toy NAS.
+5. **Epigenetic Aging (GEO GSE87571):** series-matrix metadata + supplementary `matrix1of2` betas → verify → optional toy NAS.
 6. **Dashboard:** `build_dashboard.py` → `data/dashboard/dashboard.html`.
 7. **Optional:** GitHub `repository_dispatch` when `GITHUB_DISPATCH_ENABLED=1`.
 
@@ -114,17 +114,17 @@ Wiki: [`docs/wiki/Data-Acquisition-RA.md`](../docs/wiki/Data-Acquisition-RA.md).
 
 | Host path (under `Bio-NAS/`) | Role |
 |------------------------------|------|
-| `data/epigenetic_aging/manifest.json` | Smoke catalog (`schema_version` 2, GSE87571, GSM cohort) |
+| `data/epigenetic_aging/manifest.json` | Smoke catalog (`schema_version` 2, GSE87571, GSM cohort, `beta_source`) |
 | `data/epigenetic_aging/demographics.json` | Age-bin labels (`age` &lt; 50 vs ≥ 50) |
 | `data/epigenetic_aging/files/` | Per-GSM `*_methylation.tsv` (`probe`, `beta_value`) |
 | `data/epigenetic_aging/.ready` | Download-complete marker |
 | `data/epigenetic_aging/nas_demo_results.json` | Toy NAS summary (`best_architecture.validation_accuracy`) |
 
-Pinned smoke expectations: [`docs/data/smoke_expected_ea.json`](../docs/data/smoke_expected_ea.json). Verified in-container by `scripts/verify_geo_smoke.py` after download.
+Pinned smoke expectations: [`docs/data/smoke_expected_ea.json`](../docs/data/smoke_expected_ea.json). Verified in-container by `scripts/verify_geo_smoke.py` after download. First run downloads supplementary `GSE87571_matrix1of2.txt.gz` (one-time large transfer); idempotent re-runs use `.ready`.
 
 Wiki: [`docs/wiki/Data-Acquisition-EA.md`](../docs/wiki/Data-Acquisition-EA.md).
 
-If `data/epigenetic_aging/.skipped` exists from an older Plan-1 run (`plan1_deferred`), **delete it** before re-running compose so the dashboard shows EA as Ready.
+If `data/epigenetic_aging/.skipped` exists from an older Plan-1 run (`plan1_deferred`), **delete it** before re-running compose so the dashboard shows EA as Ready (same artifact set as RA for a Ready row).
 
 Legacy `GSE*_features.tsv` trees from older entrypoints are not produced by the current pipeline.
 

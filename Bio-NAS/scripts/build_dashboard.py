@@ -167,7 +167,15 @@ def main() -> int:
             "Epigenetic Aging",
             data_root / "epigenetic_aging",
             "GSE40279, GSE87571, GSE280465",
-            ("Epigenetic Aging", "GSE40279", "GSE87571", "GSE280465"),
+            (
+                "Epigenetic Aging",
+                "GSE40279",
+                "GSE87571",
+                "GSE280465",
+                "EA smoke",
+                "EA toy",
+                "EA public",
+            ),
         ),
         ("Type 2 Diabetes", data_root / "t2d", "KORA F4/FF4", ("T2D", "Type 2 Diabetes", "KORA")),
     ]
