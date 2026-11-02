@@ -9,7 +9,7 @@ This repository contains the PhD research project.
 
 A Spatio-Temporal Bio-NAS framework investigating whether Biologically-Informed Neural Architecture Search (where neural pathways are constrained by known human anatomy, e.g., Gene Regulatory Networks) outperforms unconstrained, mathematical optimization in multi-omic disease prediction.
 
-- **24 roadmap items** — each linked 1:1 to a GitHub issue (`label:phd-sync`) with implementation requirements
+- **24 roadmap items** — each linked 1:1 to a GitHub issue (`label:phd-sync`) with implementation requirements; master-plan calendar **Summer 2026 kickoff → Spring 2029**
 - Live [timeline dashboard](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html) and [master plan](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html)
 - Dual-track framing (standard NAS vs biologically constrained architectures) with a BRCA-first comparative matrix
 
