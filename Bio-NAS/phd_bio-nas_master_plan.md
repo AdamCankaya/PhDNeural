@@ -45,6 +45,8 @@ Every quarter and checklist item declares a **Track scope** and **Cohort**:
 **Phases:** 1 | **Goal:** Identify and secure multi-disease datasets with repeated molecular measurements over time.
 **Track scope:** Shared (A+B) | **Cohort:** All 5 inventory; BRCA primary for PoC readiness
 #### Step 1: Data Acquisition
+> **Progress note (2026-11-02):** Checklist item 1 (multi-disease inventory / Plan 1) is **complete**. Checklist item 2 (longitudinal matching / Plan 2) is **next**.
+
 * Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).
   * Track scope: Shared (A+B) — All 5 cohort inventory; BRCA listed first as anchor.
   * Deliverables: dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories.

@@ -879,7 +879,10 @@
   ]
 };
 
-    const STORAGE_KEY = 'phd_plan_progress_v8';
+    const STORAGE_KEY = 'phd_plan_progress_v9';
+    const DEFAULT_PROGRESS = {
+  "year-1-q1-2026-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase": true
+};
 
     // ─── State ────────────────────────────────────────────────────────────────
     let progress = loadProgress();
@@ -889,8 +892,8 @@
     function loadProgress() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : {};
-      } catch { return {}; }
+        return raw ? JSON.parse(raw) : { ...DEFAULT_PROGRESS };
+      } catch { return { ...DEFAULT_PROGRESS }; }
     }
 
     function saveProgress() {

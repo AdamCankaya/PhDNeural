@@ -1,13 +1,16 @@
 # Docker — Plan-1 public multi-disease CPU toy NAS + static dashboard
 
-Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfile), then sequentially:
+Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfile), then sequentially runs the **unified Plan 1 chain** in [`entrypoint.sh`](entrypoint.sh):
 
-1. Downloads tiny public samples for **BRCA** (GDC), **RA** (GEO GSE71841), and **Epigenetic Aging** (GEO GSE87571) — BRCA-shaped manifest + per-sample methylation TSVs.
-2. Runs one independent CPU toy NAS per active disease and writes each `nas_demo_results.json` to its mounted directory.
-3. Skips **Alzheimer's/ADNI** and **T2D/KORA** (controlled access only).
-4. Builds `data/dashboard/dashboard.html`, aggregating the toy results.
+1. **BRCA (GDC):** tiny open TCGA-BRCA sample → **inventory verification** (public GDC API) → optional CPU toy NAS (`train_toy_nas_cpu.py --brca`).
+2. **Alzheimer's (ADNI):** `download_adni_sample.py` scaffold (status JSON; no controlled download without DUA) → optional `train_nas_ad_demo.py` when `.ready` exists.
+3. **RA (GEO GSE71841):** download → `verify_geo_smoke.py` → optional toy NAS.
+4. **T2D (KORA):** honest skip (project agreement required).
+5. **Epigenetic Aging (GEO GSE87571):** download → verify → optional toy NAS.
+6. **Dashboard:** `build_dashboard.py` → `data/dashboard/dashboard.html`.
+7. **Optional:** GitHub `repository_dispatch` when `GITHUB_DISPATCH_ENABLED=1`.
 
-ADNI and KORA are skipped by default because they require controlled access. No controlled-data credential is used or stored by the image. Toy NAS results validate the workflow only; they are not clinical evidence. Copy [`.env.example`](../.env.example) to `.env` to adjust skip flags or enable the optional GitHub Repository Dispatch.
+ADNI and KORA controlled paths stay skipped by default. No controlled-data credential is stored in the image. Toy NAS metrics validate orchestration only. Copy [`.env.example`](../.env.example) to `.env` for skip flags or dispatch.
 
 **Docker-first:** New Bio-NAS executable work should run in this container (or an extension of it), not as a host-only workflow. High-level Windows deploy steps: [Bio-NAS README § Deploy with Docker](../README.md#5-deploy-with-docker-windows). Agent rule: when Dockerfile / `COPY`'d scripts / requirements change, rebuild with `docker compose up --build` ([`.cursor/rules/docker-rebuild-notify.mdc`](../.cursor/rules/docker-rebuild-notify.mdc)).
 
@@ -27,18 +30,20 @@ Leave Docker Desktop running for all build/run steps below.
 
 ## What it does
 
-1. **Build** installs Python deps only (no TCGA/ADNI data baked into the image).
-2. **First `docker compose up` / `docker run`** queries GDC for ~5–10 BRCA cases that have **both** open methylation and RNA, and downloads:
-   - Clinical biotab + case demographics / AJCC labels
-   - Methylation beta-value files (Illumina Human Methylation 450 SeSAMe Level-3)
-   - RNA-seq gene expression (STAR counts) for the same cases (PoC-minimum completeness; **not** used by the toy train path)
-3. **Then** runs `scripts/verify_cohort_inventory_open.py` — public GDC API spot-check for TCGA-BRCA; writes `inventory_verification/` (ADNI listed under `skipped_controlled` — post-DUA).
-4. **Then** runs `scripts/train_nas_demo.py` — toy NAS over a few MLP widths with leave-one-out CV on **methylation features + stage labels only** (skip with `SKIP_NAS_DEMO=1`).
-5. **Then** runs `scripts/download_adni_sample.py` — ADNI scaffold. Without `ADNI_USER`/`ADNI_PASSWORD`, writes `adni_access_status.json` (`skipped_account_pending`) and exits 0. **Account + DUA in progress** — no controlled download attempted.
-6. **Then** runs `scripts/train_nas_ad_demo.py` — AD meth NAS only if `data/adni/.ready` + methylation files exist; otherwise skip exit 0.
-7. Re-runs skip BRCA download when `/data/tcga/BRCA/.ready` exists. If the download schema changes (manifest `schema_version`), delete `.ready` (and optionally `files/`) for a fresh pull.
+Entrypoint order matches the numbered list above. Details:
 
-Selection prefers joint meth+RNA cases ordered by `submitter_id`. Full ~1098-case cohort ETL is **Plan 07**, not this smoke.
+1. **Build** installs Python deps only (no cohort data baked into the image).
+2. **BRCA download** queries GDC for ~5–10 cases with **both** open methylation and RNA (clinical biotab + meth betas + STAR RNA — RNA not used by toy NAS).
+3. **Inventory verify** — `scripts/verify_cohort_inventory_open.py` spot-checks TCGA-BRCA via the public GDC API → `data/tcga/inventory_verification/` (`INVENTORY_VERIFY_DRY_RUN=1` skips network).
+4. **BRCA toy NAS** — `train_toy_nas_cpu.py --brca` (skip with `SKIP_BRCA_NAS=1` or legacy `SKIP_NAS_DEMO=1`).
+5. **ADNI scaffold** — `scripts/download_adni_sample.py` writes `adni_access_status.json` when credentials absent; `ADNI_SKIP=1` forces skip.
+6. **AD toy NAS** — `train_nas_ad_demo.py` only when `data/adni/.ready` exists (skip with `SKIP_AD_NAS_DEMO=1`).
+7. **RA / EA** — GEO downloads, `verify_geo_smoke.py`, optional per-disease toy NAS.
+8. **T2D** — writes `.skipped` marker; enabling controlled KORA requires explicit out-of-band agreement (entrypoint refuses `SKIP_T2D=0` today).
+9. **Dashboard** — always built last; aggregates `nas_demo_results.json` from mounted dirs.
+10. Re-runs skip BRCA/RA/EA downloads when each disease `.ready` exists.
+
+Selection prefers joint meth+RNA BRCA cases ordered by `submitter_id`. Full ~1098-case cohort ETL is **Plan 07**, not this smoke.
 
 ## Build & run
 

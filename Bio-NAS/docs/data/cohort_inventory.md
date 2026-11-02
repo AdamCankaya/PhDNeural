@@ -1,5 +1,7 @@
 # Multi-disease cohort inventory (Plan 01 / issue #354)
 
+> **Plan 01 status: Complete (2026-11-02).** Plan 1 Docker EA smoke uses **GSE87571 only** (single-series public GEO); three-study harmonization stays deferred.
+
 Inventory of candidate cohorts with **repeated molecular measurements over time** for BRCA, Alzheimer's, Rheumatoid Arthritis, Type 2 Diabetes, and **Epigenetic Aging**.
 
 | Field | Value |

@@ -1,5 +1,8 @@
-# Bio-NAS Plan-1: open GDC BRCA download → inventory verify → optional toy NAS
-# → ADNI (LONI) scaffold (skip without credentials) → optional AD NAS.
+# Bio-NAS Plan-1 CPU toy pipeline (docker/entrypoint.sh):
+#   BRCA GDC download → inventory verify → optional BRCA NAS
+#   → ADNI scaffold (+ optional AD NAS when .ready)
+#   → RA (GSE71841) verify/NAS → T2D honest skip → EA (GSE87571) verify/NAS
+#   → static dashboard → optional GitHub repository_dispatch
 # Usage (from Bio-NAS/): docker compose up --build
 # TCGA data/results persist on the host via ./data/tcga → /data/tcga.
 # ADNI scaffold status / future sample: ./data/adni → /data/adni.
@@ -37,8 +40,12 @@ services:
       TCGA_SAMPLE_MAX_BYTES: "1572864000"
       SKIP_ALZHEIMERS: "${SKIP_ALZHEIMERS:-1}"
       SKIP_T2D: "${SKIP_T2D:-1}"
+      INVENTORY_VERIFY_DRY_RUN: "${INVENTORY_VERIFY_DRY_RUN:-0}"
       SKIP_BRCA_NAS: "${SKIP_BRCA_NAS:-0}"
+      SKIP_NAS_DEMO: "${SKIP_NAS_DEMO:-0}"
       SKIP_RA_NAS: "${SKIP_RA_NAS:-0}"
+      SKIP_AD_NAS_DEMO: "${SKIP_AD_NAS_DEMO:-0}"
+      ADNI_SKIP: "${ADNI_SKIP:-0}"
       SKIP_EPIGENETIC_AGING_NAS: "${SKIP_EPIGENETIC_AGING_NAS:-0}"
       TORCH_NUM_THREADS: "${TORCH_NUM_THREADS:-2}"
       TOY_NAS_NUM_WORKERS: "${TOY_NAS_NUM_WORKERS:-0}"

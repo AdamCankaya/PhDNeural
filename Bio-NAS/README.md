@@ -66,6 +66,8 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).
 
+> **Roadmap focus (Nov 2026):** **Plan 1 complete** — multi-disease inventory locks and public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard. **Plan 2 active next** — longitudinal pairing rules and join keys on open BRCA GDC metadata ([`docs/plans/02-issue-355-longitudinal-matching-strategy.md`](docs/plans/02-issue-355-longitudinal-matching-strategy.md)). ADNI/KORA controlled access remains a parallel human/process follow-up.
+
 ### Objectives
 
 | Objective | Description |
@@ -209,16 +211,15 @@ docker compose -f Bio-NAS/docker-compose.yml up --build
 
 ### Step 4 — What the container does
 
-On first run, the entrypoint:
+On first run, the entrypoint (`docker/entrypoint.sh`):
 
 1. Downloads a tiny **open-access** TCGA-BRCA sample from the GDC API (~5–10 joint meth+RNA cases + clinical; no login / token).
-2. Writes data under the host bind mount `Bio-NAS\data\tcga\BRCA` (container path `/data/tcga/BRCA`).
-3. Verifies open TCGA-BRCA inventory counts via the public GDC API → `data\tcga\inventory_verification\`.
-4. Runs a toy MLP NAS demo on **methylation features only** and writes `nas_demo_results.json`.
-5. Runs the **ADNI scaffold** → `data\adni\` (skips with a clear status file while account+DUA are in progress; no secrets in the image).
-6. Optionally runs an AD meth NAS only if an ADNI sample `.ready` is present.
+2. Writes data under `Bio-NAS\data\tcga\BRCA` and verifies inventory via the public GDC API → `data\tcga\inventory_verification\`.
+3. Runs optional CPU toy NAS for **BRCA**, then the **ADNI scaffold** under `data\adni\` (status JSON while DUA pending).
+4. Downloads and verifies public **RA** (GSE71841) and **Epigenetic Aging** (GSE87571) GEO smokes; runs optional toy NAS per disease; **skips T2D/KORA** by default.
+5. Builds the static dashboard at `Bio-NAS\data\dashboard\dashboard.html` (BRCA + RA + EA rows when successful).
 
-Re-runs skip the BRCA download when `data\tcga\BRCA\.ready` already exists.
+Re-runs skip downloads when each disease `.ready` marker already exists.
 
 ### Step 5 — View results on Windows
 
@@ -226,6 +227,7 @@ Re-runs skip the BRCA download when `data\tcga\BRCA\.ready` already exists.
 |----------|------|
 | **Toy NAS dashboard** | `Bio-NAS\data\dashboard\dashboard.html` (always regenerated; lists failed steps if any) |
 | Host (Explorer) BRCA | `Bio-NAS\data\tcga\BRCA\` and `Bio-NAS\data\tcga\inventory_verification\` |
+| Host (Explorer) RA / EA | `Bio-NAS\data\ra\`, `Bio-NAS\data\epigenetic_aging\` |
 | Host (Explorer) ADNI | `Bio-NAS\data\adni\` (`adni_access_status.json` while DUA pending) |
 | Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\`, `verification.json`, `adni_access_status.json` |
 | Logs | Dozzle UI at [http://localhost:8080](http://localhost:8080), or `docker compose logs bio-nas-demo` |

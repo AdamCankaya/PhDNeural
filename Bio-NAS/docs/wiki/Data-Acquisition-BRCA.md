@@ -96,7 +96,7 @@ Chain inside the container:
 
 **Smoke vs full ETL:** sample-scale (~5–10 patients). Full-cohort BRCA multi-omic ETL / HDF5 is **Plan 07**.
 
-**Plan 1 BRCA status:** open Docker path + GDC inventory verify complete (2026-07-27). **Alzheimer's primary locked to ADNI** (Docker scaffold; DUA in progress). Remaining Other-3 primary locks remain open on issue #354.
+**Plan 1 BRCA status:** **Complete (2026-11-02)** — open Docker path + GDC inventory verify + public RA/EA toy smokes. **Next:** Plan 2 (#355) longitudinal pairing on open GDC metadata (barcodes/clinical). Alzheimer's primary remains **ADNI** (Docker scaffold; DUA deferred).
 
 Windows walkthrough: [README § Deploy with Docker](../../README.md#5-deploy-with-docker-windows). Contract: [`docker/README.md`](../../docker/README.md). Plan: [plan 01](../plans/01-issue-354-multi-disease-dataset-inventory.md). Inventory: [`cohort_inventory.md`](../data/cohort_inventory.md).
 

@@ -1,5 +1,12 @@
 # Plan 01: Lock cohorts and run a Docker CPU toy-NAS pipeline for all eligible public disease samples.
 
+> **Status: Complete (2026-11-02)** — Plan 1 engineering and public Docker smoke (BRCA + RA + EA) are done; inventory locks for all five diseases are checked in.
+>
+> **Deferred follow-ups (not Plan 1 blockers):**
+> - ADNI/LONI DUA approval and first controlled sample download (human/process).
+> - KORA F4/FF4 project agreement for T2D (Docker remains an honest skip).
+> - Optional GitHub Actions workflow to turn `repository_dispatch` into mobile notifications (documented in `.env.example` + `docker/README.md`; disabled by default).
+
 ## Issue reference
 
 | Field | Value |
@@ -40,7 +47,7 @@ Do **not** block BRCA Plan-1 closure on Other-3 locks. Alzheimer's lock does **n
 
 Maps 1:1 to the issue **Implementation requirements**, plus a Plan-01 Docker reproducibility path (delivery mechanism — not a substitute for inventory / Other-4 lock decisions):
 
-- [x] **Deliverables:** dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories. → `docs/data/cohort_inventory.md` + `.csv` (draft 2026-07-24; **TCGA-BRCA verified 2026-07-27**; **ADNI primary locked 2026-07-27**; RA/T2D/aging portal counts still TBD / unverified).
+- [x] **Deliverables:** dataset inventory table (source, access method, license/ethics, sample counts by timepoint) for all five disease categories. → `docs/data/cohort_inventory.md` + `.csv` (draft 2026-07-24; **TCGA-BRCA verified 2026-07-27**; **ADNI primary locked 2026-07-27**; **Other-3 primaries locked 2026-08-02** — optional portal spot-verify only).
 - [x] **Acceptance (inventory):** every disease has at least one candidate cohort with ≥2 timepoints documented. (BRCA via AURORA pairs + sparse TCGA multi-sample; Other-4 via ADNI / GSE138747 / KORA or GSE184050 / LBC1936 or SATSA.)
 - [x] **Acceptance (reproducible Docker path) — BRCA open slice:** a newcomer can clone Bio-NAS, run `docker compose up --build`, and obtain open BRCA smoke + inventory verification artifacts on the host mount (see [Acceptance criteria](#acceptance-criteria)). ADNI scaffold runs additively (skip without credentials). Other open-GEO verify optional later; controlled cohorts remain outside Docker until DUA.
 - [x] **Upstream deps satisfied (issue-wide):** disease registry entries in `src/config/disease_registry.yaml`. *(BRCA primary locked to TCGA-BRCA **open Level-3** — no GDC token required. Alzheimer's primary locked to **ADNI (LONI)** — account+DUA **in progress**; severity maps still placeholders. Controlled/dbGaP deferred. RA/T2D + Epigenetic Aging naming to be resolved.)*
@@ -64,13 +71,13 @@ Maps 1:1 to the issue **Implementation requirements**, plus a Plan-01 Docker rep
 
 - [x] Slim image + Compose: open-access TCGA-BRCA sample (~5–10 joint meth+RNA cases + clinical) → host mount `./data/tcga` → **methylation-only** toy NAS demo.
 - [x] Inventory verification script + artifacts: `scripts/verify_cohort_inventory_open.py` → `/data/tcga/inventory_verification/` (`verification.json`, `verification_summary.csv`). ADNI noted as controlled / post-DUA in `skipped_controlled`.
-- [x] Entrypoint chain: BRCA download → inventory verification → optional toy NAS → **ADNI scaffold** → optional AD meth NAS (`SKIP_NAS_DEMO=1` / `SKIP_AD_NAS_DEMO=1`; `INVENTORY_VERIFY_DRY_RUN=1`; `ADNI_SKIP=1`).
+- [x] Entrypoint chain: `docker/entrypoint.sh` — BRCA download → inventory verification → optional toy NAS → **ADNI scaffold** → optional AD meth NAS (`SKIP_BRCA_NAS` / `SKIP_NAS_DEMO`; `SKIP_AD_NAS_DEMO`; `INVENTORY_VERIFY_DRY_RUN`; `ADNI_SKIP`).
 - [x] Alzheimer's Docker scaffold: `scripts/download_adni_sample.py` + `scripts/train_nas_ad_demo.py`; mount `./data/adni` → `/data/adni`; credentials via host `.env` only (never in image). Exit 0 skip when account pending.
 - [x] Expected pins: `docs/data/smoke_expected.json` (schema_version 2, case/file ranges, PoC labels) — checked by the verify script when `manifest.json` is present.
 - [x] Newcomer docs: [`docker/README.md`](../../docker/README.md) + this plan list expected Plan-1 host outputs (BRCA smoke + verification + ADNI status).
-- [ ] **ADNI DUA / download acceptance:** blocked on account approval; then stage sample or wire approved LONI client (outside scrape).
+- [ ] **ADNI DUA / download acceptance:** **deferred** (post-DUA human step); scaffold + status JSON satisfy Plan 1 Docker acceptance until credentials exist.
 - [x] **Public multi-disease Docker acceptance:** compose downloads BRCA + RA (GSE71841) + Epigenetic Aging (GSE87571, BRCA-shaped artifacts); runs isolated CPU toy NAS jobs; skips ADNI/KORA by default; writes `data/dashboard/dashboard.html`. No NVIDIA runtime, GPU reservation, or CUDA call is permitted in this pipeline.
-- [ ] **Dashboard notification acceptance:** optional Repository Dispatch is documented with no token in the repository and disabled unless explicitly enabled in `.env`.
+- [x] **Dashboard notification acceptance:** optional Repository Dispatch documented in [`.env.example`](../../.env.example) + [`docker/README.md`](../../docker/README.md); disabled by default (`GITHUB_DISPATCH_ENABLED=0`); no token in repo — wire a repository workflow separately if desired.
 
 
 ## Approach
@@ -102,8 +109,8 @@ from `docs/wiki/Data-Acquisition-BRCA.md` as the BRCA template for the other fou
 - `docs/data/cohort_inventory.md` (+ `.csv`)
 - `docs/data/smoke_expected.json` — pinned smoke schema / ranges
 - `phd_bio-nas_master_plan.md` (requirements source)
-- `docker/Dockerfile`, `docker-compose.yml`, `docker/README.md` — repro entry for newcomers
-- `scripts/docker_entrypoint.py`, `scripts/download_tcga_brca_sample.py`, `scripts/verify_cohort_inventory_open.py`, `scripts/train_nas_demo.py`, `scripts/download_adni_sample.py`, `scripts/train_nas_ad_demo.py`
+- `docker/Dockerfile`, `docker-compose.yml`, `docker/README.md`, `docker/entrypoint.sh` — repro entry for newcomers
+- `scripts/docker_entrypoint.py` (superseded reference), `scripts/download_tcga_brca_sample.py`, `scripts/verify_cohort_inventory_open.py`, `scripts/train_nas_demo.py`, `scripts/download_adni_sample.py`, `scripts/train_nas_ad_demo.py`
 
 ## Dependencies on other plans
 
@@ -147,7 +154,7 @@ Satisfied when **all** of the following hold:
 
 3. Linked PR(s) reference this plan path and issue #354.
 
-**Issue #354** remains open until remaining Other-3 primary locks (and optional open-GEO verify) are done — BRCA + AD lock alone do not close the issue. AD DUA/download acceptance stays open while the account application is in progress.
+**Issue #354** closed **2026-11-02** with deferred ADNI/KORA/process items noted in the closing comment. Plan 2 (#355) longitudinal matching is the active engineering focus.
 
 ## Ordered Docker work items (for Plan-1 repro)
 
@@ -196,7 +203,7 @@ First plan in the roadmap. Unblocks matching (#355) and all BRCA-first ETL.
 
 Recommended roadmap position: **01 / 24** (see [`ROADMAP.md`](ROADMAP.md)).
 
-Suggested local order: **BRCA Docker + GDC verify done** → **ADNI locked + scaffold (DUA in progress)** → Remaining Other-3 lock decisions + portal spot-checks → optional GEO verify extension → leave #354 open until Other-3 acceptance + AD DUA download acceptance.
+Suggested local order: **Plan 1 complete (2026-11-02)** → **Plan 2 (#355) matching on open BRCA GDC metadata** → ADNI/KORA access follow-ups in parallel (human/process).
 
 ## Dual-track / cohort notes
 

@@ -2,6 +2,15 @@
 
 All notable changes to the Bio-NAS project documentation and roadmap tooling are recorded here.
 
+## 2026-11-02
+
+### Plan 1 complete — transition to Plan 2
+
+- Unified Plan 1 Docker chain in `docker/entrypoint.sh`: BRCA download → GDC inventory verify → optional BRCA NAS → ADNI scaffold → RA (GSE71841) → T2D skip → EA (GSE87571) → static dashboard → optional repository dispatch.
+- Marked Plan 01 docs, ROADMAP, wiki, and cohort inventory as **Complete** with deferred ADNI/KORA/process items; Plan 02 marked **Ready to start**.
+- Timeline dashboard: `STORAGE_KEY` → `phd_plan_progress_v9` seeds Plan 1 checklist item complete for new visitors.
+- Closed GitHub issue #354 with completion comment; blog post announces Plan 2 focus.
+
 ## 2026-10-20
 
 ### Roadmap calendar shift (Spring 2026 start)

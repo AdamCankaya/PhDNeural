@@ -2,8 +2,8 @@
 # Data is downloaded at container start into /data/tcga (not during build).
 # Open-access GDC only for BRCA — no login / token required.
 # ADNI: credentials from host .env only — never baked into this image.
-# Chain: BRCA smoke → inventory_verification/ → meth-only toy NAS →
-#        ADNI scaffold → optional AD meth NAS when sample present.
+# Chain (``docker/entrypoint.sh``): BRCA smoke → inventory_verification/ → optional BRCA NAS →
+#        ADNI scaffold → optional AD NAS → RA + EA public GEO smokes → dashboard.
 FROM python:3.12-slim
 
 LABEL org.opencontainers.image.title="Bio-NAS Plan-1"

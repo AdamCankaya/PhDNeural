@@ -6,6 +6,9 @@ truthy() { case "${1:-}" in 1|true|TRUE|yes|YES|on|ON) return 0;; *) return 1;; 
 
 DATA_ROOT="${DATA_ROOT:-/data}"
 BRCA_DIR="${TCGA_SAMPLE_OUT:-$DATA_ROOT/tcga/BRCA}"
+INVENTORY_VERIFY_OUT="${INVENTORY_VERIFY_OUT:-$DATA_ROOT/tcga/inventory_verification}"
+SMOKE_EXPECTED_JSON="${SMOKE_EXPECTED_JSON:-/app/docs/data/smoke_expected.json}"
+ADNI_DIR="${ADNI_SAMPLE_OUT:-$DATA_ROOT/adni}"
 RA_DIR="${RA_SAMPLE_OUT:-$DATA_ROOT/ra}"
 AGING_DIR="${EPIGENETIC_AGING_SAMPLE_OUT:-$DATA_ROOT/epigenetic_aging}"
 DASHBOARD_DIR="${DATA_ROOT}/dashboard"
@@ -35,16 +38,31 @@ run_step() {
 
 echo "=== Bio-NAS Plan-1 CPU toy pipeline ==="
 run_step "BRCA public GDC sample" python /app/scripts/download_tcga_brca_sample.py --out-dir "$BRCA_DIR"
-if ! truthy "${SKIP_BRCA_NAS:-0}"; then
+
+VERIFY_CMD=(python /app/scripts/verify_cohort_inventory_open.py --out-dir "$INVENTORY_VERIFY_OUT" --smoke-dir "$BRCA_DIR")
+if [[ -f "$SMOKE_EXPECTED_JSON" ]]; then
+  VERIFY_CMD+=(--expected "$SMOKE_EXPECTED_JSON")
+fi
+if truthy "${INVENTORY_VERIFY_DRY_RUN:-0}"; then
+  VERIFY_CMD+=(--dry-run)
+fi
+run_step "BRCA inventory verify (GDC API)" "${VERIFY_CMD[@]}"
+
+if ! truthy "${SKIP_BRCA_NAS:-0}" && ! truthy "${SKIP_NAS_DEMO:-0}"; then
   run_step "BRCA toy NAS" python /app/scripts/train_toy_nas_cpu.py --disease "BRCA" --data-dir "$BRCA_DIR" --brca
 fi
 
 if truthy "${SKIP_ALZHEIMERS:-1}"; then
-  mkdir -p "$DATA_ROOT/adni"
-  printf '%s\n' "credentials_dua" > "$DATA_ROOT/adni/.skipped"
-  echo "--- Alzheimer's skipped: ADNI/LONI requires approved controlled access ---"
+  run_step "ADNI access scaffold" python /app/scripts/download_adni_sample.py --out-dir "$ADNI_DIR"
+  if ! truthy "${SKIP_AD_NAS_DEMO:-0}"; then
+    if [[ -f "$ADNI_DIR/.ready" ]]; then
+      run_step "AD toy NAS" python /app/scripts/train_nas_ad_demo.py
+    else
+      echo "--- AD toy NAS skipped: no ADNI .ready sample (DUA pending) ---"
+    fi
+  fi
 else
-  echo "Refusing ADNI run: this image never downloads controlled-access data." >&2
+  echo "Refusing ADNI run: set SKIP_ALZHEIMERS=1 (default) or supply approved LONI credentials outside this smoke image." >&2
   exit 2
 fi
 
