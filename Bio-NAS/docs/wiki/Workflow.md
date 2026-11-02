@@ -42,7 +42,7 @@ flowchart LR
 
 > **One-way sync:** Closing an issue does **not** update `phd_bio-nas_master_plan.md`. The plan file is always the source of truth.
 
-After a **quarter calendar remap** (e.g. Spring 2026 start), `phd-sync-id` values change with new `q*-YYYY` segments. Run sync with `--close-stale --prune-project` so old issues close and Project #2 cards match the plan; then re-run `embed_dashboard_plan.py` to refresh issue URLs.
+After a **quarter calendar remap** (e.g. Summer 2026 kickoff → Spring 2029), `phd-sync-id` values change with new `q*-YYYY` segments. Run sync with `--update-existing` (and `--close-stale --prune-project` only when checklist items are added/removed) so Project #2 cards match the plan; then re-run `embed_dashboard_plan.py` to refresh issue URLs.
 
 ## Alignment contract
 

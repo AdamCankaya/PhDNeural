@@ -1,4 +1,6 @@
 # Per-disease label registry for the Static MTL baseline.
+# Docs-only scope note (no runtime flag): active_for_implementation: [brca, ra, epigenetic_aging]
+# deferred_pending_access: [alzheimers, t2d] — see docs/data/cohort_inventory.md
 # Maps cohort-specific source columns to canonical {phenotype, severity} labels.
 #
 # phenotype: 0 = Healthy, 1 = Diseased

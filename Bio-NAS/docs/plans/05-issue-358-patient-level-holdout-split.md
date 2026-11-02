@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [358](https://github.com/AdamCankaya/PhDNeural/issues/358) |
-| Title | [Y1 Q4 Winter 2026] Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation). |
+| Title | [Y1 Q2 Summer 2027] Partition data by Patient ID (80/20 train/holdout split, strict temporal isolation). |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/358 |
-| Labels | `phd-sync, year-1, abstraction, phase-2, step-1, q4-2026` |
-| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q4 Winter 2026 - 4D Tensor Construction & Irregular Time-Step Normalization |
+| Labels | `phd-sync, year-1, abstraction, phase-2, step-1, q2-2027` |
+| Year / Quarter | 1 - Spatio-Temporal Sourcing, Irregular Time-Step ETL, and Infrastructure / Q2 Summer 2027 - 4D Tensor Construction & Irregular Time-Step Normalization |
 | Phase | 2 - Code Abstraction & Generalization |
 | Master-plan goal | Construct a leakage-safe ETL pipeline producing irregular-time 4D tensors. |
 
@@ -18,7 +18,7 @@ Maps 1:1 to the issue **Implementation requirements**:
 
 - [ ] **Deliverables:** patient-level split files + loader that never peeks at holdout during fit.
 - [ ] **Acceptance:** automated leakage tests (no patient ID overlap; no future-visit leakage into earlier steps).
-- [ ] **Upstream deps satisfied:** finalized cohort tables from Year 1 Fall/Winter.
+- [ ] **Upstream deps satisfied:** finalized cohort tables from Year 1 Fall 2026 / Spring 2027 sourcing.
 
 
 ## Approach

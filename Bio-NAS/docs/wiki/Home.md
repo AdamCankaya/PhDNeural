@@ -37,7 +37,9 @@ First run executes the full Plan 1 chain: BRCA GDC sample + inventory verify + t
 
 ## Research overview
 
-**Spatio-Temporal Dual-Track Multi-Omic Fusion & Bio-NAS** — BRCA as the anchor cohort, scaling toward five disease categories over a **3-year academic calendar** (Spring 2026 → Summer 2029).
+**Spatio-Temporal Dual-Track Multi-Omic Fusion & Bio-NAS** — BRCA as the anchor cohort, scaling toward five disease categories over a **3-year academic calendar** (Summer 2026 kickoff → Spring 2029).
+
+Active development focuses on **BRCA**, **RA**, and **epigenetic aging (EA)**; **Alzheimer's** and **T2D** remain inventory-documented until controlled access completes.
 
 | Track | Approach | Purpose |
 |-------|----------|---------|
@@ -48,11 +50,10 @@ First run executes the full Plan 1 chain: BRCA GDC sample + inventory verify + t
 
 | Period | Track scope | Cohort |
 |--------|-------------|--------|
-| Y1 | Shared (A+B) | BRCA-first ETL/infra; All 5 inventory |
+| Y1 | Shared (A+B) | **Active 3** engineering; full five-disease inventory (AD/T2D deferred) |
 | Y2 modules + search | Track A + Track B → Track A then B | BRCA |
-| Y2 Summer benchmarks | Track A vs B | BRCA (**scaling gate**) |
-| Y3 Fall–Winter | Track A + Track B | BRCA attribution + dashboard |
-| Y3 Spring–Summer | Track A + Track B | Other 4 / All 5 → thesis + OSS |
+| Y2 Fall benchmarks | Track A vs B | BRCA (**scaling gate**) |
+| Y3 Spring | Track A + Track B | Attribution, dashboard, taxonomy, thesis + OSS (Active 3; Other 4 when access allows) |
 
 Every timeline item on the dashboard and master-plan HTML links to its GitHub issue. Per-task Track scope lives in the [master plan](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/phd_bio-nas_master_plan.md); design rationale is in the [FAQ](FAQ-and-Troubleshooting).
 

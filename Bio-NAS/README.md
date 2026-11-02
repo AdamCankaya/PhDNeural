@@ -17,7 +17,9 @@ A three-year PhD research program that investigates whether Biologically-Informe
 | Master plan (source) | [phd_bio-nas_master_plan.md](phd_bio-nas_master_plan.md) |
 | Pages landing | [adamcankaya.github.io/PhDNeural/Bio-NAS/](https://adamcankaya.github.io/PhDNeural/Bio-NAS/) |
 
-The roadmap follows a **3-year quarterly calendar** (Spring 2026 → Summer 2029): eleven active quarter blocks grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task. Every dashboard row and master-plan HTML entry links to its GitHub issue.
+The roadmap follows a **3-year quarterly calendar** (Summer 2026 kickoff → Spring 2029): nine active semester blocks grouped into Year 1–3, with Phase 1–4 retained as secondary metadata on every task. Every dashboard row and master-plan HTML entry links to its GitHub issue.
+
+Active development focuses on **BRCA**, **RA**, and **epigenetic aging (EA)** using open or available public cohorts. **Alzheimer's (ADNI)** and **T2D (KORA)** remain documented in the inventory with locked primary choices but are **out of scope for implementation** until controlled-access approvals complete.
 
 ---
 
@@ -38,12 +40,9 @@ Year 1–2 complete a **BRCA dual-track vertical slice**. Year 3 work on the Oth
 
 | Quarter | Track scope | Cohort |
 |---------|-------------|--------|
-| Y1 Spring 2026 → Spring 2027 | Shared (A+B) | BRCA-first ETL/infra; All 5 inventory in Spring |
-| Y2 Summer 2027 → Fall 2027 | Track A + Track B modules | BRCA spatial/temporal search space |
-| Y2 Winter 2027 | Track A then Track B | BRCA Optuna studies |
-| Y2 Spring 2028 | Track A vs B | BRCA holdout + ablations (**scaling gate**) |
-| Y3 Summer 2028 → Fall 2028 | Track A + Track B | BRCA attribution + dashboard |
-| Y3 Winter 2028 → Summer 2029 | Track A + Track B | Other 4 / All 5 taxonomy, thesis, OSS |
+| Y1 Summer 2026 → Fall 2027 | Shared (A+B) | Kickoff + **Active 3** inventory/ETL; AD/T2D deferred |
+| Y2 Spring 2028 → Fall 2028 | Track A+B → A vs B | BRCA NAS + holdout (**scaling gate**) |
+| Y3 Spring 2029 | Track A + Track B | Attribution, dashboard, taxonomy, thesis, OSS |
 
 ---
 
@@ -59,14 +58,14 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 | Year | Quarters | Focus | Track / cohort | Tasks |
 |------|----------|-------|----------------|------:|
-| **Year 1** | Spring 2026 → Spring 2027 | Longitudinal cohort sourcing, feature mapping, 4D ETL / Δt embeddings, compute + Postgres hub | Shared (A+B) · BRCA-first | 9 |
-| **Year 2** | Summer 2027 → Spring 2028 | Spatial/temporal NAS modules, distributed Optuna search, holdout benchmarks & baselines | Track A+B → A vs B · BRCA | 8 |
-| **Year 3** | Summer 2028 → Summer 2029 | Attribution maps, Streamlit trajectories, taxonomy synthesis, thesis & OSS release | Track A+B · BRCA then Other 4 / All 5 | 7 |
+| **Year 1** | Summer 2026 → Fall 2027 | Kickoff, cohort sourcing (Fall 2026), feature mapping, 4D ETL / Δt embeddings, compute + Postgres hub | Shared (A+B) · **Active 3** | 13 |
+| **Year 2** | Spring 2028 → Fall 2028 | Spatial/temporal NAS modules, distributed Optuna search, holdout benchmarks & baselines | Track A+B → A vs B · BRCA | 8 |
+| **Year 3** | Spring 2029 | Attribution maps, Streamlit trajectories, taxonomy synthesis, thesis & OSS release | Track A+B · BRCA + Active 3 when access allows | 8 |
 | | | | | **24** |
 
 Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).
 
-> **Roadmap focus (Nov 2026):** **Plan 1 complete** — multi-disease inventory locks and public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard. **Plan 2 active next** — longitudinal pairing rules and join keys on open BRCA GDC metadata ([`docs/plans/02-issue-355-longitudinal-matching-strategy.md`](docs/plans/02-issue-355-longitudinal-matching-strategy.md)). ADNI/KORA controlled access remains a parallel human/process follow-up.
+> **Roadmap focus (Fall 2026 / Nov 2026):** **Plan 1 complete** — **Active 3** inventory + public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard; five-disease **inventory** documented with AD/T2D access deferred. **Plan 2 active next** — longitudinal pairing on BRCA, RA, EA ([`docs/plans/02-issue-355-longitudinal-matching-strategy.md`](docs/plans/02-issue-355-longitudinal-matching-strategy.md)).
 
 ### Objectives
 
@@ -107,7 +106,7 @@ Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](p
 
 ## 3. Disease Categories (Comparative Matrix)
 
-> **Note:** Data sources for all five diseases are now **completely locked in** for Plan 1.
+> **Note:** All five disease **primaries are locked in the inventory**; **Active 3** (BRCA, RA, EA) drives current Docker/engineering work. Alzheimer's (ADNI) and T2D (KORA) remain **deferred** pending controlled access.
 
 | Category | Disease | Primary source |
 |----------|---------|----------------|

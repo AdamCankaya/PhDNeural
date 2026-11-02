@@ -220,7 +220,7 @@ def build():
         SLIDE_H - Inches(1.25),
         Inches(11.5),
         Inches(0.9),
-        "Adam Cankaya\nacankaya2017@fau.edu  ·  Thesis Committee Introduction  ·  Spring 2026",
+        "Adam Cankaya\nacankaya2017@fau.edu  ·  Thesis Committee Introduction  ·  Summer 2026",
         size=16,
         bold=True,
         color=WHITE,
@@ -411,27 +411,27 @@ Fourth, the NAS search space includes spatial modules like one-dimensional CNNs 
     # ----- Slide 6: Roadmap -----
     s = prs.slides.add_slide(blank)
     _bg(s)
-    _chrome(s, "Three-Year Roadmap", "Spring 2026 → Summer 2029  ·  24 checklist tasks synced to GitHub issues")
+    _chrome(s, "Three-Year Roadmap", "Summer 2026 kickoff → Spring 2029  ·  29 checklist tasks (24 phd-sync issues)")
 
     years = [
-        ("Year 1", "Spring 2026 – Spring 2027", FAU_BLUE, [
-            "All-5 cohort inventory",
+        ("Year 1", "Summer 2026 – Fall 2027", FAU_BLUE, [
+            "Kickoff + **Active 3** inventory",
             "BRCA feature maps & spacing",
             "Leakage-safe 4D ETL + Δt",
             "Compute stack & Optuna hub",
-        ], "Shared (A+B) · BRCA-first"),
-        ("Year 2", "Summer 2027 – Spring 2028", FAU_RED, [
+        ], "Shared (A+B) · Active 3"),
+        ("Year 2", "Spring 2028 – Fall 2028", FAU_RED, [
             "Spatial & temporal modules",
             "Dual-track Optuna studies",
             "Holdout eval + ablations",
             "Classical baselines · scaling gate",
         ], "Track A vs B · BRCA"),
-        ("Year 3", "Summer 2028 – Summer 2029", FAU_BLUE, [
+        ("Year 3", "Spring 2029", FAU_BLUE, [
             "Attribution & driver maps",
             "Trajectory dashboard",
             "Taxonomy / tempo compare",
             "Dissertation + OSS release",
-        ], "BRCA → Other 4 / All 5"),
+        ], "BRCA + Active 3 when access allows"),
     ]
     for i, (yr, dates, color, bullets, scope) in enumerate(years):
         left = Inches(0.45 + i * 4.25)
@@ -447,13 +447,13 @@ Fourth, the NAS search space includes spatial modules like one-dimensional CNNs 
 
     _set_notes(
         s,
-        """The program runs on a three-year academic calendar from Spring 2026 through Summer 2029, with twenty-four roadmap tasks tracked one-to-one as GitHub issues.
+        """The program runs on a three-year academic calendar from Summer 2026 kickoff through Spring 2029, with twenty-nine master-plan checklist tasks (twenty-four phd-sync GitHub issues).
 
-Year one is shared infrastructure: inventory all five diseases, build BRCA-first feature maps, construct leakage-safe four-dimensional tensors with delta-t embeddings, and stand up the compute and Optuna orchestration hub.
+Year one is shared infrastructure: **Active 3** cohort inventory and matching, BRCA-first feature maps, leakage-safe four-dimensional tensors with delta-t embeddings, and compute plus Optuna orchestration.
 
-Year two engineers the search space—spatial then temporal modules—runs Track A and Track B Optuna studies on BRCA, and closes with holdout evaluation, ablations, and classical baselines. That summer comparison is the scaling gate.
+Year two engineers the search space—spatial then temporal modules—runs Track A and Track B Optuna studies on BRCA, and closes with holdout evaluation, ablations, and classical baselines. That fall comparison is the scaling gate.
 
-Year three focuses on interpretability, a trajectory dashboard, structural taxonomy across disease tempos, the dissertation, and an open-source framework release. Other-four dual-track expansion happens only after the BRCA gate.""",
+Year three (Spring 2029) covers interpretability, a trajectory dashboard, structural taxonomy, the dissertation, and an open-source framework release. AD/T2D expansion waits on controlled access.""",
     )
 
     # ----- Slide 7: Goals -----

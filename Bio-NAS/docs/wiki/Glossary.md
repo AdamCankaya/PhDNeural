@@ -51,7 +51,9 @@
 | **Additive sync** | Default sync mode: new plan items create issues; removed items stay open unless `--close-stale` |
 | **Disease registry** | `src/config/disease_registry.yaml` — per-disease phenotype/severity column mappings and K |
 | **Severity masking (`-1`)** | Missing severity labels use `-1` and mask the ordinal loss (e.g. normal tissue without stage) |
-| **Quarter-first roadmap** | Tasks grouped by Year 1–3 quarters (Spring 2026 → Summer 2029); **24** checklist items each linked to a `phd-sync` issue |
+| **Quarter-first roadmap** | Tasks grouped by Year 1–3 quarters (Summer 2026 kickoff → Spring 2029); **29** master-plan checklist items; **24** `phd-sync` issues |
+| **Active 3** | Near-term engineering cohorts: **BRCA**, **RA**, **epigenetic aging (EA)** |
+| **Deferred 2** | **Alzheimer's (ADNI)** and **T2D (KORA)** — inventory locked; controlled access pending |
 | **Cox-PH** | Cox Proportional Hazards — optional post-thesis prognostic head; **not** in Static MTL baseline |
 
 ## Related pages

@@ -4,6 +4,8 @@
 
 Inventory of candidate cohorts with **repeated molecular measurements over time** for BRCA, Alzheimer's, Rheumatoid Arthritis, Type 2 Diabetes, and **Epigenetic Aging**.
 
+**Active 3 (engineering):** BRCA, RA, and epigenetic aging use open/public Docker smokes in Plan 01. **Deferred:** ADNI and KORA remain documented with locked primaries until DUA/agreement completes.
+
 | Field | Value |
 |-------|-------|
 | Plan | [`docs/plans/01-issue-354-multi-disease-dataset-inventory.md`](../plans/01-issue-354-multi-disease-dataset-inventory.md) |
@@ -11,7 +13,16 @@ Inventory of candidate cohorts with **repeated molecular measurements over time*
 | Companion CSV | [`cohort_inventory.csv`](cohort_inventory.csv) |
 | BRCA template | [`docs/wiki/Data-Acquisition-BRCA.md`](../wiki/Data-Acquisition-BRCA.md) |
 | Draft date | 2026-07-24 |
-| Last updated | 2026-08-02 — RA and Epigenetic Aging primaries **LOCKED**; All 5 diseases now locked |
+| Last updated | 2026-11-02 — **Active 3** engineering (BRCA, RA, EA); all five primaries **locked in inventory**; AD/T2D access **deferred** |
+
+## Active vs deferred (engineering scope)
+
+| Tier | Diseases | Meaning |
+|------|----------|---------|
+| **Active engineering (now)** | **BRCA**, **RA**, **Epigenetic Aging (EA)** | Open/public or in-repo Docker smokes; Plan 2+ matching/ETL/NAS proceeds here first. |
+| **Inventory-only / deferred** | **Alzheimer's**, **Type 2 Diabetes (T2D)** | Primaries locked (ADNI/LONI; KORA F4/FF4) but **no controlled data access yet** — Docker skips by default. |
+
+Active development focuses on **BRCA**, **RA**, and **epigenetic aging (EA)** using open or available public cohorts. **Alzheimer's (ADNI)** and **T2D (KORA)** remain documented in the inventory with locked primary choices but are **out of scope for implementation** until controlled-access approvals complete.
 
 ## How to read this table
 

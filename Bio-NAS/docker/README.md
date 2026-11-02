@@ -1,6 +1,6 @@
 # Docker — Plan-1 public multi-disease CPU toy NAS + static dashboard
 
-Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfile), then sequentially runs the **unified Plan 1 chain** in [`entrypoint.sh`](entrypoint.sh):
+Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfile), then sequentially runs the **unified Plan 1 chain** in [`entrypoint.sh`](entrypoint.sh). **Active engineering smokes:** BRCA, RA, and epigenetic aging (EA). **Deferred by default:** ADNI (Alzheimer's) and KORA (T2D) until controlled access completes.
 
 1. **BRCA (GDC):** tiny open TCGA-BRCA sample → **inventory verification** (public GDC API) → optional CPU toy NAS (`train_toy_nas_cpu.py --brca`).
 2. **Alzheimer's (ADNI):** `download_adni_sample.py` scaffold (status JSON; no controlled download without DUA) → optional `train_nas_ad_demo.py` when `.ready` exists.

@@ -16,9 +16,9 @@ from render_master_plan_html import main as render_master_plan_main
 
 
 BRANDING = "PhD Roadmap 2026–2029"
-STORAGE_KEY = "phd_plan_progress_v9"
+STORAGE_KEY = "phd_plan_progress_v10"
 DEFAULT_PROGRESS = {
-    "year-1-q1-2026-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase": True,
+    "year-1-q3-2026-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase": True,
 }
 
 
@@ -73,7 +73,7 @@ def main() -> int:
     default_progress_js = json.dumps(DEFAULT_PROGRESS, indent=2)
     if "const DEFAULT_PROGRESS" not in html:
         html = re.sub(
-            r"(const STORAGE_KEY = 'phd_plan_progress_v9';)\n",
+            r"(const STORAGE_KEY = 'phd_plan_progress_v10';)\n",
             rf"\1\n    const DEFAULT_PROGRESS = {default_progress_js};\n",
             html,
             count=1,

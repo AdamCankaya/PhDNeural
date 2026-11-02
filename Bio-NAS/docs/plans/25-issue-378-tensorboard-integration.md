@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [378](https://github.com/AdamCankaya/PhDNeural/issues/378) |
-| Title | [Y2 Fall-Spring] Integrate TensorBoard into existing Static MTL training loop |
+| Title | [Y2 Q2 Summer 2028] Integrate TensorBoard into existing Static MTL training loop |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/378 |
 | Labels | `phd-sync, year-2, phase-3, logging, step-1` |
-| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting |
+| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q2 Summer 2028 - Parallel Search Optimization |
 | Phase | 3 - Scaling to the Comparative Matrix |
 | Master-plan goal | Enable continuous trajectory monitoring and logging for multi-task model evaluation. |
 

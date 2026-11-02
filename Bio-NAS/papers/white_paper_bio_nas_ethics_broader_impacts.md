@@ -60,11 +60,11 @@ The following actions map the issues above to accountable practice throughout th
 
 The technical plan follows the three-year Bio-NAS master roadmap, with ethics and welfare coupling at each phase.
 
-**Year 1 (Spring 2026 – Spring 2027) — sourcing, tensors, infrastructure.** Spring 2026 completes the five-disease **cohort inventory** with license and ethics columns (`docs/data/cohort_inventory.md`). Winter 2026–Spring 2027 builds leakage-safe four-dimensional tensors `(batch, time, spatial features, channels)`, Δt embeddings for irregular visits, and Dockerized PostgreSQL for Optuna metadata. Ethics coupling: document DUAs and IRB-aware ADNI use; defer controlled dbGaP files; enforce patient-level holdout before preprocessing to reduce optimistic bias that could later harm translation efforts.
+**Year 1 (Summer 2026 – Fall 2027) — kickoff, sourcing, tensors, infrastructure.** Fall 2026 completes the five-disease **cohort inventory** with **Active 3** (BRCA, RA, EA) engineering paths and license/ethics columns (`docs/data/cohort_inventory.md`); AD/T2D remain deferred pending DUA/agreement. Summer 2027 builds leakage-safe four-dimensional tensors `(batch, time, spatial features, channels)`, Δt embeddings for irregular visits, and Fall 2027 adds Dockerized PostgreSQL for Optuna metadata. Ethics coupling: document DUAs and IRB-aware ADNI use; defer controlled dbGaP files; enforce patient-level holdout before preprocessing to reduce optimistic bias that could later harm translation efforts.
 
-**Year 2 (Summer 2027 – Spring 2028) — dual-track NAS and benchmarking.** Modular spatial (1D-CNN, spatial transformer) and temporal (ConvLSTM/GRU, attention) blocks feed separate Track A and Track B Optuna studies on BRCA. Winter 2027 runs large-scale search with causal cross-validation; Spring 2028 evaluates frozen **20% holdout** trajectories, ablations, and classical baselines—the **scaling gate** evidence base. Ethics coupling: report Track A versus Track B deltas with uncertainty; if Track B does not improve interpretability or sparsity, narrow claims before Other 4 scaling.
+**Year 2 (Spring 2028 – Fall 2028) — dual-track NAS and benchmarking.** Spring 2028 codes spatial and temporal modules; Summer 2028 runs large-scale Track A/B Optuna search with causal cross-validation; Fall 2028 evaluates frozen **20% holdout** trajectories, ablations, and classical baselines—the **scaling gate** evidence base. Ethics coupling: report Track A versus Track B deltas with uncertainty; if Track B does not improve interpretability or sparsity, narrow claims before Other 4 scaling.
 
-**Year 3 (Summer 2028 – Summer 2029) — interpretability, interface, release.** Summer 2028 implements Captum/SHAP attribution over CpG sites and timestamps, with Track B maps checked against pathway priors. Fall 2028 delivers a Streamlit trajectory dashboard; master-plan acceptance requires **auth and PII constraints documented** before any demo resembling clinical workflow. Winter 2028–Summer 2029 synthesizes cross-disease taxonomy (post–scaling gate) and releases tagged open-source Python with install docs and smoke boundaries.
+**Year 3 (Spring 2029) — interpretability, interface, release.** Spring 2029 implements Captum/SHAP attribution, Streamlit trajectories, cross-disease taxonomy (post–scaling gate), dissertation finalization, and tagged open-source Python with install docs and smoke boundaries. Master-plan acceptance requires **auth and PII constraints documented** before any demo resembling clinical workflow.
 
 ### Anticipated outcomes
 
@@ -74,13 +74,14 @@ The technical plan follows the three-year Bio-NAS master roadmap, with ethics an
 
 | Period | Technical focus | Ethics and governance milestones |
 |--------|-----------------|----------------------------------|
-| Y1 Spring 2026 | All-5 inventory; BRCA PoC readiness | License/ethics table; ADNI DUA application (in progress) |
-| Y1 Summer 2026 – Spring 2027 | Feature maps; 4D ETL; Optuna hub | Leakage tests; controlled cohorts marked outside Docker |
-| Y2 Summer 2027 – Spring 2028 | Track A/B NAS; holdout benchmarks | Scaling gate decision; causal CV documented |
-| Y3 Summer – Fall 2028 | Attribution; Streamlit dashboard | PII/auth review; demo ≠ clinical product |
-| Y3 Winter 2028 – Summer 2029 | Taxonomy; thesis; OSS tag | Release notes; smoke vs holdout nomenclature frozen |
+| Y1 Summer 2026 | Kickoff; repo/Docker/wiki baseline | Committee alignment |
+| Y1 Fall 2026 | All-5 inventory; **Active 3** PoC | License/ethics table; ADNI DUA application (in progress) |
+| Y1 Spring – Summer 2027 | Feature maps; 4D ETL | Leakage tests; controlled cohorts marked outside Docker |
+| Y1 Fall 2027 | Optuna hub | Postgres in Docker; credentials outside repo |
+| Y2 Spring – Fall 2028 | Track A/B NAS; holdout benchmarks | Scaling gate decision; causal CV documented |
+| Y3 Spring 2029 | Attribution; dashboard; thesis; OSS | PII/auth review; demo ≠ clinical product |
 
-Calendar authority: Bio-NAS README and `phd_bio_nas_master_plan.md` (Spring 2026 through Summer 2029).
+Calendar authority: Bio-NAS README and `phd_bio-nas_master_plan.md` (Summer 2026 kickoff through Spring 2029).
 
 ## References
 

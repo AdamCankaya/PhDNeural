@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [364](https://github.com/AdamCankaya/PhDNeural/issues/364) |
-| Title | [Y2 Q3 Fall 2027] Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression. |
+| Title | [Y2 Q1 Spring 2028] Implement ConvLSTM/GRU blocks and Temporal Attention layers for longitudinal progression. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/364 |
-| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q3-2027` |
-| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q3 Fall 2027 - Temporal Progression Modules |
+| Labels | `phd-sync, year-2, phase-3, scaling, step-1, q1-2028` |
+| Year / Quarter | 2 - Spatio-Temporal NAS Execution & Multi-Task Forecasting / Q1 Spring 2028 - Engineering the Spatio-Temporal Search Space |
 | Phase | 3 - Scaling to the Comparative Matrix |
 | Master-plan goal | Implement temporal progression blocks for longitudinal forecasting. |
 

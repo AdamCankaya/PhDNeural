@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | Number | [377](https://github.com/AdamCankaya/PhDNeural/issues/377) |
-| Title | [Y3 Q2 Summer 2029] Release the complete open-source Python framework. |
+| Title | [Y3 Q1 Spring 2029] Release the complete open-source Python framework. |
 | URL | https://github.com/AdamCankaya/PhDNeural/issues/377 |
-| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q2-2029` |
-| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q2 Summer 2029 - Thesis Defense |
+| Labels | `phd-sync, thesis-deliverable, year-3, phase-4, step-1, q1-2029` |
+| Year / Quarter | 3 - Spatio-Temporal Interpretability and Clinical Interface / Q1 Spring 2029 - Interpretability, Interface, and Thesis Synthesis |
 | Phase | 4 - Thesis Synthesis & Final Deliverables |
 | Master-plan goal | Finalize dissertation and release the open-source framework. |
 

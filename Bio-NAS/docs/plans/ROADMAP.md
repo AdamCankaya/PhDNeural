@@ -1,6 +1,6 @@
 # Bio-NAS Implementation Roadmap
 
-> Quarter labels in per-issue plans follow [`phd_bio-nas_master_plan.md`](../../phd_bio-nas_master_plan.md) (Spring 2026 → Summer 2029 calendar as of Oct 2026).
+> Quarter labels in per-issue plans follow [`phd_bio-nas_master_plan.md`](../../phd_bio-nas_master_plan.md) (Summer 2026 kickoff → Spring 2029 calendar as of Nov 2026).
 
 Plans for all **25 open** `phd-sync` roadmap issues in [AdamCankaya/PhDNeural](https://github.com/AdamCankaya/PhDNeural).
 Authoritative checklist: [`phd_bio-nas_master_plan.md`](../../phd_bio-nas_master_plan.md).
@@ -118,7 +118,7 @@ flowchart TD
 
 | Order | Issue | Plan file | Depends on |
 |------:|-------|-----------|------------|
-| 01 | [#354](https://github.com/AdamCankaya/PhDNeural/issues/354) | [01-issue-354-multi-disease-dataset-inventory.md](01-issue-354-multi-disease-dataset-inventory.md) — **Complete (2026-11-02)** — five-disease inventory locks; public Docker CPU toy pipeline (BRCA+RA+EA); ADNI/KORA access deferred | — |
+| 01 | [#354](https://github.com/AdamCankaya/PhDNeural/issues/354) | [01-issue-354-multi-disease-dataset-inventory.md](01-issue-354-multi-disease-dataset-inventory.md) — **Complete (2026-11-02)** — five-disease **inventory** locks; **Active 3** public Docker CPU toy pipeline (BRCA+RA+EA); ADNI/KORA access deferred | — |
 | 02 | [#355](https://github.com/AdamCankaya/PhDNeural/issues/355) | [02-issue-355-longitudinal-matching-strategy.md](02-issue-355-longitudinal-matching-strategy.md) — **Next / ready to start** | #354 |
 | 03 | [#356](https://github.com/AdamCankaya/PhDNeural/issues/356) | [03-issue-356-spatial-temporal-feature-map.md](03-issue-356-spatial-temporal-feature-map.md) | #354, #355 |
 | 04 | [#357](https://github.com/AdamCankaya/PhDNeural/issues/357) | [04-issue-357-genomic-structural-spacing.md](04-issue-357-genomic-structural-spacing.md) | #356 |
@@ -148,12 +148,13 @@ flowchart TD
 
 | Group | Plans | Focus |
 |-------|-------|-------|
-| Year 1 Fall–Winter | 01–04 | Cohort inventory, matching, feature map, spacing |
-| Year 1 Spring–Summer | 05–09 | Leakage-safe ETL, Δt, 4D HDF5, compute, Postgres |
-| Year 2 Fall–Spring | 10–13, 25 | Spatial/temporal + Intermediate Fusion modules, phased Optuna search, Slurm workers, TensorBoard logging |
-| Year 2 Summer | 14–16 | Holdout eval, ablations, classical baselines (**scaling gate**) |
-| Year 3 Fall–Winter | 17–20 | Attribution, driver maps, Streamlit trajectories |
-| Year 3 Spring–Summer | 21–24 | Taxonomy, tempo compare, dissertation, OSS release |
+| Year 1 Fall 2026 | 01–02 | **Active 3** cohort inventory + matching; AD/T2D metadata-only |
+| Year 1 Spring–Summer 2027 | 03–07 | Feature map, spacing, leakage-safe ETL, Δt, 4D HDF5, RA/EA MTL |
+| Year 1 Fall 2027 | 08–09 | Compute stack, Postgres / Optuna hub |
+| Year 2 Spring 2028 | 10–11 | Spatial/temporal + Intermediate Fusion modules |
+| Year 2 Summer 2028 | 12–13, 25 | Phased Optuna search, Slurm workers, TensorBoard logging |
+| Year 2 Fall 2028 | 14–16 | Holdout eval, ablations, classical baselines (**scaling gate**) |
+| Year 3 Spring 2029 | 17–24 | Attribution, driver maps, Streamlit trajectories, taxonomy, dissertation, OSS release |
 
 ## Existing code foundations (do not rebuild)
 

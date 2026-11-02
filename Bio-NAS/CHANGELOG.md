@@ -4,11 +4,18 @@ All notable changes to the Bio-NAS project documentation and roadmap tooling are
 
 ## 2026-11-02
 
+### Timeline realignment (Summer 2026 → Spring 2029) + Active 3 cohort scope
+
+- Restructured `phd_bio-nas_master_plan.md`: Summer 2026 kickoff, Fall 2026 Plans 1–2, Spring/Summer/Fall 2027–2028, Spring 2029 Plans 18–24; removed Winter quarter headers; executive dual-track table and **Active 3** (BRCA, RA, EA) vs deferred AD/T2D wording.
+- Regenerated `phd_bio-nas_timeline_dashboard.html` and `phd_bio-nas_master_plan.html`; dashboard `STORAGE_KEY` → **`phd_plan_progress_v10`**; branding **PhD Roadmap 2026–2029**.
+- Updated all 25 `docs/plans/*.md` quarter labels, ROADMAP, README, wiki, cohort inventory, and landing pages.
+- After pull: run `python scripts/sync_phd_to_github.py --update-existing` to refresh GitHub issue titles/quarters (optional `--close-stale` only if checklist items change).
+
 ### Plan 1 complete — transition to Plan 2
 
 - Unified Plan 1 Docker chain in `docker/entrypoint.sh`: BRCA download → GDC inventory verify → optional BRCA NAS → ADNI scaffold → RA (GSE71841) → T2D skip → EA (GSE87571) → static dashboard → optional repository dispatch.
 - Marked Plan 01 docs, ROADMAP, wiki, and cohort inventory as **Complete** with deferred ADNI/KORA/process items; Plan 02 marked **Ready to start**.
-- Timeline dashboard: `STORAGE_KEY` → `phd_plan_progress_v9` seeds Plan 1 checklist item complete for new visitors.
+- Timeline dashboard: `STORAGE_KEY` → `phd_plan_progress_v10` seeds Plan 1 checklist item complete for new visitors (supersedes v9 note below).
 - Closed GitHub issue #354 with completion comment; blog post announces Plan 2 focus.
 
 ## 2026-10-20
