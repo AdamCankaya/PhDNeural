@@ -28,12 +28,13 @@ run_step() {
   if "$@"; then
     printf '%s|%s\n' "$title" "0" >> "$STEP_LOG"
     return 0
+  else
+    rc=$?
+    echo "WARNING: step failed (exit ${rc}): ${title}" >&2
+    printf '%s|%s\n' "$title" "$rc" >> "$STEP_LOG"
+    PIPELINE_FAILURES=$((PIPELINE_FAILURES + 1))
+    return 0
   fi
-  local rc=$?
-  echo "WARNING: step failed (exit ${rc}): ${title}" >&2
-  printf '%s|%s\n' "$title" "$rc" >> "$STEP_LOG"
-  PIPELINE_FAILURES=$((PIPELINE_FAILURES + 1))
-  return 0
 }
 
 echo "=== Bio-NAS Plan-1 CPU toy pipeline ==="

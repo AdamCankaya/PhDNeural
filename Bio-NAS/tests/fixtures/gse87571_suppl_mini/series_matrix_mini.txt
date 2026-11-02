@@ -1,0 +1,7 @@
+!Series_geo_accession	"GSE87571"
+!Sample_geo_accession	"GSM_A1"	"GSM_A2"	"GSM_B1"	"GSM_B2"	"GSM_C1"	"GSM_C2"
+!Sample_title	"t1"	"t2"	"t3"	"t4"	"t5"	"t6"
+!Sample_characteristics_ch1	"age: 42"	"age: 45"	"age: 55"	"age: 60"	"age: 48"	"age: 62"
+!series_matrix_table_begin
+ID_REF	GSM_A1	GSM_A2	GSM_B1	GSM_B2	GSM_C1	GSM_C2
+!series_matrix_table_end

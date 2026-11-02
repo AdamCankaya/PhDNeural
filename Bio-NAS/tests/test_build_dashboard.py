@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from build_dashboard import disease_row, load_pipeline_steps, skipped_status
+from build_dashboard import disease_row, load_pipeline_steps, skipped_status, step_failures_for_disease
 
 
 class BuildDashboardTests(unittest.TestCase):
@@ -54,6 +54,64 @@ class BuildDashboardTests(unittest.TestCase):
             row = disease_row("RA", disease_dir, "GEO", [], ("RA",))
             self.assertEqual(row[2], "Partial")
             self.assertIn("0.50", row[6])
+
+    def test_epigenetic_aging_ready_row(self) -> None:
+        keywords = (
+            "Epigenetic Aging",
+            "GSE40279",
+            "GSE87571",
+            "GSE280465",
+            "EA smoke",
+            "EA toy",
+            "EA public",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            disease_dir = Path(tmp) / "epigenetic_aging"
+            disease_dir.mkdir()
+            (disease_dir / ".ready").write_text("{}\n", encoding="utf-8")
+            (disease_dir / "manifest.json").write_text(
+                json.dumps({"n_cases": 8, "schema_version": 2}),
+                encoding="utf-8",
+            )
+            (disease_dir / "nas_demo_results.json").write_text(
+                json.dumps(
+                    {
+                        "n_samples": 8,
+                        "best_architecture": {
+                            "validation_accuracy": 0.75,
+                            "hidden_width": 16,
+                            "validation_loss": 0.42,
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            row = disease_row("Epigenetic Aging", disease_dir, "GEO", [], keywords)
+            self.assertEqual(row[2], "Ready")
+            self.assertEqual(row[4], "8")
+            self.assertIn("Methylation", row[5])
+            self.assertIn("0.75", row[6])
+
+    def test_epigenetic_aging_failed_verify_step(self) -> None:
+        keywords = (
+            "Epigenetic Aging",
+            "GSE87571",
+            "EA smoke",
+            "EA toy",
+            "EA public",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            disease_dir = Path(tmp) / "epigenetic_aging"
+            disease_dir.mkdir()
+            steps = [("EA smoke verify", 1)]
+            row = disease_row("Epigenetic Aging", disease_dir, "GEO", steps, keywords)
+            self.assertIn("Failed", row[2])
+            self.assertIn("1 step", row[2])
+
+    def test_ea_toy_nas_failure_matches_keywords(self) -> None:
+        keywords = ("EA smoke", "EA toy", "GSE87571")
+        failed = step_failures_for_disease([("EA toy NAS", 1)], keywords)
+        self.assertEqual(failed, ["EA toy NAS"])
 
 
 if __name__ == "__main__":
