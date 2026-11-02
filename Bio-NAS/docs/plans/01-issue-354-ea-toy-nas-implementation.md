@@ -15,20 +15,9 @@ This is **orchestration smoke only** — not epigenetic clock training, three-st
 | Inventory primaries (full thesis) | GSE40279, GSE87571, GSE280465 |
 | **This slice** | **GSE87571 only** (single-series smoke; harmonization deferred) |
 
-## Current gap
+> **Status: Complete (2026-11-02)** — GSE87571 download, verify, and `train_toy_nas_cpu.py --ea` are wired in `docker/entrypoint.sh` with offline tests and dashboard aggregation.
 
-| Piece | BRCA / RA | EA today |
-|-------|-----------|----------|
-| Public downloader | Yes | No (`entrypoint.sh` writes `epigenetic_aging/.skipped` = `plan1_deferred`) |
-| BRCA-shaped artifacts | Yes | No |
-| `verify_geo_smoke.py` + pins | RA: `smoke_expected_ra.json` | None |
-| `train_toy_nas_cpu.py` flag | `--brca` / `--ra` | No `--ea` |
-| Compose env | `RA_SAMPLE_*` wired | `EPIGENETIC_AGING_SAMPLE_OUT` + unused `SKIP_EPIGENETIC_AGING_NAS` |
-| Wiki | Data-Acquisition-RA | Data-Acquisition-EA |
-
-**Entrypoint of record:** `docker/entrypoint.sh` (not `scripts/docker_entrypoint.py`).
-
-## Scope
+## Implementation summary (was “Current gap”)
 
 ### In scope
 

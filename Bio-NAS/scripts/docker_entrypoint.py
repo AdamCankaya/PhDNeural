@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Docker entrypoint: BRCA open chain + optional ADNI scaffold.
+"""SUPERSEDED for Plan 1: use ``docker/entrypoint.sh`` (Compose ENTRYPOINT).
+
+Retained for reference and optional host debugging only — the canonical
+multi-disease CPU toy pipeline (BRCA verify, RA/EA GEO, dashboard) lives in
+``docker/entrypoint.sh``.
+
+Docker entrypoint: BRCA open chain + optional ADNI scaffold.
 
 Chain:
   1. Open PoC-minimum TCGA-BRCA sample at $TCGA_SAMPLE_OUT (meth betas + STAR

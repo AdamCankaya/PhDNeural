@@ -2,7 +2,7 @@
 
 Welcome to the **PhDNeural** project wiki — a published mirror of documentation under [`docs/wiki/`](https://github.com/AdamCankaya/PhDNeural/tree/main/Bio-NAS/docs/wiki) in the repository.
 
-> **Planning phase:** **24** roadmap checklist items, each with a 1:1 open GitHub issue (`label:phd-sync`) containing implementation requirements. Sync with `--update-existing`; prune orphans with `--close-stale --prune-project`.
+> **Status (Nov 2026):** **Plan 1 complete** — multi-disease inventory locks and public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard. **Plan 2 (#355) longitudinal matching** is the current engineering focus. **24** roadmap checklist items remain tracked as open `phd-sync` issues (#355–#378) with implementation requirements on the live dashboard.
 
 ## Quick links
 
@@ -33,7 +33,7 @@ docker compose up --build
 
 Or build/run manually: `docker build -f docker\Dockerfile -t bio-nas-demo:local .` then `docker run --rm -v "${PWD}/data/tcga:/data/tcga" bio-nas-demo:local`.
 
-First run downloads a tiny open-access TCGA-BRCA sample and runs the toy NAS demo; results appear under `Bio-NAS\data\tcga\BRCA` on the host. Full steps and troubleshooting: [Bio-NAS README § 5](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md#5-deploy-with-docker-windows) and [docker/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/README.md).
+First run executes the full Plan 1 chain: BRCA GDC sample + inventory verify + toy NAS, ADNI scaffold status, public **RA** (GSE71841) and **EA** (GSE87571) GEO smokes, and a static results dashboard under `Bio-NAS\data\dashboard\`. Full steps and troubleshooting: [Bio-NAS README § 5](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/README.md#5-deploy-with-docker-windows) and [docker/README.md](https://github.com/AdamCankaya/PhDNeural/blob/main/Bio-NAS/docker/README.md).
 
 ## Research overview
 

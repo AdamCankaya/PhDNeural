@@ -16,7 +16,10 @@ from render_master_plan_html import main as render_master_plan_main
 
 
 BRANDING = "PhD Roadmap 2026–2029"
-STORAGE_KEY = "phd_plan_progress_v8"
+STORAGE_KEY = "phd_plan_progress_v9"
+DEFAULT_PROGRESS = {
+    "year-1-q1-2026-phase-1-step-1-item-1-identify-and-secure-multi-disease-datase": True,
+}
 
 
 def main() -> int:
@@ -65,6 +68,34 @@ def main() -> int:
         r"const STORAGE_KEY = 'phd_plan_progress[^']*';",
         f"const STORAGE_KEY = '{STORAGE_KEY}';",
         html,
+    )
+
+    default_progress_js = json.dumps(DEFAULT_PROGRESS, indent=2)
+    if "const DEFAULT_PROGRESS" not in html:
+        html = re.sub(
+            r"(const STORAGE_KEY = 'phd_plan_progress_v9';)\n",
+            rf"\1\n    const DEFAULT_PROGRESS = {default_progress_js};\n",
+            html,
+            count=1,
+        )
+    else:
+        html = re.sub(
+            r"const DEFAULT_PROGRESS = \{[\s\S]*?\};",
+            f"const DEFAULT_PROGRESS = {default_progress_js};",
+            html,
+            count=1,
+        )
+
+    html = re.sub(
+        r"function loadProgress\(\) \{\s*try \{\s*const raw = localStorage\.getItem\(STORAGE_KEY\);\s*return raw \? JSON\.parse\(raw\) : \{\};\s*\} catch \{ return \{\}; \}\s*\}",
+        "function loadProgress() {\n"
+        "      try {\n"
+        "        const raw = localStorage.getItem(STORAGE_KEY);\n"
+        "        return raw ? JSON.parse(raw) : { ...DEFAULT_PROGRESS };\n"
+        "      } catch { return { ...DEFAULT_PROGRESS }; }\n"
+        "    }",
+        html,
+        count=1,
     )
 
     dashboard_path.write_text(html, encoding="utf-8")

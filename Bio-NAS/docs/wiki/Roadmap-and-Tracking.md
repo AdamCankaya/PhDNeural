@@ -10,6 +10,14 @@ The PhD roadmap is organized by **year and quarter** (Spring 2026 → Summer 202
 
 **Pages:** [dashboard](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_timeline_dashboard.html) · [master plan HTML](https://adamcankaya.github.io/PhDNeural/Bio-NAS/phd_bio-nas_master_plan.html)
 
+## Current focus (Nov 2026)
+
+| Item | Status |
+|------|--------|
+| Plan 1 — multi-disease inventory + public Docker toy pipeline (#354) | **Complete** (2026-11-02) |
+| Plan 2 — longitudinal matching / join keys (#355) | **Next / in progress** |
+| Timeline dashboard default progress | `STORAGE_KEY` **`phd_plan_progress_v9`** seeds Plan 1 item 1 complete for new visitors; clear site data if upgrading from v8 |
+
 ## Planning phase status
 
 All **24** roadmap tasks are tracked as **open** issues during the planning phase. Each issue body includes **Summary** and **Implementation requirements** (Deliverables / Acceptance / Dependencies) synced from nested checklist bullets.

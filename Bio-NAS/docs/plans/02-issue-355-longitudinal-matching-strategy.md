@@ -1,5 +1,11 @@
 # Plan 02: Source longitudinal tracking options focusing on primary vs. recurrent match points.
 
+> **Status: Ready to start (2026-11-02)** — Plan 1 inventory locks and public Docker smoke are complete; open GDC metadata is available for BRCA pairing prototypes.
+>
+> **Prerequisites satisfied:** [`cohort_inventory.md`](../data/cohort_inventory.md) + [`01-issue-354-multi-disease-dataset-inventory.md`](01-issue-354-multi-disease-dataset-inventory.md) (Complete); reproducible `docker compose up --build` for BRCA inventory verify + RA/EA toy NAS ([`docker/README.md`](../../docker/README.md)).
+>
+> **First implementation slice:** prototype BRCA open GDC barcode pairing (case/sample IDs) → draft `docs/data/matching_strategy.md` § BRCA + seed `src/config/longitudinal_keys.yaml` join keys (no full omic ETL).
+
 ## Issue reference
 
 | Field | Value |
