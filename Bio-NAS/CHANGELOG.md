@@ -2,6 +2,15 @@
 
 All notable changes to the Bio-NAS project documentation and roadmap tooling are recorded here.
 
+## 2026-11-07
+
+### Plan 2 BRCA match pairs — GDC discover scope
+
+- `build_brca_longitudinal_matching.py --discover` pages open GDC `/cases` for TCGA-BRCA samples whose type is a YAML later type (Recurrent Tumor, Metastatic). No smoke manifest and no omic downloads. `summary.json` adds `cohort_scope` (`discover`, `smoke`, or `fixture`); `schema_version` stays 1.
+- Docker Plan 2 defaults to `BRCA_MATCHING_SCOPE=discover`. `smoke` keeps the 8-case manifest. `SKIP_BRCA_MATCHING=1` unchanged. Zero match pairs on smoke remain expected.
+- Dashboard Plan 2 disclaimer is scope-aware and lists `cohort_scope`.
+- BRCA slice accepted for issue #355: documented join keys and exclusion rules. Discover returned 7 TCGA-BRCA cases and 0 match pairs (`ambiguous_duplicate_sample_type_without_time` on every case). Empty pairs meet the issue acceptance.
+
 ## 2026-11-02
 
 ### Timeline realignment (Summer 2026 → Spring 2029) + Active 3 cohort scope
@@ -17,6 +26,18 @@ All notable changes to the Bio-NAS project documentation and roadmap tooling are
 - Marked Plan 01 docs, ROADMAP, wiki, and cohort inventory as **Complete** with deferred ADNI/KORA/process items; Plan 02 marked **Ready to start**.
 - Timeline dashboard: `STORAGE_KEY` → `phd_plan_progress_v10` seeds Plan 1 checklist item complete for new visitors (supersedes v9 note below).
 - Closed GitHub issue #354 with completion comment; blog post announces Plan 2 focus.
+
+### Plan 2 BRCA longitudinal matching (#355)
+
+- Added `docs/data/matching_strategy.md`, `src/config/longitudinal_keys.yaml`, `src/data/brca_longitudinal_matching.py`, and `scripts/build_brca_longitudinal_matching.py` (GDC metadata + `--fixture` offline mode).
+- Docker: entrypoint step after inventory verify (`SKIP_BRCA_MATCHING` default off), `PyYAML` in image, `PYTHONPATH=/app`, artifacts under `data/tcga/BRCA/longitudinal_matching/`.
+- Dashboard: pipeline steps table, Plan 2 section, **Longitudinal matching** column on TCGA-BRCA row.
+- Tests: `test_brca_longitudinal_matching.py`, `test_longitudinal_keys.py`, `test_build_brca_matching_cli.py`, entrypoint contract + expanded `test_build_dashboard.py`.
+
+### Plan 2 follow-up — drop unranked GDC sample types
+
+- Unranked `sample_type` rows are dropped before visit ordering (`drop_unranked_sample_types`); fixes smoke cohort whole-case `missing_time_and_rank` exclusions when extra biospecimen types are listed.
+- `summary.json` adds `n_samples_dropped_unranked` and `sample_types_observed`; dashboard Plan 1/Plan 2 section headings and updated Plan 2 disclaimer.
 
 ## 2026-10-20
 

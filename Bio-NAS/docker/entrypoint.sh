@@ -49,6 +49,34 @@ if truthy "${INVENTORY_VERIFY_DRY_RUN:-0}"; then
 fi
 run_step "BRCA inventory verify (GDC API)" "${VERIFY_CMD[@]}"
 
+BRCA_MATCHING_OUT="${BRCA_MATCHING_OUT:-$BRCA_DIR/longitudinal_matching}"
+MATCHING_KEYS="${MATCHING_KEYS_YAML:-/app/src/config/longitudinal_keys.yaml}"
+BRCA_MATCHING_SCOPE="${BRCA_MATCHING_SCOPE:-discover}"
+if truthy "${SKIP_BRCA_MATCHING:-0}"; then
+  echo "--- BRCA longitudinal matching skipped (SKIP_BRCA_MATCHING=1) ---"
+else
+  case "$BRCA_MATCHING_SCOPE" in
+    discover)
+      run_step "BRCA longitudinal matching (GDC metadata)" \
+        python /app/scripts/build_brca_longitudinal_matching.py \
+        --discover \
+        --out-dir "$BRCA_MATCHING_OUT" \
+        --keys-yaml "$MATCHING_KEYS"
+      ;;
+    smoke)
+      run_step "BRCA longitudinal matching (GDC metadata)" \
+        python /app/scripts/build_brca_longitudinal_matching.py \
+        --smoke-dir "$BRCA_DIR" \
+        --out-dir "$BRCA_MATCHING_OUT" \
+        --keys-yaml "$MATCHING_KEYS"
+      ;;
+    *)
+      echo "ERROR: BRCA_MATCHING_SCOPE must be discover or smoke (got: ${BRCA_MATCHING_SCOPE})" >&2
+      run_step "BRCA longitudinal matching (GDC metadata)" false
+      ;;
+  esac
+fi
+
 if ! truthy "${SKIP_BRCA_NAS:-0}" && ! truthy "${SKIP_NAS_DEMO:-0}"; then
   run_step "BRCA toy NAS" python /app/scripts/train_toy_nas_cpu.py --disease "BRCA" --data-dir "$BRCA_DIR" --brca
 fi

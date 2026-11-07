@@ -1,5 +1,5 @@
 # Bio-NAS Plan-1 CPU toy pipeline (docker/entrypoint.sh):
-#   BRCA GDC download → inventory verify → optional BRCA NAS
+#   BRCA GDC download → inventory verify → Plan 2 longitudinal matching → optional BRCA NAS
 #   → ADNI scaffold (+ optional AD NAS when .ready)
 #   → RA (GSE71841) verify/NAS → T2D honest skip → EA (GSE87571) verify/NAS
 #   → static dashboard → optional GitHub repository_dispatch
@@ -41,6 +41,10 @@ services:
       SKIP_ALZHEIMERS: "${SKIP_ALZHEIMERS:-1}"
       SKIP_T2D: "${SKIP_T2D:-1}"
       INVENTORY_VERIFY_DRY_RUN: "${INVENTORY_VERIFY_DRY_RUN:-0}"
+      SKIP_BRCA_MATCHING: "${SKIP_BRCA_MATCHING:-0}"
+      BRCA_MATCHING_SCOPE: "${BRCA_MATCHING_SCOPE:-discover}"
+      BRCA_MATCHING_OUT: /data/tcga/BRCA/longitudinal_matching
+      MATCHING_KEYS_YAML: /app/src/config/longitudinal_keys.yaml
       SKIP_BRCA_NAS: "${SKIP_BRCA_NAS:-0}"
       SKIP_NAS_DEMO: "${SKIP_NAS_DEMO:-0}"
       SKIP_RA_NAS: "${SKIP_RA_NAS:-0}"

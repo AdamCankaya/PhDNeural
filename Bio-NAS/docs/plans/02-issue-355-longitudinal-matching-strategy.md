@@ -1,6 +1,8 @@
 # Plan 02: Source longitudinal tracking options focusing on primary vs. recurrent match points.
 
-> **Status: Ready to start (2026-11-02)** — Plan 1 inventory locks and public Docker smoke are complete; open GDC metadata is available for BRCA pairing prototypes.
+> **Status: BRCA slice complete (2026-11-02)** — Plan 2 Docker step, matching strategy doc, YAML join keys, unit tests, and dashboard section landed for issue #355. RA/EA templates remain stubs.
+>
+> **Follow-up (2026-11-02):** drop unranked GDC `sample_type` rows before visit ordering so mixed biospecimen lists (e.g. Blood Derived Normal + Primary) do not exclude entire smoke cases; see `matching_strategy.md` § Sample filtering and `CHANGELOG.md`.
 >
 > **Prerequisites satisfied:** [`cohort_inventory.md`](../data/cohort_inventory.md) + [`01-issue-354-multi-disease-dataset-inventory.md`](01-issue-354-multi-disease-dataset-inventory.md) (Complete); reproducible `docker compose up --build` for BRCA inventory verify + RA/EA toy NAS ([`docker/README.md`](../../docker/README.md)).
 >
@@ -22,9 +24,9 @@
 
 Maps 1:1 to the issue **Implementation requirements**:
 
-- [ ] **Deliverables:** matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease.
-- [ ] **Acceptance:** documented join keys and exclusion rules that preserve temporal order.
-- [ ] **Upstream deps satisfied:** cohort-specific clinical/metadata dictionaries.
+- [x] **Deliverables:** matching strategy note (patient ID schemes, primary/recurrent or visit pairing rules) per disease — **BRCA complete** in [`docs/data/matching_strategy.md`](../data/matching_strategy.md); RA/EA stubs in YAML.
+- [x] **Acceptance:** documented join keys and exclusion rules that preserve temporal order — [`src/config/longitudinal_keys.yaml`](../../src/config/longitudinal_keys.yaml) + [`src/data/brca_longitudinal_matching.py`](../../src/data/brca_longitudinal_matching.py).
+- [x] **Upstream deps satisfied:** cohort-specific clinical/metadata dictionaries.
 
 
 ## Approach
@@ -65,6 +67,12 @@ Satisfied when the issue acceptance text is met:
 > documented join keys and exclusion rules that preserve temporal order.
 
 Plus: linked PR(s) reference this plan path and issue #355; experiments (if any) record IDs per `docs/wiki/Experiment-Log-Template.md`.
+
+**Verification (BRCA slice):**
+
+- `python -m unittest discover -s tests` (from `Bio-NAS/`)
+- `docker compose up --build` → `data/tcga/BRCA/longitudinal_matching/` + pipeline log step `BRCA longitudinal matching (GDC metadata)|0`
+- Dashboard: `data/dashboard/dashboard.html` Plan 2 section
 
 ## Rough sequencing notes
 

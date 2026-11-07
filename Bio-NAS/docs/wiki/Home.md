@@ -2,7 +2,7 @@
 
 Welcome to the **PhDNeural** project wiki — a published mirror of documentation under [`docs/wiki/`](https://github.com/AdamCankaya/PhDNeural/tree/main/Bio-NAS/docs/wiki) in the repository.
 
-> **Status (Nov 2026):** **Plan 1 complete** — multi-disease inventory locks and public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard. **Plan 2 (#355) longitudinal matching** is the current engineering focus. **24** roadmap checklist items remain tracked as open `phd-sync` issues (#355–#378) with implementation requirements on the live dashboard.
+> **Status (Nov 2026):** **Plan 1 complete** — multi-disease inventory locks and public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard. **Plan 2 (#355) BRCA longitudinal matching** landed (GDC metadata step + `matching_strategy.md`). **Next:** Plan 3 (#356) feature map. **24** roadmap checklist items remain tracked as open `phd-sync` issues (#355–#378) with implementation requirements on the live dashboard.
 
 ## Quick links
 

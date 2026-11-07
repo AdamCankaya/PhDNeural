@@ -2,6 +2,10 @@
 
 Time-related fields are continuous tabular inputs in the clinical modality.
 They are Z-scored on the training partition only (no temporal sequences).
+
+Sample-level visit ordering for Plan 02 BRCA matching uses GDC biospecimen fields
+(``days_to_collection``, etc.) documented in ``src/config/longitudinal_keys.yaml``,
+not the case-level clinical columns mapped below.
 """
 
 from __future__ import annotations

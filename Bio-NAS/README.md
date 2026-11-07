@@ -65,7 +65,7 @@ The central hypothesis is that embedding biological constraints (Bio-NAS) into d
 
 Authoritative checklist (per-task Track scope): [`phd_bio-nas_master_plan.md`](phd_bio-nas_master_plan.md).
 
-> **Roadmap focus (Fall 2026 / Nov 2026):** **Plan 1 complete** — **Active 3** inventory + public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard; five-disease **inventory** documented with AD/T2D access deferred. **Plan 2 active next** — longitudinal pairing on BRCA, RA, EA ([`docs/plans/02-issue-355-longitudinal-matching-strategy.md`](docs/plans/02-issue-355-longitudinal-matching-strategy.md)).
+> **Roadmap focus (Fall 2026 / Nov 2026):** **Plan 1 complete** — **Active 3** inventory + public Docker CPU toy smoke (BRCA, RA, EA) + static dashboard; five-disease **inventory** documented with AD/T2D access deferred. **Plan 2 BRCA slice complete** — longitudinal join keys and exclusion rules ([`docs/plans/02-issue-355-longitudinal-matching-strategy.md`](docs/plans/02-issue-355-longitudinal-matching-strategy.md)); RA/EA remain stubs. **Next:** Plan 3 feature map.
 
 ### Objectives
 
@@ -214,9 +214,10 @@ On first run, the entrypoint (`docker/entrypoint.sh`):
 
 1. Downloads a tiny **open-access** TCGA-BRCA sample from the GDC API (~5–10 joint meth+RNA cases + clinical; no login / token).
 2. Writes data under `Bio-NAS\data\tcga\BRCA` and verifies inventory via the public GDC API → `data\tcga\inventory_verification\`.
-3. Runs optional CPU toy NAS for **BRCA**, then the **ADNI scaffold** under `data\adni\` (status JSON while DUA pending).
-4. Downloads and verifies public **RA** (GSE71841) and **Epigenetic Aging** (GSE87571) GEO smokes; runs optional toy NAS per disease; **skips T2D/KORA** by default.
-5. Builds the static dashboard at `Bio-NAS\data\dashboard\dashboard.html` (BRCA + RA + EA rows when successful).
+3. **Plan 2:** builds BRCA longitudinal matching artifacts from an open GDC metadata discover query (default `BRCA_MATCHING_SCOPE=discover`; `smoke` keeps the 8-case manifest) → `data\tcga\BRCA\longitudinal_matching\` (`SKIP_BRCA_MATCHING=1` to skip).
+4. Runs optional CPU toy NAS for **BRCA**, then the **ADNI scaffold** under `data\adni\` (status JSON while DUA pending).
+5. Downloads and verifies public **RA** (GSE71841) and **Epigenetic Aging** (GSE87571) GEO smokes; runs optional toy NAS per disease; **skips T2D/KORA** by default.
+6. Builds the static dashboard at `Bio-NAS\data\dashboard\dashboard.html` (pipeline steps, Plan 2 matching summary, BRCA + RA + EA rows when successful).
 
 Re-runs skip downloads when each disease `.ready` marker already exists.
 
@@ -225,7 +226,7 @@ Re-runs skip downloads when each disease `.ready` marker already exists.
 | Location | Path |
 |----------|------|
 | **Toy NAS dashboard** | `Bio-NAS\data\dashboard\dashboard.html` (always regenerated; lists failed steps if any) |
-| Host (Explorer) BRCA | `Bio-NAS\data\tcga\BRCA\` and `Bio-NAS\data\tcga\inventory_verification\` |
+| Host (Explorer) BRCA | `Bio-NAS\data\tcga\BRCA\`, `Bio-NAS\data\tcga\inventory_verification\`, `Bio-NAS\data\tcga\BRCA\longitudinal_matching\` |
 | Host (Explorer) RA / EA | `Bio-NAS\data\ra\`, `Bio-NAS\data\epigenetic_aging\` |
 | Host (Explorer) ADNI | `Bio-NAS\data\adni\` (`adni_access_status.json` while DUA pending) |
 | Key files | `nas_demo_results.json`, `manifest.json`, `demographics.json`, `files\`, `verification.json`, `adni_access_status.json` |

@@ -1,0 +1,52 @@
+# Machine-readable join keys for Plan 02 longitudinal matching (#355).
+# Human-readable rules: docs/data/matching_strategy.md
+# Case-level clinical time aliases: src/data/clinical_time.py (TCGA_BRCA_TIME_COLUMN_MAP)
+
+schema_version: 1
+
+brca:
+  gdc:
+    project_id: TCGA-BRCA
+    patient:
+      case_id_field: case_id
+      submitter_id_field: submitter_id
+    sample:
+      sample_id_field: sample_id
+      submitter_id_field: submitter_id
+      sample_type_field: sample_type
+      time_fields:
+        primary: days_to_collection
+        fallbacks: []
+    # Deterministic visit order when days_to_collection is missing or tied (lower = earlier).
+    sample_type_rank:
+      Solid Tissue Normal: 0
+      Primary Tumor: 1
+      Recurrent Tumor: 2
+      Metastatic: 3
+    match_pair:
+      # Directed pairs: anchor visit → later recurrent/metastatic visit.
+      anchor_sample_types:
+        - Solid Tissue Normal
+        - Primary Tumor
+      later_sample_types:
+        - Recurrent Tumor
+        - Metastatic
+    exclusions:
+      single_sample_case: true
+      ambiguous_duplicate_sample_type_without_time: true
+      missing_time_and_rank: true
+      drop_unranked_sample_types: true
+    gdc_cases_api_fields: >-
+      case_id,submitter_id,samples.sample_id,samples.submitter_id,samples.sample_type,samples.days_to_collection
+
+ra:
+  status: stub
+  notes: >-
+    RA longitudinal pairing deferred; GEO GSE71841 smoke is cross-sectional.
+    Plan 02 documents visit rules only when a repeated-measure cohort is locked.
+
+epigenetic_aging:
+  status: stub
+  notes: >-
+    EA cohorts may use chronological age at draw; no primary/recurrent tumor pairing.
+    See matching_strategy.md for cross-sectional time axis.

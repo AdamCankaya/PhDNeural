@@ -2,8 +2,8 @@
 # Data is downloaded at container start into /data/tcga (not during build).
 # Open-access GDC only for BRCA — no login / token required.
 # ADNI: credentials from host .env only — never baked into this image.
-# Chain (``docker/entrypoint.sh``): BRCA smoke → inventory_verification/ → optional BRCA NAS →
-#        ADNI scaffold → optional AD NAS → RA + EA public GEO smokes → dashboard.
+# Chain (``docker/entrypoint.sh``): BRCA smoke → inventory_verification/ → Plan 2 longitudinal matching →
+#        optional BRCA NAS → ADNI scaffold → optional AD NAS → RA + EA public GEO smokes → dashboard.
 FROM python:3.12-slim
 
 LABEL org.opencontainers.image.title="Bio-NAS Plan-1"
@@ -26,12 +26,21 @@ COPY scripts/download_geo_ea_sample.py /app/scripts/download_geo_ea_sample.py
 COPY scripts/verify_geo_smoke.py /app/scripts/verify_geo_smoke.py
 COPY scripts/train_toy_nas_cpu.py /app/scripts/train_toy_nas_cpu.py
 COPY scripts/build_dashboard.py /app/scripts/build_dashboard.py
+COPY scripts/build_brca_longitudinal_matching.py /app/scripts/build_brca_longitudinal_matching.py
+COPY src/data/brca_longitudinal_matching.py /app/src/data/brca_longitudinal_matching.py
+COPY src/data/__init__.py /app/src/data/__init__.py
+COPY src/config/load_config.py /app/src/config/load_config.py
+COPY src/config/__init__.py /app/src/config/__init__.py
+COPY src/config/longitudinal_keys.yaml /app/src/config/longitudinal_keys.yaml
+COPY src/__init__.py /app/src/__init__.py
 COPY docker/entrypoint.sh /app/entrypoint.sh
 COPY docs/data/smoke_expected.json /app/docs/data/smoke_expected.json
 COPY docs/data/smoke_expected_ra.json /app/docs/data/smoke_expected_ra.json
 COPY docs/data/smoke_expected_ea.json /app/docs/data/smoke_expected_ea.json
+COPY docs/data/smoke_expected_matching.json /app/docs/data/smoke_expected_matching.json
 
-ENV PYTHONUNBUFFERED=1 \
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
     TCGA_SAMPLE_OUT=/data/tcga/BRCA \
     TCGA_SAMPLE_N_CASES=8 \
     TCGA_SAMPLE_MAX_BYTES=1572864000 \

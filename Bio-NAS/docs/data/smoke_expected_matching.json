@@ -1,0 +1,28 @@
+{
+  "description": "Pinned minimum fields for BRCA longitudinal matching summary.json on smoke/fixture runs.",
+  "schema_version": 1,
+  "required_summary_keys": [
+    "schema_version",
+    "generated_at",
+    "project_id",
+    "n_cases_queried",
+    "n_cases",
+    "n_multi_sample_cases",
+    "n_visit_sequences",
+    "n_match_pairs",
+    "n_samples_dropped_unranked",
+    "sample_types_observed",
+    "exclusion_counts"
+  ],
+  "fixture_expectations": {
+    "n_cases_min": 6,
+    "n_match_pairs_min": 2,
+    "n_visit_sequences_min": 3
+  },
+  "notes": [
+    "Zero match pairs are expected only when BRCA_MATCHING_SCOPE=smoke (8-case smoke manifest).",
+    "Default Docker scope is discover: open TCGA-BRCA cases with a later sample type (Recurrent Tumor or Metastatic).",
+    "summary.json adds cohort_scope (discover, smoke, or fixture). schema_version stays 1; required_summary_keys are unchanged.",
+    "Validate fixture run via tests/test_build_brca_matching_cli.py."
+  ]
+}
