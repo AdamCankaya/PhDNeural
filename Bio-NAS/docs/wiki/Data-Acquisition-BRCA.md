@@ -92,11 +92,14 @@ Chain inside the container:
 
 1. Downloads ~5–10 open-access BRCA cases with **both** methylation betas and STAR RNA, plus clinical/labels — **no login / token**
 2. Runs `scripts/verify_cohort_inventory_open.py` → host `data/tcga/inventory_verification/` (GDC public API; TCGA-BRCA `verified_gdc_api`)
-3. Runs a toy MLP NAS on **methylation features only** (smoke only — not Intermediate Fusion NAS)
+3. **Plan 2 (#355):** `scripts/build_brca_longitudinal_matching.py` → `data/tcga/BRCA/longitudinal_matching/` (visit sequences + match pairs from GDC sample metadata; skip with `SKIP_BRCA_MATCHING=1`)
+4. Runs a toy MLP NAS on **methylation features only** (smoke only — not Intermediate Fusion NAS)
 
 **Smoke vs full ETL:** sample-scale (~5–10 patients). Full-cohort BRCA multi-omic ETL / HDF5 is **Plan 07**.
 
-**Plan 1 BRCA status:** **Complete (2026-11-02)** — open Docker path + GDC inventory verify + public RA/EA toy smokes. **Next:** Plan 2 (#355) longitudinal pairing on open GDC metadata (barcodes/clinical). Alzheimer's primary remains **ADNI** (Docker scaffold; DUA deferred).
+**Plan 1 BRCA status:** **Complete (2026-11-02)** — open Docker path + GDC inventory verify + public RA/EA toy smokes.
+
+**Plan 2 BRCA status:** **Complete (2026-11-02)** — matching strategy ([`matching_strategy.md`](../data/matching_strategy.md)), join keys ([`longitudinal_keys.yaml`](../../src/config/longitudinal_keys.yaml)), Docker step + dashboard Plan 2 section. Zero match pairs on smoke is expected. **Next:** Plan 3 (#356) feature map on stable visit_index / join keys.
 
 Windows walkthrough: [README § Deploy with Docker](../../README.md#5-deploy-with-docker-windows). Contract: [`docker/README.md`](../../docker/README.md). Plan: [plan 01](../plans/01-issue-354-multi-disease-dataset-inventory.md). Inventory: [`cohort_inventory.md`](../data/cohort_inventory.md).
 

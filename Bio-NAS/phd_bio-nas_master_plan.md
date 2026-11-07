@@ -50,7 +50,7 @@ Narrative quarter: formal checklist items begin Fall 2026; Summer 2026 covers re
 **Phases:** 1 | **Goal:** Identify and secure multi-disease datasets with repeated molecular measurements over time.
 **Track scope:** Shared (A+B) | **Cohort:** Active 3 engineering (BRCA, RA, EA); AD/T2D inventory + deferred access
 #### Step 1: Data Acquisition
-> **Progress note (2026-11-02):** Checklist item 1 (multi-disease inventory / Plan 1) is **complete**. Checklist item 2 (longitudinal matching / Plan 2) is **next**.
+> **Progress note (2026-11-07):** Checklist item 1 (multi-disease inventory / Plan 1) is **complete**. Checklist item 2 (longitudinal matching / Plan 2) is **complete** for the BRCA slice (RA/EA remain stubs). Checklist item 3 (spatial–temporal feature map / Plan 3) is **next**.
 
 * Identify and secure multi-disease datasets containing repeated molecular measurements over time (BRCA, Alzheimer’s, Rheumatoid Arthritis, T2D, Epigenetic Aging).
   * Track scope: Shared (A+B) — five-disease inventory; **Active 3** open/public paths for engineering; AD/T2D documented pending DUA/agreement.

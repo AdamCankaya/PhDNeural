@@ -10,9 +10,11 @@ Live tracker: [PhD Master Plan (Project #2)](https://github.com/users/AdamCankay
 
 ## Docker-first (all plans)
 
+Executable work ships in the Compose image (`docker/Dockerfile`, `docker/entrypoint.sh`). Plan 02 extends the Plan 01 BRCA chain with a GDC metadata matching step before toy NAS. Host bind-mounts under `./data/` persist artifacts; rebuild the image when `COPY`'d scripts, `src/`, or `docker/requirements.txt` change.
+
 All implementation work for these plans must be designed to run **inside the Bio-NAS Docker container** (`docker/Dockerfile`, `docker-compose.yml`). Prefer extending the entrypoint, `docker/requirements.txt`, compose env/volumes, and container-invoked scripts over host-only workflows. When a plan adds executable work, include Docker run/repro steps and expected mount outputs. Exceptions (e.g. interactive DUA/browser account setup) must be documented as **out-of-container**.
 
-**Plan 01 note (2026-11-02):** Plan 1 is **complete** — unified `docker/entrypoint.sh` chain (BRCA verify → ADNI scaffold → RA → EA → dashboard). Alzheimer's primary remains **ADNI (LONI)** with DUA deferred; T2D/KORA skip by default. **Current focus: Plan 02 (#355)** longitudinal matching.
+**Plan 01 note (2026-11-02):** Plan 1 is **complete** — unified `docker/entrypoint.sh` chain (BRCA verify → **Plan 2 matching** → ADNI scaffold → RA → EA → dashboard). Alzheimer's primary remains **ADNI (LONI)** with DUA deferred; T2D/KORA skip by default. **Plan 02 (#355) BRCA slice landed** — see `docs/data/matching_strategy.md`.
 
 Agent rule (always apply): [`.cursor/rules/docker-first-implementation.mdc`](../../.cursor/rules/docker-first-implementation.mdc). Compose contract: [`docker/README.md`](../../docker/README.md).
 
@@ -119,7 +121,7 @@ flowchart TD
 | Order | Issue | Plan file | Depends on |
 |------:|-------|-----------|------------|
 | 01 | [#354](https://github.com/AdamCankaya/PhDNeural/issues/354) | [01-issue-354-multi-disease-dataset-inventory.md](01-issue-354-multi-disease-dataset-inventory.md) — **Complete (2026-11-02)** — five-disease **inventory** locks; **Active 3** public Docker CPU toy pipeline (BRCA+RA+EA); ADNI/KORA access deferred | — |
-| 02 | [#355](https://github.com/AdamCankaya/PhDNeural/issues/355) | [02-issue-355-longitudinal-matching-strategy.md](02-issue-355-longitudinal-matching-strategy.md) — **Next / ready to start** | #354 |
+| 02 | [#355](https://github.com/AdamCankaya/PhDNeural/issues/355) | [02-issue-355-longitudinal-matching-strategy.md](02-issue-355-longitudinal-matching-strategy.md) — **BRCA slice complete** | #354 |
 | 03 | [#356](https://github.com/AdamCankaya/PhDNeural/issues/356) | [03-issue-356-spatial-temporal-feature-map.md](03-issue-356-spatial-temporal-feature-map.md) | #354, #355 |
 | 04 | [#357](https://github.com/AdamCankaya/PhDNeural/issues/357) | [04-issue-357-genomic-structural-spacing.md](04-issue-357-genomic-structural-spacing.md) | #356 |
 | 05 | [#358](https://github.com/AdamCankaya/PhDNeural/issues/358) | [05-issue-358-patient-level-holdout-split.md](05-issue-358-patient-level-holdout-split.md) | #354, #355 |

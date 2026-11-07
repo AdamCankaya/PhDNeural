@@ -58,6 +58,7 @@ def main() -> int:
     _log(f"ADNI path (inside container): {adni_dir}")
     _log(
         "Plan-1 chain: BRCA download → inventory verification → "
+        "Plan 2 longitudinal matching (see docker/entrypoint.sh) → "
         "optional meth-only toy NAS → ADNI scaffold → optional AD NAS."
     )
 

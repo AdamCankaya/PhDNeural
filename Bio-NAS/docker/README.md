@@ -2,7 +2,7 @@
 
 Minimal harness that builds a CPU-only Python image from [`Dockerfile`](Dockerfile), then sequentially runs the **unified Plan 1 chain** in [`entrypoint.sh`](entrypoint.sh). **Active engineering smokes:** BRCA, RA, and epigenetic aging (EA). **Deferred by default:** ADNI (Alzheimer's) and KORA (T2D) until controlled access completes.
 
-1. **BRCA (GDC):** tiny open TCGA-BRCA sample → **inventory verification** (public GDC API) → optional CPU toy NAS (`train_toy_nas_cpu.py --brca`).
+1. **BRCA (GDC):** tiny open TCGA-BRCA sample → **inventory verification** (public GDC API) → **Plan 2 longitudinal matching** (`build_brca_longitudinal_matching.py`) → optional CPU toy NAS (`train_toy_nas_cpu.py --brca`).
 2. **Alzheimer's (ADNI):** `download_adni_sample.py` scaffold (status JSON; no controlled download without DUA) → optional `train_nas_ad_demo.py` when `.ready` exists.
 3. **RA (GEO GSE71841):** download → `verify_geo_smoke.py` → optional toy NAS.
 4. **T2D (KORA):** honest skip (project agreement required).
@@ -35,13 +35,14 @@ Entrypoint order matches the numbered list above. Details:
 1. **Build** installs Python deps only (no cohort data baked into the image).
 2. **BRCA download** queries GDC for ~5–10 cases with **both** open methylation and RNA (clinical biotab + meth betas + STAR RNA — RNA not used by toy NAS).
 3. **Inventory verify** — `scripts/verify_cohort_inventory_open.py` spot-checks TCGA-BRCA via the public GDC API → `data/tcga/inventory_verification/` (`INVENTORY_VERIFY_DRY_RUN=1` skips network).
-4. **BRCA toy NAS** — `train_toy_nas_cpu.py --brca` (skip with `SKIP_BRCA_NAS=1` or legacy `SKIP_NAS_DEMO=1`).
-5. **ADNI scaffold** — `scripts/download_adni_sample.py` writes `adni_access_status.json` when credentials absent; `ADNI_SKIP=1` forces skip.
-6. **AD toy NAS** — `train_nas_ad_demo.py` only when `data/adni/.ready` exists (skip with `SKIP_AD_NAS_DEMO=1`).
-7. **RA / EA** — GEO downloads, `verify_geo_smoke.py`, optional per-disease toy NAS.
-8. **T2D** — writes `.skipped` marker; enabling controlled KORA requires explicit out-of-band agreement (entrypoint refuses `SKIP_T2D=0` today).
-9. **Dashboard** — always built last; aggregates `nas_demo_results.json` from mounted dirs.
-10. Re-runs skip BRCA/RA/EA downloads when each disease `.ready` exists.
+4. **BRCA longitudinal matching (Plan 2 / #355)** — `scripts/build_brca_longitudinal_matching.py` defaults to `BRCA_MATCHING_SCOPE=discover`: pages open GDC `/cases` metadata for TCGA-BRCA samples whose type is Recurrent Tumor or Metastatic (no omic download) → `data/tcga/BRCA/longitudinal_matching/` (`visit_sequences.json`, `match_pairs.json`, `summary.json` with `cohort_scope`). Set `BRCA_MATCHING_SCOPE=smoke` to keep the 8-case smoke manifest. Skip with `SKIP_BRCA_MATCHING=1`. Zero match pairs are **expected only for smoke**.
+5. **BRCA toy NAS** — `train_toy_nas_cpu.py --brca` (skip with `SKIP_BRCA_NAS=1` or legacy `SKIP_NAS_DEMO=1`).
+6. **ADNI scaffold** — `scripts/download_adni_sample.py` writes `adni_access_status.json` when credentials absent; `ADNI_SKIP=1` forces skip.
+7. **AD toy NAS** — `train_nas_ad_demo.py` only when `data/adni/.ready` exists (skip with `SKIP_AD_NAS_DEMO=1`).
+8. **RA / EA** — GEO downloads, `verify_geo_smoke.py`, optional per-disease toy NAS.
+9. **T2D** — writes `.skipped` marker; enabling controlled KORA requires explicit out-of-band agreement (entrypoint refuses `SKIP_T2D=0` today).
+10. **Dashboard** — always built last; includes **pipeline steps table**, **Plan 1 disease summary** (issue #354), **Plan 2 matching summary** (#355), and disease rows (`data/dashboard/dashboard.html`).
+11. Re-runs skip BRCA/RA/EA downloads when each disease `.ready` exists.
 
 Selection prefers joint meth+RNA BRCA cases ordered by `submitter_id`. Full ~1098-case cohort ETL is **Plan 07**, not this smoke.
 
@@ -91,8 +92,12 @@ docker run --rm -v "${PWD}/data/tcga:/data/tcga" -v "${PWD}/data/adni:/data/adni
 | `data/tcga/BRCA/nas_demo_results.json` | Toy NAS summary (`modality: methylation_beta`) |
 | `data/tcga/inventory_verification/verification.json` | GDC open inventory verify (`overall_status: ok`) |
 | `data/tcga/inventory_verification/verification_summary.csv` | Flat TCGA-BRCA summary row |
+| `data/tcga/BRCA/longitudinal_matching/summary.json` | Plan 2 matching counts (`schema_version` 1) |
+| `data/tcga/BRCA/longitudinal_matching/visit_sequences.json` | Ordered visits (`visit_index`) for multi-sample cases |
+| `data/tcga/BRCA/longitudinal_matching/match_pairs.json` | Directed anchor→later pairs (may be empty on smoke) |
+| `data/dashboard/dashboard.html` | Static dashboard — **pipeline steps table** + **Plan 1 section** + disease table + **Plan 2 section** |
 
-Pinned smoke expectations (schema / ranges / labels — not live file content hashes): [`docs/data/smoke_expected.json`](../docs/data/smoke_expected.json).
+Pinned smoke expectations (schema / ranges / labels — not live file content hashes): [`docs/data/smoke_expected.json`](../docs/data/smoke_expected.json). Matching summary pins: [`docs/data/smoke_expected_matching.json`](../docs/data/smoke_expected_matching.json). Strategy doc: [`docs/data/matching_strategy.md`](../docs/data/matching_strategy.md).
 
 Typical catalog size for ~8 joint cases is on the order of **~100–200 MB**. Still sample-scale — not the full cohort.
 
@@ -172,10 +177,14 @@ Legacy `GSE*_features.tsv` trees from older entrypoints are not produced by the 
 | `SKIP_NAS_DEMO` | (unset) | Set `1` to skip BRCA toy NAS |
 | `SKIP_AD_NAS_DEMO` | (unset) | Set `1` to skip AD toy NAS |
 | `INVENTORY_VERIFY_DRY_RUN` | (unset) | Set `1` to skip GDC network in verify |
+| `SKIP_BRCA_MATCHING` | `0` | Set `1` to skip Plan 2 GDC metadata matching |
+| `BRCA_MATCHING_SCOPE` | `discover` | `discover` pages TCGA-BRCA cases with a later sample type; `smoke` uses the 8-case manifest |
+| `BRCA_MATCHING_OUT` | `/data/tcga/BRCA/longitudinal_matching` | Matching artifact directory |
+| `MATCHING_KEYS_YAML` | `/app/src/config/longitudinal_keys.yaml` | Join keys override |
 
 ## Viewing results
 
-**Toy NAS dashboard (HTML):** after every run (even when individual disease steps fail), open **`data/dashboard/dashboard.html`** on the host. Failed steps are listed at the top; per-disease rows reflect the latest on-disk artifacts. Step details: `data/dashboard/pipeline_steps.log`. The container may exit with code **1** when some steps failed even though the dashboard was written.
+**Toy NAS dashboard (HTML):** after every run (even when individual disease steps fail), open **`data/dashboard/dashboard.html`** on the host. Includes a **full pipeline steps table**, a **Plan 1 — Multi-disease smoke cohorts** heading before the disease table, a **Plan 2 — BRCA longitudinal matching** section (from `summary.json`, including `cohort_scope` and drop counters when present). A non-empty discover run is not described as an expected all-zero smoke result. Failed steps are at the top, and per-disease rows (TCGA-BRCA includes a **Longitudinal matching** column). Step details: `data/dashboard/pipeline_steps.log`. The container may exit with code **1** when some steps failed even though the dashboard was written.
 
 **Logs UI:** [Dozzle](https://dozzle.dev/) at [http://localhost:8080](http://localhost:8080) — live logs for `bio-nas-demo`. Starts with `docker compose up`.
 

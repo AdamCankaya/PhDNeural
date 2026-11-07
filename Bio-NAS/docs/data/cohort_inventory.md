@@ -164,7 +164,7 @@ Inventory drafting does not require credentials. **BRCA** (open Level-3) and **A
 
 | Slice | Status | Notes |
 |-------|--------|-------|
-| **BRCA Plan-1** | **Complete** for open path | Primary locked; GDC API verified; Docker chain = download → inventory verify → optional toy NAS; expected pins in `docs/data/smoke_expected.json`. Controlled/dbGaP still deferred. |
+| **BRCA Plan-1** | **Complete** for open path | Primary locked; GDC API verified; Docker chain = download → inventory verify → **Plan 2 matching** → optional toy NAS; expected pins in `docs/data/smoke_expected.json`. Controlled/dbGaP still deferred. |
 | **Alzheimer's Plan-1** | **Primary locked; Docker scaffold done; DUA open** | ADNI (LONI) locked. Account + DUA **in progress**. Compose adds ADNI scaffold (skip without creds) + optional AD meth NAS when sample present. Inventory verify for ADNI is **post-DUA** (no public login-free API). |
 | **Remaining Other-3** | **Open** | RA / T2D / Epigenetic Aging primaries still recommended-unlocked. |
 

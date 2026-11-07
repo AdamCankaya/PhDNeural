@@ -15,7 +15,7 @@ The PhD roadmap is organized by **year and quarter** (Summer 2026 kickoff → Sp
 | Item | Status |
 |------|--------|
 | Plan 1 — multi-disease inventory + public Docker toy pipeline (#354) | **Complete** (2026-11-02) — **Fall 2026** quarter |
-| Plan 2 — longitudinal matching / join keys (#355) | **Next / in progress** — **Active 3** (BRCA, RA, EA) |
+| Plan 2 — longitudinal matching / join keys (#355) | **BRCA slice complete** — Docker matching step + YAML + docs; RA/EA stubs — **Active 3** (BRCA, RA, EA) |
 | Timeline dashboard default progress | `STORAGE_KEY` **`phd_plan_progress_v10`** seeds Plan 1 item 1 complete for new visitors; clear site data if upgrading from v9 |
 
 ## Planning phase status
